@@ -1,1 +1,28 @@
-<h1>Hello World</h1>
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+    <header class="header-min section-padding bg-img" data-background="{% static 'img/smoke-bg.jpg' %}" data-overlay-dark="7">
+        <div class="container ontop">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="caption">
+                        <h1 class="text-center">
+                            <span class="bract mr-40">
+                                { <span>We are</span> }</span> NEXCODE
+                            </span>
+                        </h1>
+                        <h1 class="ml-80">division of a</h1>
+                        <div class="d-flex align-items-center">
+                            <h1>digital</h1>
+                            <p class="text-left ml-60">From kickoff to launch, our streamlined process keeps
+                                you in the loop while ensuring your new website is designed.</p>
+                        </div>
+                        <h1 class="text-center">creative studio</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+{% endblock %}
