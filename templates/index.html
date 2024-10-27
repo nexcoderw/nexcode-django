@@ -2,63 +2,6 @@
 {% load static %}
 {% block content %}
 
-<header class="header-ca">
-    <div class="container">
-        <div class="row justify-content-between">
-            <div class="col-lg-7">
-                <div class="caption">
-                    <h1>
-                        Transforming Visions into Digital Reality
-                    </h1>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="text">
-                    <p class="text-u fz-16 mt-4 mt-lg-0">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit repellat natus voluptate temporibus distinctio.
-                    </p>
-                    <a href="#" class="crv-butn mt-40">
-                        <div class="d-flex">
-                            <span class="text">More about us</span>
-                            <span class="icon">
-                                <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
-                            </span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <div class="imgWrapper">
-            <div class="main-img bg-img" data-background="{% static 'img/hero/4.jpg' %}">
-                <div class="vid-butn">
-                    <a href="#0" class="crv-butn vid">
-                        <div class="d-flex">
-                            <span class="text">Play Showreel</span>
-                            <span class="icon pe-7s-play"></span>
-                        </div>
-                    </a>
-                    <div class="shap-left-bottom">
-                        <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            class="w-11 h-11">
-                            <path
-                                d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                fill="#0d0d0d"></path>
-                        </svg>
-                    </div>
-                    <div class="shap-right-top">
-                        <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            class="w-11 h-11">
-                            <path
-                                d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                fill="#0d0d0d"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
+    {% include 'inc/hero.html' %}
 
 {% endblock %}
