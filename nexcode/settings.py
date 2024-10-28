@@ -150,10 +150,10 @@ WHITENOISE_AUTOREFRESH = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
-    "site_title": "B&B Mountain View",
-    "site_header": "B&B Mountain View",
-    "site_brand": "B&B Mountain View",
-    "welcome_sign": "Welcome Admin",
+    "site_title": "NEXCODE",
+    "site_header": "NEXCODE",
+    "site_brand": "NEXCODE",
+    "welcome_sign": "Nexcode Admin Login",
     "show_sidebar": True,
     "navigation_expanded": True,
     "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
