@@ -14,16 +14,23 @@
                     </div>
                 </div>
                 <div class="col-lg-7">
-                    <a href="+250781862349" class="contact-number fz-60">+250 781 862 349</a>
+                    <a href="{{ settings.phone_number }}" class="contact-number fz-60">
+                        {{ settings.phone_number }}
+                    </a>
                     <ul class="fz-18 mt-30 rest">
                         <li class="mb-15">
-                            <a href="info@nexcode.com">
-                                info@nexcode.com
+                            <a href="{{ settings.email }}">
+                                {{ settings.email }}
+                            </a>
+                        </li>
+                        <li class="mb-15">
+                            <a href="{{ settings.second_email }}">
+                                {{ settings.second_email }}
                             </a>
                         </li>
                         <li>
                             <a href="#"> 
-                                Kigali Rwanda, La Bonne Address Building
+                                {{ settings.address }}
                             </a>
                         </li>
                     </ul>
