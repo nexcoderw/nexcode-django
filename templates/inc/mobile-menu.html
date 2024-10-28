@@ -20,20 +20,35 @@
         <div class="cont-info valign">
             <div class="text-center full-width">
                 <div class="logo">
-                    <img src="{% static 'img/logo-light.svg' %}" alt="">
+                    <img src="{{ settings.icon_white_logo.url }}" alt="" style="width: 60px;">
                 </div>
                 <div class="social-icon mt-40">
-                    <a href="#"> <i class="fab fa-facebook-f"></i> </a>
-                    <a href="#"> <i class="fab fa-x-twitter"></i> </a>
-                    <a href="#"> <i class="fab fa-linkedin-in"></i> </a>
-                    <a href="#"> <i class="fab fa-instagram"></i> </a>
+                    <a href="{{ settings.twitter }}"> <i class="fab fa-x-twitter"></i> </a>
+                    <a href="{{ settings.linkedin }}"> <i class="fab fa-linkedin-in"></i> </a>
+                    <a href="{{ settings.instagram }}"> <i class="fab fa-instagram"></i> </a>
+                    <a href="{{ settings.github }}"> <i class="fab fa-github"></i> </a>
                 </div>
                 <div class="item mt-30">
-                    <h5>Kigali Rwanda, <br> La Bonne Address Building</h5>
+                    <h5>
+                        {{ settings.address }}
+                    </h5>
                 </div>
                 <div class="item mt-10">
-                    <h5><a href="info@nexcode.com">info@nexcode.com</a></h5>
-                    <h5 class="underline"><a href="+250781862349">+250 781 862 349</a></h5>
+                    <h5>
+                        <a href="{{ settings.email }}">
+                            {{ settings.email }}
+                        </a>
+                    </h5>
+                    <h5>
+                        <a href="{{ settings.second_email }}">
+                            {{ settings.second_email }}
+                        </a>
+                    </h5>
+                    <h5 class="underline">
+                        <a href="{{ settings.phone_number }}">
+                            {{ settings.phone_number }}
+                        </a>
+                    </h5>
                 </div>
             </div>
         </div>
