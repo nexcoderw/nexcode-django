@@ -152,171 +152,47 @@
     <section class="team-marq section-padding pt-0">
         <div class="swiper team-swiper swiper-container">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="item">
-                        <div class="img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar5.jpg" alt="">
-                            <div class="social-icons">
-                                <a href="#"> <i class="fa-brands fa-x-twitter"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-facebook-f"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-instagram"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-behance"></i> </a>
+                {% for member in team %}
+                    <div class="swiper-slide">
+                        <div class="item">
+                            <div class="img">
+                                <img src="{{ member.image.url }}" alt="">
+                                <div class="social-icons">
+                                    <a href="{{ member.linkedin }}" target="_blank">
+                                        <i class="fa-brands fa-linkedin"></i>
+                                    </a>
+                                    <a href="{{ member.github }}" target="_blank">
+                                        <i class="fa-brands fa-github"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="cont">
-                            <h6>Peterson</h6>
-                            <span>Ceo Manager</span>
-                            <div class="shap-left-bottom">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                            <div class="shap-right-top">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="item">
-                        <div class="img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar5.jpg" alt="">
-                            <div class="social-icons">
-                                <a href="#"> <i class="fa-brands fa-x-twitter"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-facebook-f"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-instagram"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-behance"></i> </a>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <h6>Peterson</h6>
-                            <span>Ceo Manager</span>
-                            <div class="shap-left-bottom">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                            <div class="shap-right-top">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
+                            <div class="cont">
+                                <h6>
+                                    {{ member.name }}
+                                </h6>
+                                <span>
+                                    {{ member.position }}
+                                </span>
+                                <div class="shap-left-bottom">
+                                    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                        class="w-11 h-11">
+                                        <path
+                                            d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
+                                            fill="#100f0f"></path>
+                                    </svg>
+                                </div>
+                                <div class="shap-right-top">
+                                    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                        class="w-11 h-11">
+                                        <path
+                                            d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
+                                            fill="#100f0f"></path>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="item">
-                        <div class="img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar5.jpg" alt="">
-                            <div class="social-icons">
-                                <a href="#"> <i class="fa-brands fa-x-twitter"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-facebook-f"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-instagram"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-behance"></i> </a>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <h6>Peterson</h6>
-                            <span>Ceo Manager</span>
-                            <div class="shap-left-bottom">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                            <div class="shap-right-top">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="item">
-                        <div class="img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar5.jpg" alt="">
-                            <div class="social-icons">
-                                <a href="#"> <i class="fa-brands fa-x-twitter"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-facebook-f"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-instagram"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-behance"></i> </a>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <h6>Peterson</h6>
-                            <span>Ceo Manager</span>
-                            <div class="shap-left-bottom">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                            <div class="shap-right-top">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="item">
-                        <div class="img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar5.jpg" alt="">
-                            <div class="social-icons">
-                                <a href="#"> <i class="fa-brands fa-x-twitter"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-facebook-f"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-instagram"></i> </a>
-                                <a href="#"> <i class="fa-brands fa-behance"></i> </a>
-                            </div>
-                        </div>
-                        <div class="cont">
-                            <h6>Peterson</h6>
-                            <span>Ceo Manager</span>
-                            <div class="shap-left-bottom">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                            <div class="shap-right-top">
-                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    class="w-11 h-11">
-                                    <path
-                                        d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                        fill="#100f0f"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
