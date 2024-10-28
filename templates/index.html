@@ -1,5 +1,8 @@
 {% extends 'layouts/app.html' %}
 {% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
 {% block content %}
 
     {% include 'inc/hero.html' %}
@@ -196,4 +199,30 @@
         </div>
     </section>
 
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- ORANGE PANEL ---
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".imgWrapper",
+                scrub: true,
+                pin: true,
+                start: "40% 50%",
+                end: "+=100%",
+            }
+        })
+
+            .to(".imgWrapper .main-img", {
+                clipPath: 'inset(0% 0%)',
+                scale: 1,
+                ease: 'Linear.easeNone'
+            })
+    </script>
 {% endblock %}
