@@ -1,6 +1,12 @@
 from home.models import *
 from django.contrib import admin
 
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'position', 'created_at', 'updated_at')
+    search_fields = ('name', 'position')
+    list_filter = ('created_at', 'updated_at')
+
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'subject', 'created_at')
