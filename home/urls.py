@@ -7,4 +7,9 @@ app_name = 'base'
 
 urlpatterns = [
     path('', home, name="home"),
+    path('about/', about, name="about"),
+    path('services/', services, name="services"),
+    path('portfolio/', portfolio, name="portfolio"),
+    path('team/', team, name="team"),
+    path('contact/', contact, name="contact"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
