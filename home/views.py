@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 def home(request):
-    team = Team.objects.all()
+    team = Team.objects.all()[:4]
     settings = Setting.objects.first()
 
     context = {
