@@ -199,29 +199,50 @@
 
     <section class="team-pg pb-100">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="item mb-40">
-                        <div class="img fit-img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar1.jpg" alt="">
-                            <div class="social-icon">
-                                <a href="#0">
-                                    <i class="fa-brands fa-x-twitter"></i>
-                                </a>
-                                <a href="#0">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </a>
-                                <a href="#0">
-                                    <i class="fa-brands fa-dribbble"></i>
-                                </a>
-                            </div>
+            <div class="sec-head mb-80">
+                <div class="row mt-30">
+                    <div class="col-lg-5 offset-lg-3 col-md-7">
+                        <div class="sm-mb30">
+                            <h2>Our Team</h2>
+                            <a href="{% url 'base:team' %}" class="butn-under mt-15">
+                                View All Team Members 
+                                <span class="icon invert">
+                                    <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
+                                </span>
+                            </a>
                         </div>
-                        <div class="cont text-center">
-                            <h6>Thomas Tatum</h6>
-                            <p>Web Developer</p>
+                    </div>
+                    <div class="col-lg-4 col-md-5">
+                        <div class="text">
+                            <span>Creating forms that last. <br>
+                                <span class="opacity-5 mt-10">Echo the heart of businesses.</span>
+                            </span>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                {% for member in team %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="item mb-40">
+                            <div class="img fit-img">
+                                <img src="{{ member.image.url }}" alt="">
+                                <div class="social-icon">
+                                    <a href="{{ member.linkedin }}" target="_blank">
+                                        <i class="fa-brands fa-linkedin"></i>
+                                    </a>
+                                    <a href="{{ member.github }}" target="_blank">
+                                        <i class="fa-brands fa-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cont text-center">
+                                <h6>{{ member.name }}</h6>
+                                <p>{{ member.position }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </section>
