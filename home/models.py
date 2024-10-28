@@ -11,7 +11,7 @@ def logo_image_path(instance, filename):
     return f'settings/logo/{random_number}_{instance.created_at}{file_extension}'
 
 class Setting(models.Model):
-    black_logo = ProcessedImageField(
+    icon_black_logo = ProcessedImageField(
         upload_to=logo_image_path,
         # processors=[ResizeToFill(600, 600)],
         format='PNG',
@@ -19,7 +19,23 @@ class Setting(models.Model):
         null=True,
         blank=True
     )
-    white_logo = ProcessedImageField(
+    name_black_logo = ProcessedImageField(
+        upload_to=logo_image_path,
+        # processors=[ResizeToFill(600, 600)],
+        format='PNG',
+        options={'quality': 90},
+        null=True,
+        blank=True
+    )
+    icon_white_logo = ProcessedImageField(
+        upload_to=logo_image_path,
+        # processors=[ResizeToFill(600, 600)],
+        format='PNG',
+        options={'quality': 90},
+        null=True,
+        blank=True
+    )
+    name_white_logo = ProcessedImageField(
         upload_to=logo_image_path,
         # processors=[ResizeToFill(600, 600)],
         format='PNG',
@@ -29,6 +45,7 @@ class Setting(models.Model):
     )
     address = models.CharField(max_length=255, null=True, blank=True)
     email = models.CharField(max_length=255, null=True, blank=True)
+    second_email = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     instagram = models.CharField(max_length=255, null=True, blank=True)
     twitter = models.CharField(max_length=255, null=True, blank=True)
