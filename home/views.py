@@ -1,34 +1,101 @@
+from home.models import *
 from django.shortcuts import render
 
 def home(request):
-    return render(request, 'index.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'index.html', context)
 
 def about(request):
-    return render(request, 'about.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'about.html', context)
 
 def services(request):
-    return render(request, 'services/index.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/index.html', context)
 
 def softwareDev(request):
-    return render(request, 'services/softwareDev.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/softwareDev.html', context)
 
 def uiUx(request):
-    return render(request, 'services/uiUx.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/uiUx.html', context)
 
 def digitalMarketing(request):
-    return render(request, 'services/digitalMarketing.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/digitalMarketing.html', context)
 
 def mobileDev(request):
-    return render(request, 'services/mobileDev.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/mobileDev.html', context)
 
 def portfolio(request):
-    return render(request, 'portfolio.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'portfolio.html', context)
 
 def team(request):
-    return render(request, 'team.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'team.html', context)
 
 def blogs(request):
-    return render(request, 'blogs/index.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'blogs/index.html', context)
 
 def contact(request):
-    return render(request, 'contact.html')
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'contact.html', context)
