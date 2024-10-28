@@ -5,6 +5,33 @@ from django.utils.text import slugify
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 
+def team_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    return f'team/member_{slugify(instance.name)}_{instance.created_at}{file_extension}'
+
+class Team(models.Model):
+    name = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    image = ProcessedImageField(
+        upload_to=team_image_path,
+        processors=[ResizeToFill(1333, 1694)],
+        format='JPEG',
+        options={'quality': 90},
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Team Members"
+
 class Contact(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
