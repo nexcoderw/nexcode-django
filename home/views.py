@@ -1,5 +1,7 @@
+from home.forms import *
 from home.models import *
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 def home(request):
     settings = Setting.objects.first()
@@ -92,9 +94,22 @@ def blogs(request):
     return render(request, 'blogs/index.html', context)
 
 def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Save the form data to the database
+            contact_message = form.save()
+            messages.success(request, 'Your message has been sent successfully!')
+            return redirect('base:contact')
+        else:
+            messages.error(request, 'There was an error submitting your message. Please try again.')
+    else:
+        form = ContactForm()
+
     settings = Setting.objects.first()
 
     context = {
+        'form': form,
         'settings': settings
     }
 
