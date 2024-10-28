@@ -5,6 +5,16 @@ from django.utils.text import slugify
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 
+class Contact(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.name} - {self.subject}'
+
 def logo_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     random_number = random.randint(1000, 9999)
