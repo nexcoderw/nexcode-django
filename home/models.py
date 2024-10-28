@@ -20,6 +20,8 @@ class Team(models.Model):
         null=True,
         blank=True,
     )
+    linkedin = models.CharField(max_length=255, null=True, blank=True)
+    github = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
