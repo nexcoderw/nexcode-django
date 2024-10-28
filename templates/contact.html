@@ -73,37 +73,28 @@
                         <div class="sec-head mb-50">
                             <h6 class="sub-head">Send a <span class="fw-200">message</span></h6>
                         </div>
-                        <form id="contact-form" method="post" action="contact.php">
-
+                        <form id="contact-form" method="post">
+                            {% csrf_token %}
                             <div class="messages"></div>
-
                             <div class="controls row">
-
                                 <div class="col-lg-6">
                                     <div class="form-group mb-30">
-                                        <input id="form_name" type="text" name="name" placeholder="Name"
-                                            required="required">
+                                        {{ form.name }}
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6">
                                     <div class="form-group mb-30">
-                                        <input id="form_email" type="email" name="email" placeholder="Email"
-                                            required="required">
+                                        {{ form.email }}
                                     </div>
                                 </div>
-
                                 <div class="col-12">
                                     <div class="form-group mb-30">
-                                        <input id="form_subject" type="text" name="subject"
-                                            placeholder="Subject">
+                                        {{ form.subject }}
                                     </div>
                                 </div>
-
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <textarea id="form_message" name="message" placeholder="Message"
-                                            rows="4" required="required"></textarea>
+                                        {{ form.message }}
                                     </div>
                                     <div class="mt-30">
                                         <button type="submit" class="butn butn-md butn-bord butn-rounded">
@@ -116,7 +107,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                             </div>
                         </form>
                     </div>
