@@ -4,9 +4,11 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 def home(request):
+    team = Team.objects.all()
     settings = Setting.objects.first()
 
     context = {
+        'team': team,
         'settings': settings
     }
 
