@@ -2,6 +2,7 @@
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'css/inner_pages.css' %}">
 {% endblock %}
 {% block content %}
 
@@ -145,53 +146,265 @@
         </div>
     </section>
 
-    <section class="gray-box section-padding">
-
-        <!-- ==================== Start Team ==================== -->
-
-        <div class="team-min">
-            <div class="container pt-30 bord-thin-top">
-                <div class="sec-head mb-80">
-                    <div class="d-flex">
-                        <div>
-                            <span class="sub-head">About Us</span>
-                        </div>
-                        <div class="ml-auto">
-                            <div class="bract">{ <span> Creative Team </span> }</div>
+    <div class="works-mp section-padding pt-0">
+        <div class="container-xxl">
+            <div class="sec-head mb-80">
+                <div class="d-flex">
+                    <div>
+                        <span class="sub-head">Selected Work</span>
+                    </div>
+                    <div class="ml-auto">
+                        <div class="bract">{ <span>2020 - 2024</span> }</div>
+                    </div>
+                </div>
+                <div class="row mt-30">
+                    <div class="col-lg-5 offset-lg-3 col-md-7">
+                        <div class="sm-mb30">
+                            <h2>Our Work <br>
+                                & Case Studies</h2>
+                            <a href="#0" class="butn-under mt-15">View All Works <span class="icon invert">
+                                    <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
+                                </span></a>
                         </div>
                     </div>
-                    <div class="row mt-30">
-                        <div class="col-lg-7 offset-lg-3">
-                            <div>
-                                <h2 class="fz-60">Top Digital Design Talent
-                                    to Satisfy Your Every Creative
-                                    Whim. Committed. Precise.</h2>
-                                <a href="#0" class="butn-under mt-15">View All Works <span class="icon">
-                                        <img src="../common/imgs/icons/arrow-top-right.svg" alt="">
-                                    </span></a>
-                            </div>
+                    <div class="col-lg-4 col-md-5">
+                        <div class="text">
+                            <span>Creating forms that last. <br>
+                                <span class="opacity-5 mt-10">Echo the heart of businesses.</span></span>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-100">
-                    <div class="col-lg-3 col-md-8 col-9 md-mb50">
-                        <div class="text-u fz-15">
-                            <span>SOLVING COMPLEX DESIGN <br> PROBLEMS AT A RACE <br> CAR SPEED.</span>
+            </div>
+            <div class="row gallery">
+                <div class="col-lg-3 items">
+                    <div class="item">
+                        <div class="cont d-flex align-items-center">
+                            <div>
+                                <h5>Swat Co.</h5>
+                                <span>branding, ui/ux design</span>
+                            </div>
+                            <div class="ml-auto">
+                                <a href="#0">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="img">
+                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/portfolio/works2/1.jpg" alt="">
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-3">
-                        <div class="text-u fz-15 opacity-7">
-                            <span>EST.2013</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="team-pg pb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="item mb-40">
+                        <div class="img fit-img">
+                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar1.jpg" alt="">
+                            <div class="social-icon">
+                                <a href="#0">
+                                    <i class="fa-brands fa-x-twitter"></i>
+                                </a>
+                                <a href="#0">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </a>
+                                <a href="#0">
+                                    <i class="fa-brands fa-dribbble"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="cont text-center">
+                            <h6>Thomas Tatum</h6>
+                            <p>Web Developer</p>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="text">
-                            <p>We cater to the creative needs of the broadest range of clients. Whether you
-                                are a development agency looking to outsource design work, a company in
-                                search of a Product Designer or Product Team, a marketing agency that needs
-                                a landing page, a startup that wants to launch an app, or an enterprise that
-                                plans to rebrand or redesign its website, we welcome any challenge with our
-                                arms wide open.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-pg section-padding pt-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Basic pack</h6>
+                            <h2 class="fz-70 mb-5">$9.99</h2>
+                            <span class="sub-color">Per Month</span>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Adipiscing elit sed do.</li>
+                                <li>Eusmod tempor incididunt ut.</li>
+                                <li>labore et dolore magna.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Standard pack</h6>
+                            <h2 class="fz-70 mb-5">$29.99</h2>
+                            <span class="sub-color">Per Month</span>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Adipiscing elit sed do.</li>
+                                <li>Eusmod tempor incididunt ut.</li>
+                                <li>labore et dolore magna.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Premium pack</h6>
+                            <h2 class="fz-70 mb-5">$49.99</h2>
+                            <span class="sub-color">Per Month</span>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Adipiscing elit sed do.</li>
+                                <li>Eusmod tempor incididunt ut.</li>
+                                <li>labore et dolore magna.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faqs-pg section-padding pt-0">
+        <div class="container">
+            <div class="row lg-marg">
+                <div class="col-lg-5 md-mb30">
+                    <div class="fit-img img">
+                        <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/faqs.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-7 pt-30 pb-30">
+                    <div class="sec-head mb-60">
+                        <h6 class="sub-head mb-15">Questions & Answers</h6>
+                        <h2>Providing clarity on frequently asked questions</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item active">
+                                    <h4 class="accordion-header" id="heading2">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse2"
+                                            aria-expanded="false" aria-controls="collapse2">
+                                            Why’s Hubfolio instead of full-time designer?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse2" class="accordion-collapse collapse show"
+                                        aria-labelledby="heading2" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>How quick is quick? For most design, we’re talking 2-3
+                                                business days.
+                                                We balance speed with quality,ensuring you get top-north
+                                                design
+                                                swiftly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading3">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse3"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            Speed of design delivery?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse3" class="accordion-collapse collapse"
+                                        aria-labelledby="heading3" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>How quick is quick? For most design, we’re talking 2-3
+                                                business days.
+                                                We balance speed with quality,ensuring you get top-north
+                                                design
+                                                swiftly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading4">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse4"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            What’s the Hubfolio progress like?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse4" class="accordion-collapse collapse"
+                                        aria-labelledby="heading4" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>How quick is quick? For most design, we’re talking 2-3
+                                                business days.
+                                                We balance speed with quality,ensuring you get top-north
+                                                design
+                                                swiftly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading5">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse5"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            How to request a design?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse5" class="accordion-collapse collapse"
+                                        aria-labelledby="heading5" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>How quick is quick? For most design, we’re talking 2-3
+                                                business days.
+                                                We balance speed with quality,ensuring you get top-north
+                                                design
+                                                swiftly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -224,5 +437,91 @@
                 scale: 1,
                 ease: 'Linear.easeNone'
             })
+
+            
+
+$(function () {
+
+    "use strict";
+
+    var team = new Swiper(".team-marq .team-swiper", {
+        slidesPerView: 4,
+        spaceBetween: 50,
+        centeredSlides: true,
+        speed: 8000,
+        autoplay: {
+            delay: 0,
+        },
+        loop: true,
+        allowTouchMove: false,
+        disableOnInteraction: true,
+        breakpoints: {
+            0: {
+                slidesPerView: 2,
+            },
+            480: {
+                slidesPerView: 2,
+            },
+            787: {
+                slidesPerView: 3,
+            },
+            991: {
+                slidesPerView: 4,
+            },
+            1200: {
+                slidesPerView: 4,
+            }
+        }
+    });
+
+    $('.accordion .accordion-item').on('click', function () {
+        $(this).addClass("active").siblings().removeClass("active");
+    });
+
+     // Services active
+
+     $('.services-cst .item').on('mouseenter', function () {
+        $('.services-cst .item').removeClass('active');
+        $(this).addClass('active');
+
+        if ($(this).hasClass('active')) {
+            return false;
+        }
+    });
+
+    $(function () {
+        let cards = gsap.utils.toArray(".cards .card-item");
+
+        let stickDistance = 0;
+
+        let firstCardST = ScrollTrigger.create({
+            trigger: cards[0],
+            start: "center center"
+        });
+
+        let lastCardST = ScrollTrigger.create({
+            trigger: cards[cards.length - 1],
+            start: "bottom bottom"
+        });
+
+        cards.forEach((card, index) => {
+            var scale = 1 - (cards.length - index) * 0.025;
+            let scaleDown = gsap.to(card, { scale: scale, 'transform-origin': '"50% ' + (lastCardST.start + stickDistance) + '"' });
+
+            ScrollTrigger.create({
+                trigger: card,
+                start: "center center",
+                end: () => lastCardST.start + stickDistance,
+                pin: true,
+                pinSpacing: false,
+                ease: "none",
+                animation: scaleDown,
+                toggleActions: "restart none none reverse"
+            });
+        });
+    });
+
+});
+
     </script>
 {% endblock %}
