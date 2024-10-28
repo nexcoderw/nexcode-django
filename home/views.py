@@ -76,9 +76,11 @@ def portfolio(request):
     return render(request, 'portfolio.html', context)
 
 def team(request):
+    team = Team.objects.all()
     settings = Setting.objects.first()
 
     context = {
+        'team': team,
         'settings': settings
     }
 
