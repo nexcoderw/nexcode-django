@@ -13,9 +13,11 @@ def home(request):
     return render(request, 'index.html', context)
 
 def about(request):
+    team = Team.objects.all()
     settings = Setting.objects.first()
 
     context = {
+        'team': team,
         'settings': settings
     }
 
