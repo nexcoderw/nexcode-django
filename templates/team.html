@@ -16,28 +16,30 @@
     <section class="team-pg pb-100">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="item mb-40">
-                        <div class="img fit-img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/team/avatar4.jpg" alt="">
-                            <div class="social-icon">
-                                <a href="#0">
-                                    <i class="fa-brands fa-x-twitter"></i>
-                                </a>
-                                <a href="#0">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </a>
-                                <a href="#0">
-                                    <i class="fa-brands fa-dribbble"></i>
-                                </a>
+                {% for member in team %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="item mb-40">
+                            <div class="img fit-img">
+                                <img src="{{ member.image.url }}" alt="">
+                                <div class="social-icon">
+                                    <a href="#0">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </a>
+                                    <a href="#0">
+                                        <i class="fa-brands fa-instagram"></i>
+                                    </a>
+                                    <a href="#0">
+                                        <i class="fa-brands fa-dribbble"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cont text-center">
+                                <h6>{{ member.name }}</h6>
+                                <p>{{ member.position }}</p>
                             </div>
                         </div>
-                        <div class="cont text-center">
-                            <h6>Thomas Tatum</h6>
-                            <p>Web Developer</p>
-                        </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
