@@ -2,23 +2,13 @@ import os
 import random
 from django.db import models
 from django.utils.text import slugify
+from taggit.managers import TaggableManager
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     return f'portfolio/work_{slugify(instance.name)}_{instance.created_at}{file_extension}'
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = "Tags"
-        ordering = ['name']
-
 
 class Portfolio(models.Model):
     CATEGORY_CHOICES = [
@@ -47,7 +37,7 @@ class Portfolio(models.Model):
     )
     category = models.CharField(max_length=255, null=True, blank=True, choices=CATEGORY_CHOICES)
     description = models.TextField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
+    tags = TaggableManager()  # Adds tagging functionality
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
