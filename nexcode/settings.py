@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third party
+    'taggit',
     'django.contrib.humanize',
     'whitenoise.runserver_nostatic',
     'ckeditor',
