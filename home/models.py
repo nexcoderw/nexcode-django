@@ -6,6 +6,50 @@ from taggit.managers import TaggableManager
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 
+def portfolio_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    return f'portfolio/work_{slugify(instance.name)}_{instance.created_at}{file_extension}'
+
+class Portfolio(models.Model):
+    CATEGORY_CHOICES = [
+        ('Web App', 'Web App'),
+        ('Logo', 'Logo'),
+        ('UI/UX', 'UI/UX'),
+        ('Mobile App', 'Mobile App'),
+    ]
+    name = models.CharField(max_length=255)
+    link = models.CharField(max_length=255)
+    image = ProcessedImageField(
+        upload_to=portfolio_image_path,
+        processors=[ResizeToFill(1920, 1350)],
+        format='JPEG',
+        options={'quality': 90},
+        null=True,
+        blank=True,
+    )
+    big_image = ProcessedImageField(
+        upload_to=portfolio_image_path,
+        processors=[ResizeToFill(2000, 1125)],
+        format='JPEG',
+        options={'quality': 90},
+        null=True,
+        blank=True,
+    )
+    category = models.CharField(max_length=255, null=True, blank=True, choices=CATEGORY_CHOICES)
+    description = models.TextField(null=True, blank=True)
+    tags = TaggableManager()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Portfolios"
+
 def team_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     return f'team/member_{slugify(instance.name)}_{instance.created_at}{file_extension}'
