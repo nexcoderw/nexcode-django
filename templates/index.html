@@ -159,11 +159,13 @@
                 <div class="row mt-30">
                     <div class="col-lg-5 offset-lg-3 col-md-7">
                         <div class="sm-mb30">
-                            <h2>Our Work <br>
-                                & Case Studies</h2>
-                            <a href="#0" class="butn-under mt-15">View All Works <span class="icon invert">
+                            <h2>Our Recent <br> Work</h2>
+                            <a href="{% url 'base:portfolio' %}" class="butn-under mt-15">
+                                View All Works
+                                <span class="icon invert">
                                     <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
-                                </span></a>
+                                </span>
+                            </a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-5">
@@ -175,24 +177,32 @@
                 </div>
             </div>
             <div class="row gallery">
-                <div class="col-lg-3 items">
-                    <div class="item">
-                        <div class="cont d-flex align-items-center">
-                            <div>
-                                <h5>Swat Co.</h5>
-                                <span>branding, ui/ux design</span>
+                {% for work in portfolio %}
+                    <div class="col-lg-3 items">
+                        <div class="item">
+                            <div class="cont d-flex align-items-center">
+                                <div>
+                                    <h5>
+                                        {{ work.name }}.
+                                    </h5>
+                                    <span>
+                                        {% for tag in work.tags.all %}
+                                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="ml-auto">
+                                    <a href="#0">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="ml-auto">
-                                <a href="#0">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </a>
+                            <div class="img">
+                                <img src="{{ work.image.url }}" alt="">
                             </div>
-                        </div>
-                        <div class="img">
-                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/portfolio/works2/1.jpg" alt="">
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
