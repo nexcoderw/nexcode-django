@@ -73,9 +73,11 @@ def mobileDev(request):
     return render(request, 'services/mobileDev.html', context)
 
 def portfolio(request):
+    portfolio = Portfolio.objects.all().order_by('-created_at')
     settings = Setting.objects.first()
 
     context = {
+        'portfolio': portfolio,
         'settings': settings
     }
 
