@@ -4,10 +4,12 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 def home(request):
+    portfolio = Portfolio.objects.all()[:4]
     team = Team.objects.all()[:4]
     settings = Setting.objects.first()
 
     context = {
+        'portfolio': portfolio,
         'team': team,
         'settings': settings
     }
