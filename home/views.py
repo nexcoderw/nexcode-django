@@ -1,7 +1,7 @@
 from home.forms import *
 from home.models import *
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 def home(request):
     portfolio = Portfolio.objects.all()[:4]
@@ -81,7 +81,16 @@ def portfolio(request):
         'settings': settings
     }
 
-    return render(request, 'portfolio.html', context)
+    return render(request, 'work/index.html', context)
+
+def workDetails(request, slug):
+    work = get_object_or_404(Portfolio, slug=slug)
+
+    context = {
+        'work': work
+    }
+
+    return render(request, 'work/show.html', context)
 
 def team(request):
     team = Team.objects.all()
