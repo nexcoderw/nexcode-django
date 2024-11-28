@@ -7,16 +7,16 @@
             <div class="text-center">
                 <div class="caption mb-100">
                     <h1>Portfolio</h1>
-                    <h6>( <a href="#0">Home</a> - <span>Portfolio</span> )</h6>
+                    <h6>( <a href="{% url 'base:home' %}">Home</a> - <span>Portfolio</span> )</h6>
                 </div>
             </div>
         </div>
     </header>
 
-    <section class="work-card section-padding pt-0">
+    <section class="work-card section-padding">
         <div class="container">
             <div class="cards">
-                {% for work in porfolio %}
+                {% for work in portfolio %}
                     <div class="card-item">
                         <div class="d-lg-flex align-items-end">
                             <div>
@@ -28,7 +28,7 @@
                                     {% endfor %}
                                 </div>
                                 <h3 class="title">
-                                    <a href="#">{{ work.name }}.</a>
+                                    <a href="#">{{ work.name }}</a>
                                 </h3>
                             </div>
                             <div class="ml-auto">
@@ -43,10 +43,22 @@
                             </div>
                         </div>
                         <div class="img fit-img mt-30">
-                            <img src="{{ work.big_image.url }}" alt="">
+                            <img src="{{ work.big_image.url }}" alt="{{ work.name }}">
                         </div>
                     </div>
+                {% empty %}
+                    <p>No portfolio items found.</p>
                 {% endfor %}
+            </div>
+            <div class="text-center mt-80">
+                <a href="{% url 'base:portfolio' %}" class="butn butn-md butn-bord butn-rounded">
+                    <div class="d-flex align-items-center">
+                        <span>Check Our Portfolio</span>
+                        <span class="icon invert ml-10">
+                            <img src="{% static 'img/icons/arrow-top-right.svg' %}" alt="">
+                        </span>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
