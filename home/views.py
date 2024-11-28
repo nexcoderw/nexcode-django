@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 def home(request):
-    portfolio = Portfolio.objects.all()[:4]
+    portfolio = Portfolio.objects.all().order_by('-created_at')[:4]
     team = Team.objects.all()[:4]
     settings = Setting.objects.first()
 
@@ -85,9 +85,11 @@ def portfolio(request):
 
 def workDetails(request, slug):
     work = get_object_or_404(Portfolio, slug=slug)
+    settings = Setting.objects.first()
 
     context = {
-        'work': work
+        'work': work,
+        'settings': settings
     }
 
     return render(request, 'work/show.html', context)
