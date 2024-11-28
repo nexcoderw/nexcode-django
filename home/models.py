@@ -1,5 +1,6 @@
 import os
 import random
+import string
 from django.db import models
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
@@ -17,7 +18,9 @@ class Portfolio(models.Model):
         ('UI/UX', 'UI/UX'),
         ('Mobile App', 'Mobile App'),
     ]
+    
     name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     link = models.CharField(max_length=255)
     image = ProcessedImageField(
         upload_to=portfolio_image_path,
@@ -40,13 +43,29 @@ class Portfolio(models.Model):
     tags = TaggableManager()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
+    def _generate_random_number(self, length=7):
+        """Generate a random number of specified length."""
+        return ''.join(random.choices(string.digits, k=length))
+    
+    def _generate_unique_slug(self):
+        """Generate a unique slug by appending 7 random numbers."""
+        base_slug = slugify(self.name)
+        random_number = self._generate_random_number()
+        slug = f"{base_slug}-{random_number}"
+        while Portfolio.objects.filter(slug=slug).exists():
+            random_number = self._generate_random_number()
+            slug = f"{base_slug}-{random_number}"
+        return slug
+    
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
+        if not self.slug:
+            self.slug = self._generate_unique_slug()
+        super(Portfolio, self).save(*args, **kwargs)
+    
     def __str__(self):
         return self.name
-
+    
     class Meta:
         verbose_name_plural = "Portfolios"
 
