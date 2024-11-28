@@ -14,6 +14,7 @@ urlpatterns = [
     path('services/digital-marketing', digitalMarketing, name="digitalMarketing"),
     path('services/mobile-development', mobileDev, name="mobileDev"),
     path('portfolio/', portfolio, name="portfolio"),
+    path('work/<slug>', workDetails, name="workDetails"),
     path('team/', team, name="team"),
     path('blogs/', blogs, name="blogs"),
     path('contact/', contact, name="contact"),
