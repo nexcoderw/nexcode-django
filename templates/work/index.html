@@ -22,17 +22,19 @@
                             <div>
                                 <div class="tags">
                                     {% for tag in work.tags.all %}
-                                        <a href="#0">
+                                        <a href="{% url 'base:workDetails' work.slug %}">
                                             {{ tag.name }}{% if not forloop.last %}, {% endif %}
                                         </a>
                                     {% endfor %}
                                 </div>
                                 <h3 class="title">
-                                    <a href="#">{{ work.name }}</a>
+                                    <a href="{% url 'base:workDetails' work.slug %}">
+                                        {{ work.name }}
+                                    </a>
                                 </h3>
                             </div>
                             <div class="ml-auto">
-                                <a href="#" class="butn butn-md butn-bord butn-rounded">
+                                <a href="{% url 'base:workDetails' work.slug %}" class="butn butn-md butn-bord butn-rounded">
                                     <div class="d-flex align-items-center">
                                         <span>View Project</span>
                                         <span class="icon invert ml-10">
