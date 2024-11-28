@@ -1,0 +1,69 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+    <header class="serv-hed2 section-padding pb-0">
+        <div class="container">
+            <div class="caption mb-80">
+                <h1 class="fz-80 fw-600">
+                    {{ work.name }}
+                </h1>
+                <div class="row justify-content-end">
+                    <div class="col-lg-5">
+                        <div class="text mt-30">
+                            <p>
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus eius numquam accusantium ex ipsa cum quaerat labore nihil praesentium quasi.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="list mt-30">
+                            <ul>
+                                <a href="{{ work.link }}" target="_blank" class="crv-butn mt-80">
+                                    <div class="d-flex">
+                                        <span class="text">Visit {{ work.name }}</span>
+                                        <span class="icon">
+                                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                        </span>
+                                    </div>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="fit-img radius-15">
+                <img src="{{ work.big_image.url }}" alt="">
+            </div>
+        </div>
+    </header>
+
+    <section class="serv-details section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content">
+                        <h3>
+                            About the project
+                        </h3>
+                        <div class="text mt-30 mb-30">
+                            <p>
+                                {{ work.description }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-80">
+                <div class="col-md-12">
+                    <div class="img sm-mb30">
+                        <img src="{{ work.image.url }}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
