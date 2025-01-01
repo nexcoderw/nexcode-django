@@ -1,3 +1,5 @@
+<!-- templates/blogs/index.html -->
+
 {% extends 'layouts/app.html' %}
 {% load static %}
 {% block content %}
@@ -41,9 +43,9 @@
                                     </div>
                                 </div>
                                 <div class="date ml-auto">
-                                    <span class="sub-color">
-                                        <i class="fa-regular fa-clock mr-15 opacity-7"></i> 
-                                        12 hours ago
+                                    <!-- Add a span with data-created-at attribute -->
+                                    <span class="sub-color time-ago" data-created-at="{{ blog.created_at_iso }}">
+                                        Loading...
                                     </span>
                                 </div>
                             </a>
@@ -63,5 +65,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeAgoElements = document.querySelectorAll('.time-ago');
+    
+            timeAgoElements.forEach(function(element) {
+                const createdAt = new Date(element.getAttribute('data-created-at'));
+                const now = new Date();
+                let diffInSeconds = Math.floor((now - createdAt) / 1000);
+    
+                if (diffInSeconds < 0) {
+                    // Future date handling
+                    element.textContent = 'Just now';
+                    return;
+                }
+    
+                const diffInMinutes = Math.floor(diffInSeconds / 60);
+                const diffInHours = Math.floor(diffInMinutes / 60);
+    
+                if (diffInHours < 1) {
+                    if (diffInMinutes < 1) {
+                        element.textContent = 'Just now';
+                    } else {
+                        element.textContent = `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+                    }
+                } else if (diffInHours < 24) {
+                    element.textContent = `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+                } else {
+                    // Format the date as Month Day, Year (e.g., January 1, 2025)
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = createdAt.toLocaleDateString(undefined, options);
+                    element.textContent = formattedDate;
+                }
+            });
+        });
+    </script>
+    
 
 {% endblock %}
