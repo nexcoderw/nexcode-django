@@ -109,6 +109,9 @@ def blogs(request):
     blogs = Blog.objects.all().order_by('-created_at')
     settings = Setting.objects.first()
 
+    for blog in blogs:
+        blog.created_at_iso = blog.created_at.isoformat()
+
     context = {
         'blogs': blogs,
         'settings': settings
@@ -119,6 +122,8 @@ def blogs(request):
 def getBlogDetails(request, slug):
     blog = get_object_or_404(Blog, slug=slug)
     settings = Setting.objects.first()
+
+    blog.created_at_iso = blog.created_at.isoformat()
 
     context = {
         'blog': blog,
