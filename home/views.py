@@ -116,6 +116,17 @@ def blogs(request):
 
     return render(request, 'blogs/index.html', context)
 
+def getBlogDetails(request, slug):
+    blog = get_object_or_404(Blog, slug=slug)
+    settings = Setting.objects.first()
+
+    context = {
+        'blog': blog,
+        'settings': settings
+    }
+
+    return render(request, 'blogs/show.html', context)
+
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
