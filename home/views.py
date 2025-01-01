@@ -106,9 +106,11 @@ def team(request):
     return render(request, 'team.html', context)
 
 def blogs(request):
+    blogs = Blog.objects.all().order_by('-created_at')
     settings = Setting.objects.first()
 
     context = {
+        'blogs': blogs,
         'settings': settings
     }
 
