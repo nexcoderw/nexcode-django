@@ -1,0 +1,52 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+    <header class="post-header pt-20">
+        <div class="container-xl bg-img mt-80" data-background="{{ blog.featured_image.url }}" data-overlay-dark="4">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="caption">
+                        <div class="tags fz-14">
+                            <a href="#0">Design</a>
+                            <a href="#0">Development</a>
+                        </div>
+                        <h1 class="fz-55 mt-30">
+                            {{ blog.title }}
+                        </h1>
+                    </div>
+                    <div class="info d-flex mt-40 align-items-center">
+                        <div class="left-info sm-mb30">
+                            <div class="d-flex align-items-center">
+                                <div class="author-info">
+                                    <div class="d-flex align-items-center">
+                                        <a href="#0" class="circle-60">
+                                            <img src="{{ blog.featured_image.url }}" alt=""
+                                                class="circle-img">
+                                        </a>
+                                        <a href="#0" class="ml-20">
+                                            <span class="opacity-7 mb-5">{{ blog.author }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="date ml-50">
+                                    <a href="#0">
+                                        <span class="opacity-7 mb-5">Published</span>
+                                        <h6 class="fz-16">{{ blog.published_at }}</h6>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-info ml-auto">
+                            <div>
+                                <span class="pe-7s-comment fz-18 mr-10"></span>
+                                <span class="opacity-7">02 Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+{% endblock %}
