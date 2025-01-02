@@ -124,6 +124,10 @@ def getBlogDetails(request, slug):
     settings = Setting.objects.first()
 
     blog.created_at_iso = blog.created_at.isoformat()
+    if blog.published_at:
+        blog.published_at_iso = blog.published_at.isoformat()
+    else:
+        blog.published_at_iso = None
 
     context = {
         'blog': blog,
