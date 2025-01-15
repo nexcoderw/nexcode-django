@@ -447,7 +447,7 @@
   padding-bottom: 55px; }
 
 .testimonials-cst .controls {
-  background-image: url(../imgs/smoke-bg.jpg);
+  background-image: url(../img/smoke-bg.jpg);
   background-size: cover;
   border-radius: 30px;
   display: -webkit-box;
@@ -528,11 +528,11 @@
       -webkit-box-shadow: none;
       box-shadow: none; }
       .faqs-pg .accordion-item .accordion-header button:after {
-        background-image: url(../imgs/plus-solid.svg);
+        background-image: url(../img/plus-solid.svg);
         -webkit-filter: invert(1);
         filter: invert(1); }
       .faqs-pg .accordion-item .accordion-header button:not(.collapsed):after {
-        background-image: url(../imgs/minus-solid.svg); }
+        background-image: url(../img/minus-solid.svg); }
   .faqs-pg .accordion-item .accordion-body {
     padding: 0;
     padding: 0px 100px 30px 0; }
