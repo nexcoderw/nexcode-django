@@ -3,14 +3,14 @@ import random
 import string
 from django.db import models
 from django.utils.text import slugify
-from django.contrib.auth.models import User  # Assuming you're using Django's built-in User model
+from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
-    return f'portfolio/work_{slugify(instance.name)}_{instance.created_at}{file_extension}'
+    return f'portfolio/work_{slugify(instance.name)}_{instance.created_at.strftime("%Y%m%d%H%M%S")}{file_extension}'
 
 class Portfolio(models.Model):
     CATEGORY_CHOICES = [
@@ -20,9 +20,9 @@ class Portfolio(models.Model):
         ('Mobile App', 'Mobile App'),
     ]
     
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    link = models.CharField(max_length=255)
+    link = models.CharField(max_length=255, null=True, blank=True)
     image = ProcessedImageField(
         upload_to=portfolio_image_path,
         processors=[ResizeToFill(1920, 1350)],
@@ -41,7 +41,22 @@ class Portfolio(models.Model):
     )
     category = models.CharField(max_length=255, null=True, blank=True, choices=CATEGORY_CHOICES)
     description = models.TextField(null=True, blank=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
+    
+    client_name = models.CharField(max_length=255, null=True, blank=True)
+    client_email = models.EmailField(null=True, blank=True)
+    client_phone_number = models.CharField(max_length=20, null=True, blank=True)
+    
+    team_members = models.ManyToManyField('Team', related_name='portfolios', blank=True)
+    
+    contract_document = models.FileField(upload_to='portfolio/contracts/', null=True, blank=True)
+    
+    project_initiation_date = models.DateField(null=True, blank=True)
+    deadline_date = models.DateField(null=True, blank=True)
+    
+    project_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -65,7 +80,7 @@ class Portfolio(models.Model):
         super(Portfolio, self).save(*args, **kwargs)
     
     def __str__(self):
-        return self.name
+        return self.name if self.name else "Unnamed Portfolio"
     
     class Meta:
         verbose_name_plural = "Portfolios"
