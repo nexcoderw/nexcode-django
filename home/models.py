@@ -244,3 +244,15 @@ class Blog(models.Model):
         verbose_name = "Blog"
         verbose_name_plural = "Blogs"
         ordering = ['-published_at', '-created_at']
+
+class Payment(models.Model):
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='payments', null=True, blank=True)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Payment of {self.amount_paid} for {self.portfolio}" if self.portfolio and self.amount_paid else "Unnamed Payment"
+    
+    class Meta:
+        verbose_name = "Payment"
+        verbose_name_plural = "Payments"
