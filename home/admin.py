@@ -1,9 +1,9 @@
 from django import forms
 from home.models import *
-from django.urls import reverse
 from django.contrib import admin
-from django.utils.html import format_html
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django.utils.html import format_html
+from django.urls import reverse
 
 # Inline for Payments in Portfolio Admin
 class PaymentInline(admin.TabularInline):
@@ -16,8 +16,8 @@ class PaymentInline(admin.TabularInline):
 # Inline for PaymentStatus in Payment Admin
 class PaymentStatusInline(admin.TabularInline):
     model = PaymentStatus
-    extra = 1
-    readonly_fields = ('updated_at',)
+    extra = 0
+    readonly_fields = ('amount_paid', 'status', 'updated_at')
     fields = ('amount_paid', 'status', 'updated_at')
 
 @admin.register(Portfolio)
@@ -30,7 +30,7 @@ class PortfolioAdmin(admin.ModelAdmin):
     list_per_page = 20  # Adjust as needed
     
     def client_info(self, obj):
-        return f"{obj.client_name} | {obj.client_email} | {obj.client_phone_number}"
+        return f"{obj.client_name or '-'} | {obj.client_email or '-'} | {obj.client_phone_number or '-'}"
     client_info.short_description = 'Client Information'
     
     def display_tags(self, obj):
@@ -39,12 +39,12 @@ class PortfolioAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_portfolio_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_portfolio_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
     
     readonly_fields = ('created_at', 'updated_at')
@@ -67,12 +67,12 @@ class TeamAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_team_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_team_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
 @admin.register(Contact)
@@ -86,12 +86,12 @@ class ContactAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_contact_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_contact_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
 class BlogAdminForm(forms.ModelForm):
@@ -137,12 +137,12 @@ class BlogAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_blog_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_blog_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
     
     def get_queryset(self, request):
@@ -160,12 +160,12 @@ class SettingAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_setting_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_setting_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
 @admin.register(Payment)
@@ -179,12 +179,12 @@ class PaymentAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_payment_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_payment_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
 @admin.register(PaymentStatus)
@@ -198,10 +198,10 @@ class PaymentStatusAdmin(admin.ModelAdmin):
     
     def edit_link(self, obj):
         url = reverse("admin:home_paymentstatus_change", args=[obj.pk])
-        return format_html('<a href="{}">Edit</a>', url)
+        return format_html('<a class="button" href="{}">Edit</a>', url)
     edit_link.short_description = "Edit"
     
     def delete_link(self, obj):
         url = reverse("admin:home_paymentstatus_delete", args=[obj.pk])
-        return format_html('<a href="{}">Delete</a>', url)
+        return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"

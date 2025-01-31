@@ -2,16 +2,34 @@ import os
 import random
 import string
 from django.db import models
-from django.utils import timezone
 from django.utils.text import slugify
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # Assuming you're using Django's built-in User model
 from taggit.managers import TaggableManager
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
+from django.utils import timezone
+from django.db.models import Sum
 
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
-    return f'portfolio/work_{slugify(instance.name)}_{instance.created_at.strftime("%Y%m%d%H%M%S")}{file_extension}'
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f'portfolio/work_{slugify(instance.name)}_{timestamp}{file_extension}'
+
+def team_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f'team/member_{slugify(instance.name)}_{timestamp}{file_extension}'
+
+def logo_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    random_number = random.randint(1000, 9999)
+    return f'settings/logo/{random_number}_{timestamp}{file_extension}'
+
+def blog_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f'blog/{slugify(instance.title)}_{timestamp}{file_extension}'
 
 class Portfolio(models.Model):
     CATEGORY_CHOICES = [
@@ -95,10 +113,6 @@ class Portfolio(models.Model):
     class Meta:
         verbose_name_plural = "Portfolios"
 
-def team_image_path(instance, filename):
-    base_filename, file_extension = os.path.splitext(filename)
-    return f'team/member_{slugify(instance.name)}_{instance.created_at.strftime("%Y%m%d%H%M%S")}{file_extension}'
-
 class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     position = models.CharField(max_length=255, null=True, blank=True)
@@ -136,10 +150,6 @@ class Contact(models.Model):
     
     class Meta:
         verbose_name_plural = "Contacts"
-
-def logo_image_path(instance, filename):
-    base_filename, file_extension = os.path.splitext(filename)
-    return f'settings/logo/{random.randint(1000, 9999)}_{instance.created_at.strftime("%Y%m%d%H%M%S")}{file_extension}'
 
 class Setting(models.Model):
     icon_black_logo = ProcessedImageField(
@@ -196,10 +206,6 @@ class Setting(models.Model):
     class Meta:
         verbose_name = "Setting"
         verbose_name_plural = "Settings"
-
-def blog_image_path(instance, filename):
-    base_filename, file_extension = os.path.splitext(filename)
-    return f'blog/{slugify(instance.title)}_{instance.created_at.strftime("%Y%m%d%H%M%S")}{file_extension}'
 
 class Blog(models.Model):
     STATUS_CHOICES = [
@@ -267,22 +273,23 @@ class Payment(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
-        # Update amount_paid in Portfolio
-        total_paid = self.portfolio.payments.aggregate(total=models.Sum('amount_paid'))['total'] or 0
-        self.portfolio.amount_paid = total_paid
-        self.portfolio.save()
-        
-        # Update PaymentStatus
-        if self.portfolio.amount_paid >= self.portfolio.project_amount:
-            PaymentStatus.objects.update_or_create(
-                payment=self,
-                defaults={'amount_paid': self.portfolio.amount_paid, 'status': 'Fully Paid'}
-            )
-        else:
-            PaymentStatus.objects.update_or_create(
-                payment=self,
-                defaults={'amount_paid': self.portfolio.amount_paid, 'status': 'Partial'}
-            )
+        if self.portfolio:
+            # Update amount_paid in Portfolio
+            total_paid = self.portfolio.payments.aggregate(total=Sum('amount_paid'))['total'] or 0
+            self.portfolio.amount_paid = total_paid
+            self.portfolio.save()
+            
+            # Update PaymentStatus
+            if self.portfolio.amount_paid >= (self.portfolio.project_amount or 0):
+                PaymentStatus.objects.update_or_create(
+                    payment=self,
+                    defaults={'amount_paid': self.portfolio.amount_paid, 'status': 'Fully Paid'}
+                )
+            else:
+                PaymentStatus.objects.update_or_create(
+                    payment=self,
+                    defaults={'amount_paid': self.portfolio.amount_paid, 'status': 'Partial'}
+                )
     
     class Meta:
         verbose_name = "Payment"
@@ -300,3 +307,4 @@ class PaymentStatus(models.Model):
     class Meta:
         verbose_name = "Payment Status"
         verbose_name_plural = "Payment Statuses"
+
