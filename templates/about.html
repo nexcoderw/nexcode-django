@@ -155,14 +155,22 @@
                     <div class="swiper-slide">
                         <div class="item">
                             <div class="img">
-                                <img src="{{ member.image.url }}" alt="">
+                                {% if member.image %}
+                                    <img src="{{ member.image.url }}" alt="{{ member.name }}">
+                                {% else %}
+                                    <img src="{% static 'img/image404.jpg' %}" alt="Dummy Image">
+                                {% endif %}
                                 <div class="social-icons">
-                                    <a href="{{ member.linkedin }}" target="_blank">
-                                        <i class="fa-brands fa-linkedin"></i>
-                                    </a>
-                                    <a href="{{ member.github }}" target="_blank">
-                                        <i class="fa-brands fa-github"></i>
-                                    </a>
+                                    {% if member.linkedin %}
+                                        <a href="{{ member.linkedin }}" target="_blank">
+                                            <i class="fa-brands fa-linkedin"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if member.github %}
+                                        <a href="{{ member.github }}" target="_blank">
+                                            <i class="fa-brands fa-github"></i>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="cont">
