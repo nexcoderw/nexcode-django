@@ -256,3 +256,17 @@ class Payment(models.Model):
     class Meta:
         verbose_name = "Payment"
         verbose_name_plural = "Payments"
+
+class PaymentStatus(models.Model):
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='statuses', null=True, blank=True)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    status = models.CharField(max_length=20, default='Partial', null=True, blank=True)  # e.g., 'Partial', 'Fully Paid'
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.status} for {self.payment}" if self.payment and self.status else "Unnamed Payment Status"
+    # git commit -m "Create PaymentStatus model to track payment statuses"
+    
+    class Meta:
+        verbose_name = "Payment Status"
+        verbose_name_plural = "Payment Status"
