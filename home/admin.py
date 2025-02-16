@@ -30,10 +30,14 @@ class PaymentInline(admin.TabularInline):
     show_change_link = True
 
     def get_queryset(self, request):
-        """Show only payments for portfolios with a 'Partial' payment status."""
         queryset = super().get_queryset(request)
-        if self.instance.payment_status == "Fully Paid":
+        
+        # If we have the parent portfolio instance, check its payment status
+        portfolio_instance = self.parent_model
+        
+        if portfolio_instance and portfolio_instance.payment_status == "Fully Paid":
             queryset = queryset.none()  # Prevent any further payments from being added
+
         return queryset
 
 @admin.register(Portfolio)
@@ -189,43 +193,43 @@ class SettingAdmin(admin.ModelAdmin):
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('portfolio', 'amount_paid', 'payment_date', 'edit_link', 'delete_link')
-    search_fields = ('portfolio__name', 'amount_paid')
-    list_filter = ('payment_date',)
-    ordering = ('-payment_date',)
-    list_per_page = 20
+# @admin.register(Payment)
+# class PaymentAdmin(admin.ModelAdmin):
+#     list_display = ('portfolio', 'amount_paid', 'payment_date', 'edit_link', 'delete_link')
+#     search_fields = ('portfolio__name', 'amount_paid')
+#     list_filter = ('payment_date',)
+#     ordering = ('-payment_date',)
+#     list_per_page = 20
     
-    def edit_link(self, obj):
-        url = reverse("admin:home_payment_change", args=[obj.pk])
-        return format_html('<a class="button" href="{}">Edit</a>', url)
-    edit_link.short_description = "Edit"
+#     def edit_link(self, obj):
+#         url = reverse("admin:home_payment_change", args=[obj.pk])
+#         return format_html('<a class="button" href="{}">Edit</a>', url)
+#     edit_link.short_description = "Edit"
     
-    def delete_link(self, obj):
-        url = reverse("admin:home_payment_delete", args=[obj.pk])
-        return format_html('<a class="button" href="{}">Delete</a>', url)
-    delete_link.short_description = "Delete"
+#     def delete_link(self, obj):
+#         url = reverse("admin:home_payment_delete", args=[obj.pk])
+#         return format_html('<a class="button" href="{}">Delete</a>', url)
+#     delete_link.short_description = "Delete"
 
 
-@admin.register(PaymentStatus)
-class PaymentStatusAdmin(admin.ModelAdmin):
-    list_display = ('payment', 'amount_paid', 'status', 'updated_at', 'edit_link', 'delete_link')
-    search_fields = ('payment__portfolio__name', 'status')
-    list_filter = ('status', 'updated_at')
-    ordering = ('-updated_at',)
-    readonly_fields = ('updated_at',)
-    list_per_page = 20
+# @admin.register(PaymentStatus)
+# class PaymentStatusAdmin(admin.ModelAdmin):
+#     list_display = ('payment', 'amount_paid', 'status', 'updated_at', 'edit_link', 'delete_link')
+#     search_fields = ('payment__portfolio__name', 'status')
+#     list_filter = ('status', 'updated_at')
+#     ordering = ('-updated_at',)
+#     readonly_fields = ('updated_at',)
+#     list_per_page = 20
     
-    def edit_link(self, obj):
-        url = reverse("admin:home_paymentstatus_change", args=[obj.pk])
-        return format_html('<a class="button" href="{}">Edit</a>', url)
-    edit_link.short_description = "Edit"
+#     def edit_link(self, obj):
+#         url = reverse("admin:home_paymentstatus_change", args=[obj.pk])
+#         return format_html('<a class="button" href="{}">Edit</a>', url)
+#     edit_link.short_description = "Edit"
     
-    def delete_link(self, obj):
-        url = reverse("admin:home_paymentstatus_delete", args=[obj.pk])
-        return format_html('<a class="button" href="{}">Delete</a>', url)
-    delete_link.short_description = "Delete"
+#     def delete_link(self, obj):
+#         url = reverse("admin:home_paymentstatus_delete", args=[obj.pk])
+#         return format_html('<a class="button" href="{}">Delete</a>', url)
+#     delete_link.short_description = "Delete"
 
 @admin.register(Testimony)
 class TestimonyAdmin(admin.ModelAdmin):
