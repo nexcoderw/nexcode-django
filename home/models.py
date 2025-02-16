@@ -70,7 +70,6 @@ class Portfolio(models.Model):
         ('Learning Project', 'Learning Project'),
     ]
 
-    # Existing Fields
     name = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     link = models.CharField(max_length=255, null=True, blank=True)
@@ -96,34 +95,39 @@ class Portfolio(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # New Fields
     repo_link = models.URLField(max_length=255, null=True, blank=True)
     figma_link = models.URLField(max_length=255, null=True, blank=True)
     project_category = models.CharField(max_length=255, choices=PROJECT_CATEGORY_CHOICES, null=True, blank=True)
     system_analysis_document = models.FileField(upload_to='portfolio/system_analysis/', null=True, blank=True)
     publish = models.BooleanField(default=False)
     
-    # New Client Information Fields
     client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='portfolios', null=True, blank=True)
-    
-    # New Team Information Field
     team_members = models.ManyToManyField('Team', related_name='portfolios', blank=True)
-    
-    # New Document Field
     contract_document = models.FileField(upload_to='portfolio/contracts/', null=True, blank=True)
     
-    # New Project Timeline Fields
     project_initiation_date = models.DateField(null=True, blank=True)
     deadline_date = models.DateField(null=True, blank=True)
     
-    # New Financial Fields
     project_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    @property
+    def total_amount_paid(self):
+        """Calculate the total amount paid from associated payments."""
+        total_paid = self.payments.aggregate(total=Sum('amount_paid'))['total'] or 0
+        return total_paid
+
+    @property
+    def payment_status(self):
+        """Return the payment status: 'Partial' or 'Fully Paid'."""
+        if self.total_amount_paid >= (self.project_amount or 0):
+            return "Fully Paid"
+        return "Partial"
 
     def _generate_random_number(self, length=7):
         """Generate a random number of specified length."""
         return ''.join(random.choices(string.digits, k=length))
-    
+
     def _generate_unique_slug(self):
         """Generate a unique slug by appending 7 random numbers."""
         base_slug = slugify(self.name)
@@ -133,7 +137,7 @@ class Portfolio(models.Model):
             random_number = self._generate_random_number()
             slug = f"{base_slug}-{random_number}"
         return slug
-    
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self._generate_unique_slug()
