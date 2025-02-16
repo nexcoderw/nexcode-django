@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 def home(request):
-    portfolio = Portfolio.objects.all().order_by('-created_at')[:4]
+    portfolio = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')[:4]
     team = Team.objects.all()[:4]
     settings = Setting.objects.first()
 
@@ -91,7 +91,7 @@ def maintenance(request):
     return render(request, 'services/maintenance.html', context)
 
 def portfolio(request):
-    portfolio = Portfolio.objects.filter(published=True, project_category='Client Project').order_by('-created_at')
+    portfolio = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')
     settings = Setting.objects.first()
 
     context = {
