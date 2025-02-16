@@ -52,7 +52,7 @@ def uiUx(request):
         'settings': settings
     }
 
-    return render(request, 'services/uiUx.html', context)
+    return render(request, 'services/ui-ux.html', context)
 
 def digitalMarketing(request):
     settings = Setting.objects.first()
@@ -61,7 +61,7 @@ def digitalMarketing(request):
         'settings': settings
     }
 
-    return render(request, 'services/digitalMarketing.html', context)
+    return render(request, 'services/digital-marketing.html', context)
 
 def mobileDev(request):
     settings = Setting.objects.first()
@@ -70,7 +70,25 @@ def mobileDev(request):
         'settings': settings
     }
 
-    return render(request, 'services/mobileDev.html', context)
+    return render(request, 'services/mobile-development.html', context)
+
+def networking(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/networking.html', context)
+
+def maintenance(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'services/maintenance.html', context)
 
 def portfolio(request):
     portfolio = Portfolio.objects.all().order_by('-created_at')
