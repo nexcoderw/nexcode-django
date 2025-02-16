@@ -306,11 +306,13 @@ class Payment(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='payments', null=True, blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     payment_date = models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return f"Payment of {self.amount_paid} for {self.portfolio}" if self.portfolio and self.amount_paid else "Unnamed Payment"
-    
+
     def save(self, *args, **kwargs):
+        if self.portfolio:
+            # Check if the payment status is 'Fully Paid' before saving the payment
+            if self.portfolio.payment_status == "Fully Paid":
+                raise ValueError("Cannot record payment when the portfolio is fully paid.")
+        
         super().save(*args, **kwargs)
         
         if self.portfolio:
@@ -318,7 +320,7 @@ class Payment(models.Model):
             total_paid = self.portfolio.payments.aggregate(total=Sum('amount_paid'))['total'] or 0
             self.portfolio.amount_paid = total_paid
             self.portfolio.save()
-            
+
             # Update PaymentStatus
             if self.portfolio.amount_paid >= (self.portfolio.project_amount or 0):
                 PaymentStatus.objects.update_or_create(
@@ -330,7 +332,7 @@ class Payment(models.Model):
                     payment=self,
                     defaults={'amount_paid': self.portfolio.amount_paid, 'status': 'Partial'}
                 )
-    
+
     class Meta:
         verbose_name = "Payment"
         verbose_name_plural = "Payments"
