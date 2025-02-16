@@ -35,7 +35,11 @@
                                 </div>
                             </div>
                             <div class="cont text-center">
-                                <h6>{{ member.name }}</h6>
+                                <h6>
+                                    <a href="{% url 'base:getTeamMember' member.slug %}">
+                                        {{ member.name }}
+                                    </a>
+                                </h6>
                                 <p>{{ member.position }}</p>
                             </div>
                         </div>
