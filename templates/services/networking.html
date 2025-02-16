@@ -1,0 +1,232 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+    <header class="serv-hed2 section-padding pb-0">
+        <div class="container">
+            <div class="caption mb-80">
+                <h1 class="fz-80 fw-600">Networking <br /> Services</h1>
+                <div class="row justify-content-end">
+                    <div class="col-lg-5">
+                        <div class="text mt-30">
+                            <p>
+                                At NEXCODE, we provide top-notch networking solutions designed to optimize your business infrastructure. Our team specializes in building secure, scalable, and reliable networks that ensure seamless communication and data flow across your organization.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="list mt-30">
+                            <ul>
+                                <li>Network Design & Architecture</li>
+                                <li>Network Security & Monitoring</li>
+                                <li>Wi-Fi Solutions & Connectivity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="fit-img radius-15">
+                <img src="{% static 'img/services/networking1.jpg' %}" alt="">
+            </div>
+        </div>
+    </header>
+
+    <section class="serv-details section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content">
+                        <h3>We connect your business with secure and reliable networks</h3>
+                        <div class="text mt-30 mb-30">
+                            <p>
+                                At NEXCODE, we believe that a strong network is the backbone of any modern business. Our expert team works with you to design and implement network infrastructures that support your company's needs, whether you're looking to enhance your internal communication, improve data security, or optimize network performance.
+                            </p>
+                        </div>
+                        <div class="text">
+                            <p>
+                                Our goal is to create a seamless digital environment that empowers your team to work efficiently and securely. By using the latest networking technologies, we ensure your infrastructure is not only robust but also scalable for future growth.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-80">
+                <div class="col-md-6">
+                    <div class="img sm-mb30">
+                        <img src="{% static 'img/services/networking2.jpg' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="img">
+                        <img src="{% static 'img/services/networking3.jpg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-80">
+                <div class="col-lg-7">
+                    <div class="content">
+                        <h3>Our Networking Solutions</h3>
+                        <div class="text mt-30 mb-50">
+                            <p>
+                                We specialize in building robust network infrastructures tailored to your business. Whether it's setting up secure communication channels or optimizing your existing network, our services are designed to provide you with the reliability and performance your business demands.
+                            </p>
+                        </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item active">
+                                <h2 class="accordion-header" id="heading2">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse2"
+                                        aria-expanded="false" aria-controls="collapse2">
+                                        <span>1.</span>Network Design & Architecture
+                                    </button>
+                                </h2>
+                                <div id="collapse2" class="accordion-collapse collapse show"
+                                    aria-labelledby="heading2" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We design and implement network architectures that align with your business objectives, ensuring scalability, security, and reliability across all devices and systems.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading1">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse1" aria-expanded="true"
+                                        aria-controls="collapse1">
+                                        <span>2.</span>Network Security & Monitoring
+                                    </button>
+                                </h2>
+                                <div id="collapse1" class="accordion-collapse collapse"
+                                    aria-labelledby="heading1" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We provide robust security measures to protect your network from cyber threats, along with continuous monitoring to ensure smooth operations and quick issue resolution.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading3">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse3"
+                                        aria-expanded="false" aria-controls="collapse3">
+                                        <span>3.</span>Wi-Fi Solutions & Connectivity
+                                    </button>
+                                </h2>
+                                <div id="collapse3" class="accordion-collapse collapse"
+                                    aria-labelledby="heading3" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We offer Wi-Fi network setup and optimization services that ensure stable and fast internet access for all your employees, no matter the size or complexity of your workspace.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'base:services' %}" class="crv-butn mt-80">
+                                <div class="d-flex">
+                                    <span class="text">View all services</span>
+                                    <span class="icon">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-pg section-padding pt-0">
+        <div class="container">
+            <div class="text-center">
+                <div class="caption mb-100">
+                    <h1>Pricing</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Basic pack</h6>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Ideal for small businesses requiring essential network solutions.</li>
+                                <li>Basic network design and setup.</li>
+                                <li>Limited security features and monitoring.</li>
+                                <li>1 round of revisions and improvements after implementation.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Standard pack</h6>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Comprehensive network solutions for growing businesses.</li>
+                                <li>Advanced network design and setup with scalability.</li>
+                                <li>Enhanced security and continuous network monitoring.</li>
+                                <li>2 rounds of revisions after implementation.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Premium pack</h6>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Complete networking solutions with full customization.</li>
+                                <li>Optimized network setup and high-level security features.</li>
+                                <li>24/7 monitoring, support, and network performance management.</li>
+                                <li>Unlimited revisions and enhancements after implementation.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
