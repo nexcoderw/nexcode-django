@@ -104,10 +104,12 @@ def portfolio(request):
 def workDetails(request, slug):
     work = get_object_or_404(Portfolio, slug=slug)
     settings = Setting.objects.first()
+    recentWork = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')[:3]
 
     context = {
         'work': work,
-        'settings': settings
+        'settings': settings,
+        'recentWork': recentWork
     }
 
     return render(request, 'work/show.html', context)

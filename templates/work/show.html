@@ -197,7 +197,11 @@
                         <div class="widget tags">
                             <h6 class="title-widget">Tags</h6>
                             <div>
-                                <a href="#">Creative</a>
+                                {% for tag in work.tags.all %}
+                                    <a href="#">
+                                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                    </a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
