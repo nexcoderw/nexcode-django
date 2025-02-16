@@ -1,0 +1,50 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/personal.css' %}">
+{% endblock %}
+{% block content %}
+
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+            <main>
+                <header class="header-personal">
+                    <div class="container ontop">
+                        <div class="caption text-center">
+                            <h1>
+                                {{ member.name }}
+                            </h1>
+                        </div>
+                        <div class="caption str text-center">
+                            <h1><span class="stroke">
+                                {{ member.name }}
+                            </span></h1>
+                        </div>
+                        <div class="img">
+                            <img src="{{ member.image_png.url }}" alt="">
+                        </div>
+                        <div class="row justify-content-center text">
+                            <div class="col-lg-7 col-md-10">
+                                <div class="text-center">
+                                    <p>
+                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias accusantium sunt fugiat consequuntur molestias libero, distinctio, consequatur, vel suscipit harum officiis. Quas cumque dolorum odio ipsa et porro amet perferendis?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        window.ga = window.ga || function() {
+            (ga.q = ga.q || []).push(arguments)
+        };
+        ga.l = +new Date;
+        ga('create', 'UA-105392568-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+{% endblock %}
