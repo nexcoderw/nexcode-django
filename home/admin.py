@@ -229,7 +229,7 @@ class PaymentStatusAdmin(admin.ModelAdmin):
 
 @admin.register(Testimony)
 class TestimonyAdmin(admin.ModelAdmin):
-    list_display = ('client', 'message', 'created_at', 'updated_at', 'edit_link', 'delete_link')
+    list_display = ('client', 'message', 'edit_link', 'delete_link')
     search_fields = ('client__name', 'message')
     list_filter = ('created_at',)
     readonly_fields = ('created_at', 'updated_at')
