@@ -76,7 +76,7 @@ class PortfolioAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'position', 'linked_social_profiles', 'edit_link', 'delete_link')
+    list_display = ('name', 'position', 'slug', 'linked_social_profiles', 'edit_link', 'delete_link')
     search_fields = ('name', 'position', 'linkedin', 'github')
     list_filter = ('created_at', 'updated_at')
     list_per_page = 20
