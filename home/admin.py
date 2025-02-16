@@ -5,7 +5,23 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django.utils.html import format_html
 from django.urls import reverse
 
-# Inline for Payments in Portfolio Admin
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone_number', 'edit_link', 'delete_link')
+    search_fields = ('name', 'email', 'phone_number')
+    list_filter = ('created_at', 'updated_at')
+    list_per_page = 20
+
+    def edit_link(self, obj):
+        url = reverse("admin:home_client_change", args=[obj.pk])
+        return format_html('<a class="button" href="{}">Edit</a>', url)
+    edit_link.short_description = "Edit"
+    
+    def delete_link(self, obj):
+        url = reverse("admin:home_client_delete", args=[obj.pk])
+        return format_html('<a class="button" href="{}">Delete</a>', url)
+    delete_link.short_description = "Delete"
+
 class PaymentInline(admin.TabularInline):
     model = Payment
     extra = 1
@@ -13,7 +29,6 @@ class PaymentInline(admin.TabularInline):
     fields = ('amount_paid', 'payment_date')
     show_change_link = True
 
-# Inline for PaymentStatus in Payment Admin
 class PaymentStatusInline(admin.TabularInline):
     model = PaymentStatus
     extra = 0
@@ -22,7 +37,7 @@ class PaymentStatusInline(admin.TabularInline):
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'client_info', 'project_amount', 'amount_paid', 'created_at', 'updated_at', 'display_tags', 'edit_link', 'delete_link')
+    list_display = ('name', 'category', 'client_info', 'project_amount', 'amount_paid', 'display_tags', 'edit_link', 'delete_link')
     search_fields = ('name', 'description', 'client_name', 'client_email', 'client_phone_number')
     list_filter = ('category', 'created_at', 'tags')
     ordering = ('-created_at',)
@@ -51,7 +66,7 @@ class PortfolioAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'position', 'linked_social_profiles', 'created_at', 'updated_at', 'edit_link', 'delete_link')
+    list_display = ('name', 'position', 'linked_social_profiles', 'edit_link', 'delete_link')
     search_fields = ('name', 'position', 'linkedin', 'github')
     list_filter = ('created_at', 'updated_at')
     list_per_page = 20
