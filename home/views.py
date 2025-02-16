@@ -127,7 +127,7 @@ def getTeamMember(request, slug):
     member = get_object_or_404(Team, slug=slug)
     settings = Setting.objects.first()
     
-    portfolios = Portfolio.objects.filter(team_members=member)
+    portfolios = Portfolio.objects.filter(team_members=member).order_by('-created_at')
 
     context = {
         'member': member,

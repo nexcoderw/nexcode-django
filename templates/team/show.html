@@ -55,7 +55,7 @@
                             <h2>Our Work <br>
                                 & Case Studies</h2>
                             <a href="#0" class="butn-under mt-15">View All Works <span class="icon invert">
-                                    <img src="../common/imgs/icons/arrow-top-right.svg" alt="">
+                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
                                 </span></a>
                         </div>
                     </div>
@@ -68,20 +68,49 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="item md-mb50">
-                        <div class="img fit-img">
-                            <img src="assets/imgs/works/1.webp" alt="">
-                        </div>
-                        <div class="cont mt-30">
-                            <div class="info">
-                                <span class="date">2023</span>
-                                <span class="tag">UI/UX Design</span>
+                {% for portfolio in portfolios %}
+                    <div class="col-lg-4 mb-4">
+                        <div class="item md-mb50">
+                            <div class="img fit-img">
+                                {% if portfolio.image %}
+                                    <img src="{{ portfolio.image.url }}" alt="">
+                                {% else %}
+                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ portfolio.name }}">
+                                {% endif %}
                             </div>
-                            <h5>Custom Production</h5>
+                            <div class="cont mt-30">
+                                <div class="info">
+                                    <span class="date">{{ portfolio.created_at.year }}</span>
+                                    <span class="tag">{{ portfolio.category }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <h5 style="font-size: 20px;">
+                                        {{ portfolio.name|truncatechars:20 }}.
+                                    </h5>
+                                    {% if portfolio.link %}
+                                        <a href="{{ portfolio.link }}" target="_blank" class="crv-butn">
+                                            <div class="d-flex">
+                                                <span class="text">Visit Them</span>
+                                                <span class="icon">
+                                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                                </span>
+                                            </div>
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ portfolio.repo_link }}" target="_blank" class="crv-butn">
+                                            <div class="d-flex">
+                                                <span class="text">Github Repo</span>
+                                                <span class="icon">
+                                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                                </span>
+                                            </div>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
@@ -104,7 +133,7 @@
                                 <h2>How we take your <br>
                                     business to the next level</h2>
                                 <a href="#0" class="butn-under mt-15">View All Works <span class="icon">
-                                        <img src="../common/imgs/icons/arrow-top-right.svg" alt="">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
                                     </span></a>
                             </div>
                         </div>
