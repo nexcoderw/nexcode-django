@@ -161,7 +161,7 @@ class Portfolio(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
-    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     position = models.CharField(max_length=255, null=True, blank=True)
     image = ProcessedImageField(
         upload_to=team_image_path,
@@ -190,9 +190,14 @@ class Team(models.Model):
         return slug
     
     def save(self, *args, **kwargs):
-        # Generate slug if it doesn't exist or if name is updated
-        if not self.slug or self.name:
+        # Only update slug if name has changed
+        if self.pk:  # Check if the instance already exists
+            original = Team.objects.get(pk=self.pk)
+            if self.name != original.name:
+                self.slug = self._generate_unique_slug()  # Update slug only if name is changed
+        elif not self.slug:  # For new objects, generate a slug
             self.slug = self._generate_unique_slug()
+        
         super().save(*args, **kwargs)
     
     def __str__(self):
