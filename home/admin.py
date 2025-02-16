@@ -22,7 +22,6 @@ class ClientAdmin(admin.ModelAdmin):
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
-# Inline for Payments in Portfolio Admin
 class PaymentInline(admin.TabularInline):
     model = Payment
     extra = 1
@@ -30,16 +29,16 @@ class PaymentInline(admin.TabularInline):
     fields = ('amount_paid', 'payment_date')
     show_change_link = True
 
-# Inline for PaymentStatus in Payment Admin
-class PaymentStatusInline(admin.TabularInline):
-    model = PaymentStatus
-    extra = 0
-    readonly_fields = ('amount_paid', 'status', 'updated_at')
-    fields = ('amount_paid', 'status', 'updated_at')
+    def get_queryset(self, request):
+        """Show only payments for portfolios with a 'Partial' payment status."""
+        queryset = super().get_queryset(request)
+        if self.instance.payment_status == "Fully Paid":
+            queryset = queryset.none()  # Prevent any further payments from being added
+        return queryset
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'client_info', 'project_category', 'publish', 'project_amount', 'amount_paid', 'edit_link', 'delete_link')
+    list_display = ('name', 'category', 'client_info', 'project_category', 'publish', 'total_amount_paid', 'payment_status', 'edit_link', 'delete_link')
     search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number')
     list_filter = ('category', 'created_at', 'tags', 'project_category', 'publish')
     ordering = ('-created_at',)
@@ -50,13 +49,16 @@ class PortfolioAdmin(admin.ModelAdmin):
         return f"{obj.client.name if obj.client else '-'} | {obj.client.phone_number if obj.client else '-'}"
     client_info.short_description = 'Client Information'
 
-    def display_tags(self, obj):
-        return ", ".join(tag.name for tag in obj.tags.all())
-    display_tags.short_description = 'Tags'
+    def total_amount_paid(self, obj):
+        return f"{obj.total_amount_paid:.2f}"
+    total_amount_paid.short_description = 'Amount Paid'
 
-    def project_category(self, obj):
-        return obj.get_project_category_display() if obj.project_category else '-'
-    project_category.short_description = 'Project Category'
+    def payment_status(self, obj):
+        """Display payment status with visual cues."""
+        if obj.payment_status == "Fully Paid":
+            return format_html('<span style="color: green; font-weight: bold;">{}</span>', obj.payment_status)
+        return format_html('<span style="color: red; font-weight: bold;">{}</span>', obj.payment_status)
+    payment_status.short_description = 'Payment Status'
 
     def edit_link(self, obj):
         url = reverse("admin:home_portfolio_change", args=[obj.pk])
@@ -67,8 +69,6 @@ class PortfolioAdmin(admin.ModelAdmin):
         url = reverse("admin:home_portfolio_delete", args=[obj.pk])
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
-    
-    readonly_fields = ('created_at', 'updated_at')
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
@@ -195,7 +195,6 @@ class PaymentAdmin(admin.ModelAdmin):
     search_fields = ('portfolio__name', 'amount_paid')
     list_filter = ('payment_date',)
     ordering = ('-payment_date',)
-    inlines = [PaymentStatusInline]
     list_per_page = 20
     
     def edit_link(self, obj):
@@ -207,6 +206,7 @@ class PaymentAdmin(admin.ModelAdmin):
         url = reverse("admin:home_payment_delete", args=[obj.pk])
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
+
 
 @admin.register(PaymentStatus)
 class PaymentStatusAdmin(admin.ModelAdmin):
