@@ -43,7 +43,7 @@ def softwareDev(request):
         'settings': settings
     }
 
-    return render(request, 'services/softwareDev.html', context)
+    return render(request, 'services/software-development.html', context)
 
 def uiUx(request):
     settings = Setting.objects.first()
