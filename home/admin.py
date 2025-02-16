@@ -39,9 +39,9 @@ class PaymentStatusInline(admin.TabularInline):
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'client_info', 'project_amount', 'amount_paid', 'display_tags', 'edit_link', 'delete_link')
-    search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number')
-    list_filter = ('category', 'created_at', 'tags')
+    list_display = ('name', 'category', 'client_info', 'project_category', 'repo_link', 'figma_link', 'publish', 'project_amount', 'amount_paid', 'display_tags', 'edit_link', 'delete_link')
+    search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number', 'repo_link', 'figma_link')
+    list_filter = ('category', 'created_at', 'tags', 'project_category', 'publish')
     ordering = ('-created_at',)
     inlines = [PaymentInline]
     list_per_page = 20
@@ -49,11 +49,15 @@ class PortfolioAdmin(admin.ModelAdmin):
     def client_info(self, obj):
         return f"{obj.client.name if obj.client else '-'} | {obj.client.phone_number if obj.client else '-'}"
     client_info.short_description = 'Client Information'
-    
+
     def display_tags(self, obj):
         return ", ".join(tag.name for tag in obj.tags.all())
     display_tags.short_description = 'Tags'
-    
+
+    def project_category(self, obj):
+        return obj.get_project_category_display() if obj.project_category else '-'
+    project_category.short_description = 'Project Category'
+
     def edit_link(self, obj):
         url = reverse("admin:home_portfolio_change", args=[obj.pk])
         return format_html('<a class="button" href="{}">Edit</a>', url)
