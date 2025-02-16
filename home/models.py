@@ -21,6 +21,11 @@ def team_image_path(instance, filename):
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     return f'team/member_{slugify(instance.name)}_{timestamp}{file_extension}'
 
+def team_png_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f'team/member_png_{slugify(instance.name)}_{timestamp}.png'
+
 def logo_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
@@ -156,6 +161,7 @@ class Portfolio(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     position = models.CharField(max_length=255, null=True, blank=True)
     image = ProcessedImageField(
         upload_to=team_image_path,
@@ -165,12 +171,28 @@ class Team(models.Model):
         null=True,
         blank=True,
     )
+    image_png = models.ImageField(
+        upload_to=team_png_image_path,
+        null=True,
+        blank=True,
+    )  # New PNG image field
     linkedin = models.URLField(null=True, blank=True)
     github = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    def _generate_unique_slug(self):
+        """Generate a unique slug based on the name."""
+        base_slug = slugify(self.name)
+        slug = base_slug
+        while Team.objects.filter(slug=slug).exists():
+            slug = f"{base_slug}-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+        return slug
+    
     def save(self, *args, **kwargs):
+        # Generate slug if it doesn't exist or if name is updated
+        if not self.slug or self.name:
+            self.slug = self._generate_unique_slug()
         super().save(*args, **kwargs)
     
     def __str__(self):
