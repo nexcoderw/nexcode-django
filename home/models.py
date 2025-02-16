@@ -92,10 +92,8 @@ class Portfolio(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     # New Client Information Fields
-    client_name = models.CharField(max_length=255, null=True, blank=True)
-    client_email = models.EmailField(null=True, blank=True)
-    client_phone_number = models.CharField(max_length=20, null=True, blank=True)
-    
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='portfolios', null=True, blank=True)
+
     # New Team Information Field
     team_members = models.ManyToManyField('Team', related_name='portfolios', blank=True)
     
