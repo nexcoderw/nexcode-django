@@ -64,7 +64,12 @@ class Portfolio(models.Model):
         ('UI/UX', 'UI/UX'),
         ('Mobile App', 'Mobile App'),
     ]
-    
+    PROJECT_CATEGORY_CHOICES = [
+        ('Student Project', 'Student Project'),
+        ('Client Project', 'Client Project'),
+        ('Learning Project', 'Learning Project'),
+    ]
+
     # Existing Fields
     name = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
@@ -91,9 +96,16 @@ class Portfolio(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    # New Fields
+    repo_link = models.URLField(max_length=255, null=True, blank=True)
+    figma_link = models.URLField(max_length=255, null=True, blank=True)
+    project_category = models.CharField(max_length=255, choices=PROJECT_CATEGORY_CHOICES, null=True, blank=True)
+    system_analysis_document = models.FileField(upload_to='portfolio/system_analysis/', null=True, blank=True)
+    publish = models.BooleanField(default=False)
+    
     # New Client Information Fields
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='portfolios', null=True, blank=True)
-
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='portfolios', null=True, blank=True)
+    
     # New Team Information Field
     team_members = models.ManyToManyField('Team', related_name='portfolios', blank=True)
     
@@ -107,7 +119,7 @@ class Portfolio(models.Model):
     # New Financial Fields
     project_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    
+
     def _generate_random_number(self, length=7):
         """Generate a random number of specified length."""
         return ''.join(random.choices(string.digits, k=length))
