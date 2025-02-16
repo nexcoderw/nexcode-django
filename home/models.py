@@ -2,13 +2,14 @@ import os
 import random
 import string
 from django.db import models
+from django.db.models import Sum
+from django.utils import timezone
 from django.utils.text import slugify
-from django.contrib.auth.models import User  # Assuming you're using Django's built-in User model
+from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
-from django.utils import timezone
-from django.db.models import Sum
+from django.core.exceptions import ValidationError
 
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
@@ -311,7 +312,8 @@ class Payment(models.Model):
         if self.portfolio:
             # Check if the payment status is 'Fully Paid' before saving the payment
             if self.portfolio.payment_status == "Fully Paid":
-                raise ValueError("Cannot record payment when the portfolio is fully paid.")
+                # Instead of raising an error, raise a ValidationError to provide a user-friendly message
+                raise ValidationError("Cannot record payment because the portfolio is already fully paid.")
         
         super().save(*args, **kwargs)
         
