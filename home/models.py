@@ -31,6 +31,32 @@ def blog_image_path(instance, filename):
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     return f'blog/{slugify(instance.title)}_{timestamp}{file_extension}'
 
+def client_image_path(instance, filename):
+    base_filename, file_extension = os.path.splitext(filename)
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f'clients/{slugify(instance.name)}_{timestamp}{file_extension}'
+
+class Client(models.Model):
+    name = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    image = ProcessedImageField(
+        upload_to=client_image_path,
+        processors=[ResizeToFill(300, 300)],
+        format='JPEG',
+        options={'quality': 90},
+        null=True,
+        blank=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name if self.name else "Unnamed Client"
+    
+    class Meta:
+        verbose_name_plural = "Clients"
+
 class Portfolio(models.Model):
     CATEGORY_CHOICES = [
         ('Web App', 'Web App'),
