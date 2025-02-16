@@ -226,3 +226,21 @@ class PaymentStatusAdmin(admin.ModelAdmin):
         url = reverse("admin:home_paymentstatus_delete", args=[obj.pk])
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
+
+@admin.register(Testimony)
+class TestimonyAdmin(admin.ModelAdmin):
+    list_display = ('client', 'message', 'created_at', 'updated_at', 'edit_link', 'delete_link')
+    search_fields = ('client__name', 'message')
+    list_filter = ('created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+    list_per_page = 20
+
+    def edit_link(self, obj):
+        url = reverse("admin:home_testimony_change", args=[obj.pk])
+        return format_html('<a class="button" href="{}">Edit</a>', url)
+    edit_link.short_description = "Edit"
+    
+    def delete_link(self, obj):
+        url = reverse("admin:home_testimony_delete", args=[obj.pk])
+        return format_html('<a class="button" href="{}">Delete</a>', url)
+    delete_link.short_description = "Delete"
