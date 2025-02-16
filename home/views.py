@@ -104,7 +104,8 @@ def portfolio(request):
 def workDetails(request, slug):
     work = get_object_or_404(Portfolio, slug=slug)
     settings = Setting.objects.first()
-    recentWork = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')[:3]
+    recentWork = Portfolio.objects.all().order_by('-created_at')[:3]
+    # recentWork = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')[:3]
 
     context = {
         'work': work,

@@ -19,14 +19,25 @@
                     <div class="col-lg-4">
                         <div class="list mt-30">
                             <ul>
-                                <a href="{{ work.link }}" target="_blank" class="crv-butn mt-80">
-                                    <div class="d-flex">
-                                        <span class="text">Visit {{ work.name }}</span>
-                                        <span class="icon">
-                                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
-                                        </span>
-                                    </div>
-                                </a>
+                                {% if work.link %}
+                                    <a href="{{ work.link }}" target="_blank" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">Visit {{ work.name }}</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ work.repo_link }}" target="_blank" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">Repository</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
@@ -72,8 +83,11 @@
                                             <span>Tags :</span>
                                         </div>
                                         <div>
-                                            <a href="blog-classic.html">Tech</a>
-                                            <a href="blog-classic.html">Ui-ThemeZ</a>
+                                            {% for tag in work.tags.all %}
+                                                <a href="#">
+                                                    {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                                </a>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -83,30 +97,36 @@
                                             <span>Share :</span>
                                         </div>
                                         <div>
-                                            <a href="https://www.facebook.com/"><i
-                                                    class="fab fa-facebook-f"></i></a>
-                                            <a href="https://www.twitter.com/"><i
-                                                    class="fab fa-twitter"></i></a>
-                                            <a href="https://www.youtube.com/"><i
-                                                    class="fab fa-youtube"></i></a>
+                                            <a href="https://www.facebook.com/">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            <a href="https://www.twitter.com/">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                            <a href="https://www.youtube.com/">
+                                                <i class="fab fa-youtube"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="author-area mt-50 bord-thin-bottom">
+                                <h5 class="mb-4" style="font-size: 18px;">Client</h5>
                                 <div class="flex">
                                     <div class="author-img mr-30">
                                         <div class="img">
-                                            <img src="assets/imgs/blogs/post/a1.jpg" alt="" class="circle-img">
+                                            {% if work.client.image %}
+                                                <img src="{{ work.client.image.url }}" alt="" class="circle-img">
+                                            {% else %}
+                                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="cont valign">
                                         <div class="full-width">
-                                            <h6 class="fw-600 mb-10">Chris Smith</h6>
-                                            <p>Nulla eleifend, lectus eu gravida facilisis, ipsum metus
-                                                faucibus
-                                                eros,
-                                                vitae vulputate nibh libero ac metus.</p>
+                                            <h6 class="fw-600 mb-10">
+                                                {{ work.client.name }}
+                                            </h6>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +136,7 @@
                             <div class="mb-60">
                                 <h3>Leave a comment</h3>
                             </div>
-                            <form id="contact-form" method="post" action="contact.php">
+                            <form id="contact-form" method="post">
         
                                 <div class="messages"></div>
         
@@ -173,36 +193,38 @@
                         </div>
                         <div class="widget last-post-thum">
                             <h6 class="title-widget">Latest Project</h6>
-                            <div class="item d-flex align-items-center">
-                                <div>
-                                    <div class="img">
-                                        <a href="#">
-                                            <img src="assets/imgs/blogs/blog1/4.jpg" alt="">
-                                            <span class="date">
-                                                <span>14 / <br> sep</span>
-                                            </span>
-                                        </a>
+                            {% for work in recentWork %}
+                                <div class="item d-flex align-items-center">
+                                    <div>
+                                        <div class="img">
+                                            <a href="{% if work.image %} {{ work.link }} {% else %} {{ work.repo_link }} {% endif %}" target="_blank">
+                                                {% if work.image %}
+                                                    <img src="{{ work.image.url }}" alt="">
+                                                {% else %}
+                                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                                {% endif %}
+                                                <span class="date">
+                                                    <span class="icon">
+                                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="" style="color: white;">
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="cont">
+                                        <span class="tag">
+                                            <a href="{% url 'base:workDetails' work.slug %}">
+                                                {{ work.category }}
+                                            </a>
+                                        </span>
+                                        <h6>
+                                            <a href="{% url 'base:workDetails' work.slug %}">
+                                                {{ work.name }}
+                                            </a>
+                                        </h6>
                                     </div>
                                 </div>
-                                <div class="cont">
-                                    <span class="tag"><a href="#">Web Design</a></span>
-                                    <h6>
-                                        <a href="#">
-                                        ways to quickly increase traffic to your website
-                                    </a>
-                                </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="widget tags">
-                            <h6 class="title-widget">Tags</h6>
-                            <div>
-                                {% for tag in work.tags.all %}
-                                    <a href="#">
-                                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
-                                    </a>
-                                {% endfor %}
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -247,9 +269,10 @@
                                 </div>
                             </div>
                             <div class="date ml-auto">
-                                <span class="sub-color"><i
-                                        class="fa-regular fa-clock mr-15 opacity-7"></i> 12 hours
-                                    ago</span>
+                                <span class="sub-color">
+                                    <i class="fa-regular fa-clock mr-15 opacity-7"></i> 
+                                    12 hours ago
+                                </span>
                             </div>
                         </div>
                         <div class="img fit-img mt-30">
