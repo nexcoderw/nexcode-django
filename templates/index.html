@@ -252,7 +252,7 @@
                             <div class="cont d-flex align-items-center">
                                 <div>
                                     <h5 style="font-size: 24px;">
-                                        {{ work.name }}.
+                                        {{ work.name|truncatechars:27 }}.
                                     </h5>
                                     <span>
                                         {% for tag in work.tags.all %}
@@ -267,7 +267,11 @@
                                 </div>
                             </div>
                             <div class="img">
-                                <img src="{{ work.image.url }}" alt="">
+                                {% if work.image %}
+                                    <img src="{{ work.image.url }}" alt="">
+                                {% else %}
+                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                {% endif %}
                             </div>
                         </div>
                     </div>
