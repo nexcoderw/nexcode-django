@@ -39,8 +39,8 @@ class PaymentStatusInline(admin.TabularInline):
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'client_info', 'project_category', 'repo_link', 'figma_link', 'publish', 'project_amount', 'amount_paid', 'display_tags', 'edit_link', 'delete_link')
-    search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number', 'repo_link', 'figma_link')
+    list_display = ('name', 'category', 'client_info', 'project_category', 'publish', 'project_amount', 'amount_paid', 'edit_link', 'delete_link')
+    search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number')
     list_filter = ('category', 'created_at', 'tags', 'project_category', 'publish')
     ordering = ('-created_at',)
     inlines = [PaymentInline]

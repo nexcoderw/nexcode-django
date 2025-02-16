@@ -344,3 +344,14 @@ class PaymentStatus(models.Model):
         verbose_name = "Payment Status"
         verbose_name_plural = "Payment Statuses"
 
+class Testimony(models.Model):
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='testimonies')
+    message = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Testimony from {self.client.name}" if self.client else "Unnamed Testimony"
+    
+    class Meta:
+        verbose_name_plural = "Testimonies"
