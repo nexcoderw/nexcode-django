@@ -47,7 +47,7 @@
     <section class="serv-details section-padding">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-7">
+                <div class="col-lg-8">
                     <div class="content">
                         <h3>
                             About the project
@@ -57,21 +57,119 @@
                                 {{ work.description }}
                             </p>
                         </div>
+                        <div class="img sm-mb30">
+                            {% if work.image %}
+                                <img src="{{ work.image.url }}" alt="">
+                            {% else %}
+                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-80">
-                <div class="col-md-12">
-                    <div class="img sm-mb30">
-                        {% if work.image %}
-                            <img src="{{ work.image.url }}" alt="">
-                        {% else %}
-                            <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
-                        {% endif %}
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <div class="search-box">
+                            <input type="text" name="search-post" placeholder="Search">
+                            <span class="icon pe-7s-search"></span>
+                        </div>
+                        <div class="widget catogry">
+                            <h6 class="title-widget">Categories</h6>
+                            <ul class="rest">
+                                <li>
+                                    <span><a href="#">Business</a></span>
+                                    <span class="ml-auto">33</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="widget last-post-thum">
+                            <h6 class="title-widget">Latest Project</h6>
+                            <div class="item d-flex align-items-center">
+                                <div>
+                                    <div class="img">
+                                        <a href="#">
+                                            <img src="assets/imgs/blogs/blog1/4.jpg" alt="">
+                                            <span class="date">
+                                                <span>14 / <br> sep</span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="cont">
+                                    <span class="tag"><a href="#">Web Design</a></span>
+                                    <h6>
+                                        <a href="#">
+                                        ways to quickly increase traffic to your website
+                                    </a>
+                                </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget tags">
+                            <h6 class="title-widget">Tags</h6>
+                            <div>
+                                <a href="#">Creative</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <div class="blog-mp">
+        <div class="container section-padding bord-thin-top-light">
+            <div class="sec-head mb-80">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h2>Recent Projects</h2>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="d-flex">
+                            <a href="{% url 'base:portfolio' %}" class="butn butn-md butn-bord butn-rounded ml-auto">
+                                <div class="d-flex align-items-center">
+                                    <span>All Projects</span>
+                                    <span class="icon ml-20">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row xlg-marg">
+                <div class="col-lg-4 bord">
+                    <div class="item">
+                        <div class="info d-flex align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="author-img fit-img">
+                                        <img src="http://127.0.0.1:8000/media/portfolio/work_anak-prudent_20250131164149.jpg" alt="">
+                                    </div>
+                                </div>
+                                <div class="author-info ml-10">
+                                    <span>M Moussa</span>
+                                    <span class="sub-color">editor</span>
+                                </div>
+                            </div>
+                            <div class="date ml-auto">
+                                <span class="sub-color"><i
+                                        class="fa-regular fa-clock mr-15 opacity-7"></i> 12 hours
+                                    ago</span>
+                            </div>
+                        </div>
+                        <div class="img fit-img mt-30">
+                            <img src="http://127.0.0.1:8000/media/portfolio/work_anak-prudent_20250131164149.jpg" alt="">
+                        </div>
+                        <div class="cont mt-30">
+                            <h6>
+                                <a href="#0">We’re winner SOTY at CSS Award 2023</a>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
