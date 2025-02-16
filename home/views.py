@@ -126,10 +126,13 @@ def team(request):
 def getTeamMember(request, slug):
     member = get_object_or_404(Team, slug=slug)
     settings = Setting.objects.first()
+    
+    portfolios = Portfolio.objects.filter(team_members=member)
 
     context = {
         'member': member,
-        'settings': settings
+        'settings': settings,
+        'portfolios': portfolios,  # Send portfolios to the template
     }
 
     return render(request, 'team/show.html', context)
