@@ -21,6 +21,7 @@ urlpatterns = [
     path('work/<slug>', workDetails, name="workDetails"),
 
     path('team/', team, name="team"),
+    path('<slug>/', getTeamMember, name="getTeamMember"),
 
     path('blogs/', blogs, name="blogs"),
     path('blog/<slug>/', getBlogDetails, name="getBlogDetails"),

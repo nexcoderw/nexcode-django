@@ -121,7 +121,18 @@ def team(request):
         'settings': settings
     }
 
-    return render(request, 'team.html', context)
+    return render(request, 'team/index.html', context)
+
+def getTeamMember(request, slug):
+    member = get_object_or_404(Team, slug=slug)
+    settings = Setting.objects.first()
+
+    context = {
+        'member': member,
+        'settings': settings
+    }
+
+    return render(request, 'team/show.html', context)
 
 def blogs(request):
     blogs = Blog.objects.all().order_by('-created_at')
