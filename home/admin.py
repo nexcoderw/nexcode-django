@@ -22,6 +22,7 @@ class ClientAdmin(admin.ModelAdmin):
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
 
+# Inline for Payments in Portfolio Admin
 class PaymentInline(admin.TabularInline):
     model = Payment
     extra = 1
@@ -29,6 +30,7 @@ class PaymentInline(admin.TabularInline):
     fields = ('amount_paid', 'payment_date')
     show_change_link = True
 
+# Inline for PaymentStatus in Payment Admin
 class PaymentStatusInline(admin.TabularInline):
     model = PaymentStatus
     extra = 0
@@ -38,14 +40,14 @@ class PaymentStatusInline(admin.TabularInline):
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'client_info', 'project_amount', 'amount_paid', 'display_tags', 'edit_link', 'delete_link')
-    search_fields = ('name', 'description', 'client_name', 'client_email', 'client_phone_number')
+    search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number')
     list_filter = ('category', 'created_at', 'tags')
     ordering = ('-created_at',)
     inlines = [PaymentInline]
-    list_per_page = 20  # Adjust as needed
+    list_per_page = 20
     
     def client_info(self, obj):
-        return f"{obj.client_name or '-'} | {obj.client_email or '-'} | {obj.client_phone_number or '-'}"
+        return f"{obj.client.name if obj.client else '-'} | {obj.client.phone_number if obj.client else '-'}"
     client_info.short_description = 'Client Information'
     
     def display_tags(self, obj):
