@@ -161,7 +161,7 @@ class Portfolio(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True)
     position = models.CharField(max_length=255, null=True, blank=True)
     image = ProcessedImageField(
         upload_to=team_image_path,
@@ -380,8 +380,8 @@ class PaymentStatus(models.Model):
         verbose_name_plural = "Payment Statuses"
 
 class Testimony(models.Model):
-    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='testimonies')
-    message = models.TextField(null=True, blank=True)
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='testimonies', null=True, blank=True)
+    message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
