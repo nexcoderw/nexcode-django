@@ -1,5 +1,6 @@
 from home.forms import *
 from home.models import *
+from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -184,13 +185,16 @@ def addTestimony(request):
             image = form.cleaned_data.get('image')
             message_text = form.cleaned_data.get('message')
             
-            # Create a new Client record
-            client = Client.objects.create(
-                name=name,
-                email=email,
-                phone_number=phone_number,
-                image=image
-            )
+            # Check if a client with the provided email or phone number exists
+            client = Client.objects.filter(Q(email=email) | Q(phone_number=phone_number)).first()
+            if not client:
+                # Create a new Client record if not found
+                client = Client.objects.create(
+                    name=name,
+                    email=email,
+                    phone_number=phone_number,
+                    image=image
+                )
             
             # Create a new Testimony record linked to the client
             Testimony.objects.create(
