@@ -173,7 +173,43 @@ def getBlogDetails(request, slug):
     return render(request, 'blogs/show.html', context)
 
 def addTestimony(request):
-    return render(request, 'testimony.html')
+    settings = Setting.objects.first()
+    if request.method == 'POST':
+        form = TestimonyForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Extract cleaned form data
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            phone_number = form.cleaned_data.get('phone_number')
+            image = form.cleaned_data.get('image')
+            message_text = form.cleaned_data.get('message')
+            
+            # Create a new Client record
+            client = Client.objects.create(
+                name=name,
+                email=email,
+                phone_number=phone_number,
+                image=image
+            )
+            
+            # Create a new Testimony record linked to the client
+            Testimony.objects.create(
+                client=client,
+                message=message_text
+            )
+            
+            messages.success(request, "Your testimony has been submitted successfully!")
+            return redirect('base:addTestimony')
+        else:
+            messages.error(request, "There was an error submitting your testimony. Please check the form and try again.")
+    else:
+        form = TestimonyForm()
+        
+    context = {
+        'form': form,
+        'settings': settings
+    }
+    return render(request, 'testimony.html', context)
 
 def contact(request):
     if request.method == 'POST':
