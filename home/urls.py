@@ -26,5 +26,7 @@ urlpatterns = [
     path('blogs/', blogs, name="blogs"),
     path('blog/<slug>/', getBlogDetails, name="getBlogDetails"),
 
+    path('testimony/', addTestimony, name="addTestimony"),
+
     path('contact/', contact, name="contact"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
