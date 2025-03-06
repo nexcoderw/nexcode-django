@@ -2,50 +2,62 @@
 {% load static %}
 {% block content %}
 
-    <header class="header-pg">
-        <div class="container">
-            <div class="text-center">
-                <div class="caption mb-100">
-                    <h1>Get In Touch</h1>
-                    <h6>( <a href="#0">Home</a> - <span>Contact</span> )</h6>
-                </div>
+<header class="header-pg">
+    <div class="container">
+        <div class="text-center">
+            <div class="caption mb-100">
+                <h1>Share Your Testimony</h1>
+                <h6>( <a href="{% url 'base:home' %}">Home</a> - <span>Testimony</span> )</h6>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <section class="contact-pg section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 offset-lg-1 valign">
-                    <div class="full-width">
-                        <div class="sec-head mb-50">
-                            <h6 class="sub-head">Send a <span class="fw-200">message</span></h6>
-                        </div>
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="messages"></div>
-                            <div class="controls row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <textarea name="" id=""></textarea>
-                                    </div>
-                                    <div class="mt-30">
-                                        <button type="submit" class="butn butn-md butn-bord butn-rounded">
-                                            <div class="d-flex align-items-center">
-                                                <span>Let's Talking</span>
-                                                <span class="icon ml-10">
-                                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
-                                                </span>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+<section class="testimony-pg section-padding">
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="sec-head mb-50">
+                    <h6 class="sub-head">Share Your <span class="fw-200">Testimony</span></h6>
                 </div>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="controls row">
+                        <div class="col-12 form-group">
+                            {{ form.name.label_tag }} {{ form.name }}
+                        </div>
+                        <div class="col-12 form-group">
+                            {{ form.email.label_tag }} {{ form.email }}
+                        </div>
+                        <div class="col-12 form-group">
+                            {{ form.phone_number.label_tag }} {{ form.phone_number }}
+                        </div>
+                        <div class="col-12 form-group">
+                            {{ form.image.label_tag }} {{ form.image }}
+                        </div>
+                        <div class="col-12 form-group">
+                            {{ form.message.label_tag }} {{ form.message }}
+                        </div>
+                        <div class="col-12 mt-30">
+                            <button type="submit" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Submit Testimony</span>
+                                    <span class="icon ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 {% endblock %}
