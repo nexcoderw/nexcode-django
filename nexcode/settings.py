@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 DATABASES =  {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("MYSQL_DB", "bnb"),
+        'NAME': os.getenv("MYSQL_DB", "nexcodes"),
         'USER': os.getenv("MYSQL_USER", "nexcodes_user"),
         'PASSWORD': os.getenv("MYSQL_PASSWORD", "R7s!9qB@1vXw"),
         'HOST': os.getenv("MYSQL_HOST", "vmi2421856.contaboserver.net"),
