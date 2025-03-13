@@ -390,3 +390,19 @@ class Testimony(models.Model):
     
     class Meta:
         verbose_name_plural = "Testimonies"
+
+class PortfolioRepo(models.Model):
+    """
+    Model representing a repository link associated with a portfolio.
+    This allows each Portfolio to have multiple repository links.
+    """
+    portfolio = models.ForeignKey(
+        Portfolio,
+        on_delete=models.CASCADE,
+        related_name='portfolio_repos'
+    )
+    link = models.URLField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Repo for {self.portfolio.name}: {self.link}"
