@@ -40,13 +40,17 @@ class PaymentInline(admin.TabularInline):
 
         return queryset
 
+class PortfolioRepoInline(admin.TabularInline):
+    model = PortfolioRepo
+    extra = 1
+
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'client_info', 'project_category', 'publish', 'total_amount_paid', 'payment_status', 'edit_link', 'delete_link')
     search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number')
     list_filter = ('category', 'created_at', 'tags', 'project_category', 'publish')
     ordering = ('-created_at',)
-    inlines = [PaymentInline]
+    inlines = [PortfolioRepoInline, PaymentInline]
     list_per_page = 20
     
     def client_info(self, obj):
