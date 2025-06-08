@@ -114,3 +114,6 @@ def updateProject(request, id):
     }
 
     return render(request, "admin/projects/edit.html", context)
+
+def deleteProject(request, id):
+    pass
