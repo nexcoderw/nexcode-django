@@ -1,126 +1,189 @@
-{% extends 'admin/layouts/app.html' %}
+{% extends "admin/layouts/app.html" %}
 {% load static %}
 {% block content %}
 
-	<div class="pt-8 pb-12 px-7 z-10 relative before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)] after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
-        <div class="relative z-20">
-            <h2 class="mt-10 text-lg font-medium">
-                Clients
-            </h2>
-            <div class="mt-5 grid grid-cols-12 gap-x-6 gap-y-8">
-                <div class="col-span-12 mt-2 flex flex-wrap items-center sm:flex-nowrap">
-                    <button class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 [--color:var(--color-primary)] h-10 px-4 py-2 box mr-2">
-                        Add New Client
-                    </button>
+<div
+  class="pt-8 pb-12 px-7 z-10 relative before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+         after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+         after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20">
+        <h2 class="mt-10 text-lg font-medium">Clients</h2>
+
+        <!-- ►►► FILTER BAR  ◄◄◄ -->
+        <div class="mt-5 grid grid-cols-12 gap-x-6 gap-y-8">
+            <div class="col-span-12 mt-2 flex flex-wrap items-center sm:flex-nowrap">
+
+                <!-- Add button -->
+                <a href="{% url 'controller:addClient' %}"
+                   class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium
+                          ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+                          focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4
+                          [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5
+                          [--color:var(--color-primary)] h-10 px-4 py-2 box mr-2">
+                    Add New Client
+                </a>
+
+                <!-- “Showing X–Y of Z” -->
+                {% if paginator.count %}
                     <div class="mx-auto hidden opacity-70 md:block">
-                        Showing 1 to 10 of 150 entries
+                        Showing {{ clients.start_index }}&nbsp;to&nbsp;{{ clients.end_index }} of {{ paginator.count }} entries
                     </div>
-                    <div class="mt-3 w-full sm:ml-auto sm:mt-0 sm:w-auto md:ml-0">
-                        <div class="relative w-56">
-                            <input class="h-10 rounded-md border bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground placeholder:text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/5 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 box w-56 pr-10" type="text" placeholder="Search...">
-                            <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 absolute inset-y-0 right-0 my-auto mr-3 size-4 opacity-70">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
-                                    <g fill="none">
-                                        <path fill="currentColor" fill-opacity="0.25" fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14M10.087 7.38A5 5 0 0 1 12 7a.5.5 0 0 0 0-1a6 6 0 0 0-6 6a.5.5 0 0 0 1 0a5 5 0 0 1 3.087-4.62" clip-rule="evenodd" />
-                                        <path stroke="currentColor" stroke-linecap="round" d="M20.5 20.5L17 17" stroke-width="1" />
-                                        <circle cx="11" cy="11" r="8.5" stroke="currentColor" stroke-width="1" />
-                                    </g>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- BEGIN: Users Layout -->
-                <div class="col-span-12 md:col-span-6">
-                    <div class="box relative p-5 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10 before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md">
-                        <div class="flex flex-col items-center lg:flex-row">
-                            <span data-content="Uploaded at 7 March 2021" class="tooltip border-(--color)/5 block relative flex-none overflow-hidden rounded-full border-3 ring-1 ring-(--color)/25 [--color:var(--color-primary)] size-24 lg:mr-1 lg:size-12">
-                                <img class="absolute top-0 size-full object-cover" src="{% static 'not-found.png' %}" alt="Midone - Tailwind Admin Dashboard Template">
-                            </span>
-                            <div class="mt-3 text-center lg:ml-2 lg:mr-auto lg:mt-0 lg:text-left">
-                                <a class="font-medium" href="">
-                                    John Doe
-                                </a>
-                                <div class="mt-0.5 text-xs opacity-70">
-                                    Frontend Engineer
-                                </div>
-                            </div>
-                            <div class="mt-4 flex lg:mt-0">
-                                <button class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background border-(--color)/20 h-9 rounded-md px-3 mr-2">
-                                    View Profile
-                                </button>
-                                <button class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 [--color:var(--color-primary)] h-9 rounded-md px-3">
-                                    Message
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- BEGIN: Pagination -->
-                <div class="col-span-12 flex flex-wrap items-center sm:flex-row sm:flex-nowrap">
-                    <nav class="w-full sm:mr-auto sm:w-auto">
-                        <ul class="mr-0 flex w-full gap-1 sm:mr-auto sm:w-auto">
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">
-                                    <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
-                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m11 17l-5-5l5-5m7 10l-5-5l5-5" />
-                                        </svg>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">
-                                    <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="m10.8 12l3.9 3.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-4.6-4.6q-.15-.15-.212-.325T8.425 12t.063-.375t.212-.325l4.6-4.6q.275-.275.7-.275t.7.275t.275.7t-.275.7z" />
-                                        </svg>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">...
-                            </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">1
-                            </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background h-10 px-4 py-2 box rounded-xl border-inherit">2
-                            </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">3
-                            </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">...
-                            </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">
-                                    <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="M12.6 12L8.7 8.1q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.6 4.6q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7z" />
-                                        </svg>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="flex-1 sm:flex-initial">
-                                <a class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">
-                                    <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
-                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 7l5 5l-5 5m6-10l5 5l-5 5" />
-                                        </svg>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                {% endif %}
+
+                <!-- Search -->
+                <div class="mt-3 w-full sm:ml-auto sm:mt-0 sm:w-auto md:ml-0">
+                    <form action="" method="get" class="relative w-56">
+                        <input name="q" value="{{ query }}"
+                               class="h-10 rounded-md border bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent
+                                      file:font-medium file:text-foreground placeholder:text-foreground/70 focus-visible:outline-none
+                                      focus-visible:ring-2 focus-visible:ring-foreground/5 focus-visible:ring-offset-2 disabled:cursor-not-allowed
+                                      disabled:opacity-50 box w-56 pr-10"
+                               type="text" placeholder="Search…">
+                        <button type="submit"
+                                class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 absolute inset-y-0 right-0 my-auto mr-3 size-4 opacity-70">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
+                                <g fill="none">
+                                    <path fill="currentColor" fill-opacity="0.25" fill-rule="evenodd"
+                                          d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14M10.087 7.38A5 5 0 0 1 12 7a.5.5 0 0 0 0-1a6 6 0 0 0-6 6a.5.5 0 0 0 1 0a5 5 0 0 1 3.087-4.62" clip-rule="evenodd"/>
+                                    <path stroke="currentColor" stroke-linecap="round"
+                                          d="M20.5 20.5L17 17" stroke-width="1"/>
+                                    <circle cx="11" cy="11" r="8.5" stroke="currentColor" stroke-width="1"/>
+                                </g>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </div>
+
+            <!-- ►►► CLIENT CARDS GRID  ◄◄◄ -->
+            {% if clients %}
+                {% for c in clients %}
+                    <div class="col-span-12 md:col-span-6">
+                        <div
+                          class="box relative p-5 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+                                 before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+                                 after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+                                 after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md">
+                            <div class="flex flex-col items-center lg:flex-row">
+
+                                <!-- Avatar -->
+                                <span data-content="Created {{ c.created_at|date:'j M Y' }}"
+                                      class="tooltip border-(--color)/5 block relative flex-none overflow-hidden rounded-full border-3
+                                             ring-1 ring-(--color)/25 [--color:var(--color-primary)] size-24 lg:mr-1 lg:size-12">
+                                    {% if c.image %}
+                                        <img src="{{ c.image.url }}" class="absolute top-0 size-full object-cover" alt="{{ c.name }}">
+                                    {% else %}
+                                        <img src="{% static 'not-found.png' %}" class="absolute top-0 size-full object-cover" alt="No photo">
+                                    {% endif %}
+                                </span>
+
+                                <!-- Name & Email -->
+                                <div class="mt-3 text-center lg:ml-2 lg:mr-auto lg:mt-0 lg:text-left">
+                                    <span class="font-medium">{{ c.name|default:"Unnamed Client" }}</span>
+                                    <div class="mt-0.5 text-xs opacity-70">
+                                        {{ c.email|default:"—" }}
+                                    </div>
+                                </div>
+
+                                <!-- Actions (placeholder) -->
+                                <div class="mt-4 flex lg:mt-0">
+                                    <a href="{% url 'controller:clientDetails' c.id %}"
+                                       class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center
+                                              gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors
+                                              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                                              disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4
+                                              [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background border-(--color)/20
+                                              h-9 rounded-md px-3 mr-2">
+                                        View Profile
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-span-12">
+                        <p class="text-center opacity-70 py-10">No clients found.</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- ►►► PAGINATION  ◄◄◄ -->
+            {% if paginator.num_pages > 1 %}
+            <div class="col-span-12 flex flex-wrap items-center sm:flex-row sm:flex-nowrap">
+                <nav class="w-full sm:mr-auto sm:w-auto">
+                    <ul class="mr-0 flex w-full gap-1 sm:mr-auto sm:w-auto">
+
+                        <!-- Previous -->
+                        <li class="flex-1 sm:flex-initial">
+                            {% if clients.has_previous %}
+                                <a href="?page={{ clients.previous_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+                                   class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2
+                                          whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors
+                                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                                          disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4
+                                          [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">
+                                    <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                             viewBox="0 0 24 24">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="m11 17l-5-5l5-5m7 10l-5-5l5-5" />
+                                        </svg>
+                                    </span>
+                                </a>
+                            {% endif %}
+                        </li>
+
+                        <!-- Page numbers -->
+                        {% for num in paginator.page_range %}
+                            {% if num == clients.number %}
+                                <li class="flex-1 sm:flex-initial">
+                                    <span class="[--color:var(--color-foreground)] inline-flex border items-center justify-center gap-2
+                                                  whitespace-nowrap text-sm font-medium ring-offset-background bg-background
+                                                  h-10 px-4 py-2 box rounded-xl border-inherit">
+                                        {{ num }}
+                                    </span>
+                                </li>
+                            {% elif num > clients.number|add:'-3' and num < clients.number|add:'3' %}
+                                <li class="flex-1 sm:flex-initial">
+                                    <a href="?page={{ num }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+                                       class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center
+                                              gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors
+                                              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                                              disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4
+                                              [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2
+                                              border-transparent bg-transparent">
+                                        {{ num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next -->
+                        <li class="flex-1 sm:flex-initial">
+                            {% if clients.has_next %}
+                                <a href="?page={{ clients.next_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+                                   class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2
+                                          whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors
+                                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                                          disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4
+                                          [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 h-10 px-4 py-2 border-transparent bg-transparent">
+                                    <span class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                             viewBox="0 0 24 24">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="m7 7l5 5l-5 5m6-10l5 5l-5 5" />
+                                        </svg>
+                                    </span>
+                                </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+        </div><!-- /grid -->
+    </div><!-- /relative -->
+</div><!-- /outer box -->
 
 {% endblock %}
