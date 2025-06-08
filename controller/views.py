@@ -85,3 +85,12 @@ def updateMember(request, id):
 
 def deleteMember(request, id):
     pass
+
+def projects(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/projects/index.html", context)
