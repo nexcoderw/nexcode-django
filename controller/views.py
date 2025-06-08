@@ -1,10 +1,7 @@
-import re 
 from home.forms import *
 from home.models import *
 from django.db.models import Q
 from django.contrib import messages
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -63,59 +60,10 @@ def clients(request):
     return render(request, "admin/clients/index.html", context)
 
 def addClient(request):
-    """
-    Create a new Client with solid server-side validation.
-    Shows granular error feedback and success toast via Django messages.
-    """
     settings = Setting.objects.first()
-    errors   = {}
 
-    if request.method == "POST":
-        name   = request.POST.get("name", "").strip()
-        email  = request.POST.get("email", "").strip()
-        phone  = request.POST.get("phone", "").strip()
-
-        # ---- Validation --------------------------------------------------
-        if not name:
-            errors["name"] = "Client name is required."
-
-        if not email:
-            errors["email"] = "Email address is required."
-        else:
-            try:
-                validate_email(email)
-            except ValidationError:
-                errors["email"] = "Enter a valid email address."
-
-        if not phone:
-            errors["phone"] = "Phone number is required."
-        elif not re.fullmatch(r"^\+?\d{7,15}$", phone):
-            errors["phone"] = "Phone number must contain 7–15 digits (optionally leading ‘+’)."
-
-        # Unique-email guard
-        if email and not errors.get("email") and Client.objects.filter(email=email).exists():
-            errors["email"] = "A client with this email already exists."
-
-        # ---- Create or bounce back --------------------------------------
-        if not errors:
-            client = Client.objects.create(
-                name=name,
-                email=email,
-                phone_number=phone,
-            )
-            messages.success(
-                request,
-                f'Success!  Client “{client.name or client.email}” was created.',
-            )
-            return redirect("controller:clients")
-
-        messages.error(request, "Please correct the highlighted errors.")
-
-    # GET or POST-with-errors
     context = {
-        "settings": settings,
-        "errors":   errors,
-        "old":      request.POST if request.method == "POST" else {},
+        'settings': settings
     }
 
     return render(request, "admin/clients/create.html", context)
