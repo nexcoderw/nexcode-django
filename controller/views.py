@@ -1,5 +1,5 @@
-from home.forms import *
 from home.models import *
+from controller.forms import *
 from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
@@ -60,10 +60,30 @@ def clients(request):
     return render(request, "admin/clients/index.html", context)
 
 def addClient(request):
+    """Create a new Client with full validation & rich feedback."""
     settings = Setting.objects.first()
 
+    if request.method == "POST":
+        form = ClientForm(request.POST, request.FILES)
+        if form.is_valid():
+            client = form.save()
+            messages.success(
+                request,
+                f"✅ Client “{client.name or client.email}” was created successfully."
+            )
+            return redirect("controller:clients")
+        else:
+            # Automatically carries form.errors into the template
+            messages.error(
+                request,
+                "❌ We couldn’t save the client. Please correct the errors below."
+            )
+    else:
+        form = ClientForm()
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "form": form,
     }
 
     return render(request, "admin/clients/create.html", context)
