@@ -99,11 +99,31 @@ def clientDetails(request, id):
     return render(request, "admin/clients/show.html", context)
 
 def updateClient(request, id):
+    """Edit an existing Client with rich validations & feedback."""
     settings = Setting.objects.first()
+    client   = get_object_or_404(Client, pk=id)
+
+    if request.method == "POST":
+        form = ClientForm(request.POST, request.FILES, instance=client)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                f"✅ Client “{client.name or client.email}” updated successfully."
+            )
+            return redirect("controller:clients")
+        else:
+            messages.error(
+                request,
+                "❌ We couldn’t update the client. Please correct the errors below."
+            )
+    else:
+        form = ClientForm(instance=client)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "form": form,
+        "client": client,
     }
 
     return render(request, "admin/clients/edit.html", context)
