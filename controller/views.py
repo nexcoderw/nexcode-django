@@ -158,3 +158,13 @@ def testimonies(request):
     }
 
     return render(request, "admin/testimonies/index.html", context)
+
+def testimonyDetails(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/testimonies/show.html", context)
