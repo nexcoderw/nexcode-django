@@ -72,3 +72,13 @@ def memberDetails(request, id):
     }
 
     return render(request, "admin/members/show.html", context)
+
+def updateMember(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/members/edit.html", context)
