@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="csrf-token" content="cEotZHBq6HsA8Tl18TnDuBYKacIYuYi9bVbujJcp">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="NEXCODE">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>
+        NEXCODE - Admin Login
+    </title>
+    <link rel="stylesheet" href="{% static 'admin/css/app.css' %}">
+</head>
+<body>
+    <div>
+        <div data-tw-toggle="modal" data-tw-target="#settings-dialog" class="fixed inset-y-0 right-0 z-50 my-auto flex hover:w-20 transition-all w-14 h-12 cursor-pointer border-(--color)/50 items-center border justify-center rounded-l-full shadow-lg overflow-hidden bg-background/80 [--color:var(--color-primary)] before:bg-(--color)/20 before:absolute before:inset-0">
+            <i data-lucide="settings" class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 animate-spin"></i>
+        </div>
+        <div data-tw-backdrop="" class="modal group bg-black/60 transition-[visibility,opacity] w-screen h-screen fixed left-0 top-0 [&:not(.show)]:duration-[0s,0.2s] [&:not(.show)]:delay-[0.2s,0s] [&:not(.show)]:invisible [&:not(.show)]:opacity-0 [&.show]:visible [&.show]:opacity-100 [&.show]:duration-[0s,0.4s]" id="settings-dialog">
+            <div class="box relative before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10 before:z-[-1] after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background after:shadow-[0px_3px_5px_#0000000b] after:z-[-1] after:backdrop-blur-md before:bg-background/60 dark:before:shadow-background before:shadow-foreground/60 z-50 mx-auto -mt-16 p-6 transition-[margin-top,transform] duration-[0.4s,0.3s] before:rounded-3xl before:shadow-2xl after:rounded-3xl group-[.show]:mt-16 group-[.modal-static]:scale-[1.05] sm:max-w-lg">
+                <div class="flex flex-col gap-7 px-5 pb-6 pt-2 text-center">
+                    <div class="">
+                        <h2 class="text-lg font-medium">Themes</h2>
+                        <div class="opacity-70">Choose your theme</div>
+                        <div class="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
+                            <a class="flex flex-col gap-3 outline-none transition-transform duration-100 hover:scale-[105%]" href="rubick-top-menu-dashboard-overview-1-page.html?page=dashboard-overview-1">
+                                <div class="h-24 overflow-hidden rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background shadow-lg ring-foreground/70 dark:ring-foreground/20">
+                                    <img src="dist/images/themes/rubick.png" alt="Midone - Tailwind Admin Dashboard Template">
+                                </div>
+                                <div class="text-center capitalize">rubick</div>
+                            </a>
+                            <a class="flex flex-col gap-3 outline-none transition-transform duration-100 hover:scale-[105%]" href="icewall-top-menu-dashboard-overview-1-page.html?page=dashboard-overview-2">
+                                <div class="h-24 overflow-hidden rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background shadow-lg ring-foreground/10">
+                                    <img src="dist/images/themes/icewall.png" alt="Midone - Tailwind Admin Dashboard Template">
+                                </div>
+                                <div class="text-center capitalize">icewall</div>
+                            </a>
+                            <a class="flex flex-col gap-3 outline-none transition-transform duration-100 hover:scale-[105%]" href="tinker-top-menu-dashboard-overview-1-page.html?page=dashboard-overview-3">
+                                <div class="h-24 overflow-hidden rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background shadow-lg ring-foreground/10">
+                                    <img src="dist/images/themes/tinker.png" alt="Midone - Tailwind Admin Dashboard Template">
+                                </div>
+                                <div class="text-center capitalize">tinker</div>
+                            </a>
+                            <a class="flex flex-col gap-3 outline-none transition-transform duration-100 hover:scale-[105%]" href="enigma-top-menu-dashboard-overview-1-page.html?page=dashboard-overview-4">
+                                <div class="h-24 overflow-hidden rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background shadow-lg ring-foreground/10">
+                                    <img src="dist/images/themes/enigma.png" alt="Midone - Tailwind Admin Dashboard Template">
+                                </div>
+                                <div class="text-center capitalize">enigma</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="">
+                        <h2 class="text-lg font-medium">Layouts</h2>
+                        <div class="opacity-70">Choose your layout</div>
+                        <div class="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
+                            <a class="flex flex-col gap-3 transition-transform duration-100 hover:scale-[105%]" href="rubick-side-menu-dashboard-overview-1-page.html">
+                                <div class="dark:bg-foreground/20 h-24 overflow-hidden rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background shadow-lg p-px ring-foreground/10">
+                                    <div class="flex size-full gap-1.5">
+                                        <div class="bg-foreground/10 h-full w-[20%] rounded-md"></div>
+                                        <div class="bg-foreground/10 h-full w-full rounded-md"></div>
+                                    </div>
+                                </div>
+                                <div class="text-center capitalize">Side Menu</div>
+                            </a>
+                            <a class="flex flex-col gap-3 transition-transform duration-100 hover:scale-[105%]" href="rubick-top-menu-dashboard-overview-1-page.html">
+                                <div class="dark:bg-foreground/20 h-24 overflow-hidden rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background shadow-lg p-px ring-foreground/70 dark:ring-foreground/20">
+                                    <div class="flex size-full flex-col gap-1.5">
+                                        <div class="bg-foreground/10 full h-[30%] rounded-md"></div>
+                                        <div class="bg-foreground/10 h-full w-full rounded-md"></div>
+                                    </div>
+                                </div>
+                                <div class="text-center capitalize">Top Menu</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="">
+                        <h2 class="text-lg font-medium">Main Colors</h2>
+                        <div class="opacity-70">Choose your color</div>
+                        <div class="mt-5 grid grid-cols-6 gap-6">
+                            <div data-theme="default" class="cursor-pointer h-10 overflow-hidden bg-primary rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background ring-foreground/15 transition-transform hover:scale-[110%] duration-100"></div>
+                            <div data-theme="1" class="cursor-pointer h-10 overflow-hidden bg-primary rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background ring-foreground/15 transition-transform hover:scale-[110%] duration-100"></div>
+                            <div data-theme="2" class="cursor-pointer h-10 overflow-hidden bg-primary rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background ring-foreground/15 transition-transform hover:scale-[110%] duration-100"></div>
+                            <div data-theme="3" class="cursor-pointer h-10 overflow-hidden bg-primary rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background ring-foreground/15 transition-transform hover:scale-[110%] duration-100"></div>
+                            <div data-theme="4" class="cursor-pointer h-10 overflow-hidden bg-primary rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background ring-foreground/15 transition-transform hover:scale-[110%] duration-100"></div>
+                            <div data-theme="5" class="cursor-pointer h-10 overflow-hidden bg-primary rounded-lg shadow-md image-fit ring-1 ring-offset-4 ring-offset-background ring-foreground/15 transition-transform hover:scale-[110%] duration-100"></div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <h2 class="text-lg font-medium">Appearance</h2>
+                        <div class="opacity-70">Choose your appearance</div>
+                        <div class="mt-5 grid grid-cols-3 gap-3">
+                            <div class="flex cursor-pointer flex-col gap-3 transition-transform duration-100 hover:scale-[110%]" data-dark-mode="system">
+                                <div class="bg-foreground/5 flex h-10 items-center justify-center rounded-xl">
+                                    <i data-lucide="settings" class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25"></i>
+                                </div>
+                                <div class="text-center capitalize">System</div>
+                            </div>
+                            <div class="flex cursor-pointer flex-col gap-3 transition-transform duration-100 hover:scale-[110%]" data-dark-mode="inactive">
+                                <div class="bg-foreground/5 flex h-10 items-center justify-center rounded-xl">
+                                    <i data-lucide="sun-moon" class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25"></i>
+                                </div>
+                                <div class="text-center capitalize">Light</div>
+                            </div>
+                            <div class="flex cursor-pointer flex-col gap-3 transition-transform duration-100 hover:scale-[110%]" data-dark-mode="active">
+                                <div class="bg-foreground/5 flex h-10 items-center justify-center rounded-xl">
+                                    <i data-lucide="moon-star" class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25"></i>
+                                </div>
+                                <div class="text-center capitalize">Dark</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-loader bg-background fixed inset-0 z-[100] flex items-center justify-center transition-opacity">
+        <div class="loader-spinner !w-14"></div>
+    </div>
+    <div class="relative h-screen lg:overflow-hidden bg-primary bg-noise xl:bg-background xl:bg-none before:hidden before:xl:block before:content-[''] before:w-[57%] before:-mt-[28%] before:-mb-[16%] before:-ml-[12%] before:absolute before:inset-y-0 before:left-0 before:transform before:rotate-[6deg] before:bg-primary/[.95] before:bg-noise before:rounded-[35%] after:hidden after:xl:block after:content-[''] after:w-[57%] after:-mt-[28%] after:-mb-[16%] after:-ml-[12%] after:absolute after:inset-y-0 after:left-0 after:transform after:rotate-[6deg] after:border after:bg-accent after:bg-cover after:blur-xl after:rounded-[35%] after:border-[20px] after:border-primary">
+        <div class="p-3 sm:px-8 relative h-full before:hidden before:xl:block before:w-[57%] before:-mt-[20%] before:-mb-[13%] before:-ml-[12%] before:absolute before:inset-y-0 before:left-0 before:transform before:rotate-[-6deg] before:bg-primary/40 before:bg-noise before:border before:border-primary/50 before:opacity-60 before:rounded-[20%]">
+            <div class="container relative z-10 mx-auto sm:px-20">
+                <div class="block grid-cols-2 gap-4 xl:grid">
+                    <!-- BEGIN: Login Info -->
+                    <div class="hidden min-h-screen flex-col xl:flex">
+                        <a class="flex items-center pt-10" href="">
+                            <img class="w-6" src="dist/images/logo.svg" alt="Midone - Tailwind Admin Dashboard Template">
+                            <span class="ml-3 text-xl font-medium text-white">
+                                Midone <span class="font-light opacity-70">Admin</span>
+                            </span>
+                        </a>
+                        <div class="my-auto">
+                            <img class="-mt-16 w-1/2" src="dist/images/illustration.svg" alt="Midone - Tailwind Admin Dashboard Template">
+                            <div class="mt-10 text-4xl font-medium leading-tight text-white">
+                                A few more clicks to <br>sign in to your account.
+                        
+                            </div>
+                            <div class="mt-5 text-lg text-white opacity-60">Manage all your e-commerce accounts in one place
+                        </div>
+                        </div>
+                    </div>
+                    <!-- END: Login Info -->
+                    <!-- BEGIN: Login Form -->
+                    <div class="my-10 flex h-screen py-5 xl:my-0 xl:h-auto xl:py-0">
+                        <div class="box relative p-5 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10 before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md mx-auto my-auto w-full px-5 py-8 sm:w-3/4 sm:px-8 lg:w-2/4 xl:ml-24 xl:w-auto xl:p-0 xl:before:hidden xl:after:hidden">
+                            <h2 class="text-center text-2xl font-semibold xl:text-left xl:text-3xl">Sign In
+                        </h2>
+                            <div class="mt-2 text-center opacity-70 xl:hidden">A few more clicks to sign in to your account. Manage all your
+                            e-commerce accounts in one place
+                        </div>
+                            <div class="mt-8 flex flex-col gap-5">
+                                <input class="h-10 w-full rounded-md border bg-background ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground placeholder:text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/5 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 box block min-w-full px-5 py-6 xl:min-w-[28rem]" type="text" value="midone@leftcode.com" placeholder="Email">
+                                <input class="h-10 w-full rounded-md border bg-background ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground placeholder:text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/5 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 box block min-w-full px-5 py-6 xl:min-w-[28rem]" type="password" value="123456" placeholder="Password">
+                                <div class="flex text-xs sm:text-sm">
+                                    <div class="flex gap-2.5 mr-auto flex-row items-center">
+                                        <div class="bg-background border-foreground/70 relative size-4 rounded-sm border">
+                                            <input class="peer relative z-10 size-full cursor-pointer opacity-0" type="checkbox" id="remember-me">
+                                            <div class="z-4 bg-foreground invisible absolute inset-0 flex items-center justify-center text-white peer-checked:visible">
+                                                <i data-lucide="check" class="stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25 size-4"></i>
+                                            </div>
+                                        </div>
+                                        <label class="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 opacity-70" for="remember-me">Remember me</label>
+                                    </div>
+                                    <a class="opacity-70" href="">Forgot Password?</a>
+                                </div>
+                            </div>
+                            <div class="mt-5 text-center xl:mt-10 xl:text-left">
+                                <button class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 [--color:var(--color-primary)] h-10 login-button box w-full px-4 py-5">Login
+                            </button>
+                                <button class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background border-(--color)/20 h-10 box mt-4 w-full px-4 py-5">Register
+                            </button>
+                            </div>
+                            <div class="mt-10 text-center opacity-70 xl:mt-24 xl:text-left">
+                                By signin up, you agree to our
+                            <a class="text-primary" href="">Terms and Conditions
+                            </a>
+                                
+                            &
+                            <a class="text-primary" href="">Privacy Policy
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END: Login Form -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'admin/js/login.js' %}"></script>
+</body>
+</html>
