@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import path
 from django.conf.urls.static import static
 
-app_name = "admin"
+app_name = "controller"
 
 urlpatterns = [
     path("", signIn, name="signIn"),
@@ -19,7 +19,7 @@ urlpatterns = [
     # ---------- Team ----------
     path("team/", team, name="team"),
     path("team/add/", addMember, name="addMember"),
-    path("team/<int:id>/", memberDetals, name="memberDetals"),
+    path("team/<int:id>/", memberDetails, name="memberDetails"),
     path("team/<int:id>/update/", updateMember, name="updateMember"),
     path("team/<int:id>/delete/", deleteMember, name="deleteMember"),
 
