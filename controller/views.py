@@ -117,3 +117,12 @@ def updateProject(request, id):
 
 def deleteProject(request, id):
     pass
+
+def blogs(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/blogs/index.html", context)
