@@ -53,3 +53,12 @@ def updateClient(request, id):
 
 def deleteClient(request, id):
     pass
+
+def team(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/team/index.html", context)
