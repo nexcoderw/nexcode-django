@@ -82,3 +82,6 @@ def updateMember(request, id):
     }
 
     return render(request, "admin/members/edit.html", context)
+
+def deleteMember(request, id):
+    pass
