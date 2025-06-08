@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{% static 'admin/css/top-menu.css' %}">
     <link rel="stylesheet" href="{% static 'admin/css/simplebar.css' %}">
     <link rel="stylesheet" href="{% static 'admin/css/app.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body>
 
@@ -74,6 +75,28 @@
     <script src="{% static 'admin/js/tiny-slider.js' %}"></script>
     <script src="{% static 'admin/js/rubick.js' %}"></script>
     <script src="{% static 'admin/js/helper.js' %}"></script>
-    <script src="{% static 'admin/js/pages/dashboard.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            /* global toastr */
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 3000,           // 3 seconds
+                extendedTimeOut: 1000,
+                positionClass: "toast-top-right",
+                showDuration: 300,
+                hideDuration: 300,
+            };
+
+            {% if messages %}
+                {% for msg in messages %}
+                    toastr["{{ msg.tags|default:"info" }}"]("{{ msg|escapejs }}");
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
 </body>
 </html>
