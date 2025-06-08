@@ -147,7 +147,7 @@ def updateBlog(request, id):
 
     return render(request, "admin/blogs/edit.html", context)
 
-def deleteProject(request, id):
+def deleteBlog(request, id):
     pass
 
 def testimonies(request):
