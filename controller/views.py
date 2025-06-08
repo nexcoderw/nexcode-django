@@ -40,3 +40,13 @@ def clientDetails(request, id):
     }
 
     return render(request, "admin/client/show.html", context)
+
+def updateClient(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/client/edit.html", context)
