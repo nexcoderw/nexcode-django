@@ -80,22 +80,28 @@
 
                                 <!-- Name & Email -->
                                 <div class="mt-3 text-center lg:ml-2 lg:mr-auto lg:mt-0 lg:text-left">
-                                    <span class="font-medium">{{ c.name|default:"Unnamed Client" }}</span>
+                                    <span class="font-medium">{{ c.name|default:"N/A" }}</span>
                                     <div class="mt-0.5 text-xs opacity-70">
-                                        {{ c.email|default:"—" }}
+                                        Phone Number: {{ c.email|default:"N/A" }}
+                                    </div>
+                                    <div class="mt-0.5 text-xs opacity-70">
+                                        Email Address: {{ c.phone_number|default:"N/A" }}
                                     </div>
                                 </div>
 
                                 <!-- Actions (placeholder) -->
                                 <div class="mt-4 flex lg:mt-0">
                                     <a href="{% url 'controller:clientDetails' c.id %}"
-                                       class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center
-                                              gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors
-                                              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                                              disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4
-                                              [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background border-(--color)/20
-                                              h-9 rounded-md px-3 mr-2">
+                                       class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 [--color:var(--color-primary)] h-8 px-2 py-1 min-w-32 rounded-full mr-2">
                                         View Profile
+                                    </a>
+                                    <a href="{% url 'controller:updateClient' c.id %}"
+                                       class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 h-8 px-2 py-1 min-w-32 rounded-full mr-2">
+                                        Edit Client
+                                    </a>
+                                    <a href="{% url 'controller:deleteClient' c.id %}"
+                                       class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 [--color:var(--color-danger)] h-8 px-2 py-1 min-w-32 rounded-full mr-2">
+                                        Delete Client
                                     </a>
                                 </div>
                             </div>
