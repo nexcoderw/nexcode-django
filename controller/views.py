@@ -29,4 +29,14 @@ def clients(request):
         'settings': settings
     }
 
-    return render(request, "admin/clients/index.html")
+    return render(request, "admin/clients/index.html", context)
+
+def clientDetails(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/client/show.html", context)
