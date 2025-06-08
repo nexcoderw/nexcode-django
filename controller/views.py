@@ -31,6 +31,15 @@ def clients(request):
 
     return render(request, "admin/clients/index.html", context)
 
+def addClient(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/clients/create.html", context)
+
 def clientDetails(request, id):
     settings = Setting.objects.first()
 
@@ -62,6 +71,15 @@ def team(request):
     }
 
     return render(request, "admin/members/index.html", context)
+
+def addMember(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/members/create.html", context)
 
 def memberDetails(request, id):
     settings = Setting.objects.first()
@@ -95,6 +113,15 @@ def projects(request):
 
     return render(request, "admin/projects/index.html", context)
 
+def addProject(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/projects/create.html", context)
+
 def projectDetails(request, id):
     settings = Setting.objects.first()
 
@@ -127,6 +154,15 @@ def blogs(request):
 
     return render(request, "admin/blogs/index.html", context)
 
+def addBlog(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/blogs/create.html", context)
+
 def blogDetails(request, id):
     settings = Setting.objects.first()
 
@@ -158,6 +194,15 @@ def testimonies(request):
     }
 
     return render(request, "admin/testimonies/index.html", context)
+
+def addTestimony(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/testimonies/create.html", context)
 
 def testimonyDetails(request, id):
     settings = Setting.objects.first()
