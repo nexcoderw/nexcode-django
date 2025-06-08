@@ -94,3 +94,13 @@ def projects(request):
     }
 
     return render(request, "admin/projects/index.html", context)
+
+def projectDetails(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/projects/show.html", context)
