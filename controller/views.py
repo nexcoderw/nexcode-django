@@ -178,3 +178,6 @@ def updateTestimony(request, id):
     }
 
     return render(request, "admin/testimonies/edit.html", context)
+
+def deleteTestimony(request, id):
+    pass
