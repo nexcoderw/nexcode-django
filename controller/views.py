@@ -1,7 +1,7 @@
 from home.models import *
 from controller.forms import *
-from django.db.models import Q
 from django.contrib import messages
+from django.db.models import Q, ProtectedError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -129,7 +129,26 @@ def updateClient(request, id):
     return render(request, "admin/clients/edit.html", context)
 
 def deleteClient(request, id):
-    pass
+    """
+    Permanently remove a Client record.
+
+    • Executes instantly (link is GET-based).  
+    • Catches FK-protected rows and informs the user.  
+    • Always redirects back to the client list.
+    """
+    client = get_object_or_404(Client, pk=id)
+    client_label = client.name or client.email or f"ID {client.pk}"
+
+    try:
+        client.delete()
+        messages.success(request, f"🗑️ Client “{client_label}” deleted successfully.")
+    except ProtectedError:
+        messages.error(
+            request,
+            f"❌ Client “{client_label}” can’t be removed because it’s referenced by other records."
+        )
+
+    return redirect("controller:clients")
 
 def team(request):
     settings = Setting.objects.first()
