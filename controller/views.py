@@ -181,3 +181,12 @@ def updateTestimony(request, id):
 
 def deleteTestimony(request, id):
     pass
+
+def contacts(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/contacts/index.html", context)
