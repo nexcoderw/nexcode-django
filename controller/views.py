@@ -21,3 +21,12 @@ def dashboard(request):
     }
 
     return render(request, 'admin/dashboard.html', context)
+
+def clients(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/clients/index.html")
