@@ -12,3 +12,12 @@ def signIn(request):
     }
 
     return render(request, 'admin/auth/login.html', context)
+
+def dashboard(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, 'admin/dashboard.html', context)
