@@ -50,3 +50,6 @@ def updateClient(request, id):
     }
 
     return render(request, "admin/client/edit.html", context)
+
+def deleteClient(request, id):
+    pass
