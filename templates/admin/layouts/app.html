@@ -44,13 +44,8 @@
 
             {% include 'admin/components/sidebar.html' %}
 
-            <div class="pt-8 pb-12 px-7 z-10 relative before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)] after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
-                <div class="relative z-20">
-                    
-                    {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
 
-                </div>
-            </div>
         </div>
     </div>
 
