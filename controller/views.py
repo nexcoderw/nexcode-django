@@ -23,10 +23,37 @@ def dashboard(request):
     return render(request, 'admin/dashboard.html', context)
 
 def clients(request):
+    """List, search, and paginate all Client records (newest first)."""
     settings = Setting.objects.first()
 
+    # 1️⃣  Search --------------------------------------------------------
+    query = request.GET.get("q", "").strip()
+    client_qs = Client.objects.all().order_by("-created_at")               # latest first
+
+    if query:
+        client_qs = client_qs.filter(
+            Q(name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone_number__icontains=query)
+        )
+
+    # 2️⃣  Pagination ----------------------------------------------------
+    paginator = Paginator(client_qs, 10)                                   # 10 per page
+    page = request.GET.get("page", 1)
+
+    try:
+        clients_page = paginator.page(page)
+    except PageNotAnInteger:
+        clients_page = paginator.page(1)
+    except EmptyPage:
+        clients_page = paginator.page(paginator.num_pages)
+
+    # 3️⃣  Context & render ---------------------------------------------
     context = {
-        'settings': settings
+        "settings": settings,
+        "clients": clients_page,        # iterable in the template
+        "paginator": paginator,         # so you can show page numbers
+        "query": query,                 # keep the search box filled
     }
 
     return render(request, "admin/clients/index.html", context)
