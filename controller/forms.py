@@ -41,6 +41,12 @@ class ClientForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data["email"]
-        if Client.objects.filter(email__iexact=email).exists():
+        qs = Client.objects.filter(email__iexact=email)
+
+        # ✨  Ignore the record we’re currently editing
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
             raise forms.ValidationError("A client with this email already exists.")
         return email
