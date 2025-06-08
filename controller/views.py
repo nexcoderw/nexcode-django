@@ -136,3 +136,13 @@ def blogDetails(request, id):
     }
 
     return render(request, "admin/blogs/show.html", context)
+
+def updateBlog(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/blogs/edit.html", context)
