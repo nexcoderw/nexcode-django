@@ -146,3 +146,15 @@ def updateBlog(request, id):
     }
 
     return render(request, "admin/blogs/edit.html", context)
+
+def deleteProject(request, id):
+    pass
+
+def testimonies(request):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings
+    }
+
+    return render(request, "admin/testimonies/index.html", context)
