@@ -1,0 +1,86 @@
+<div class="border-(--color-nav-foreground)/20 relative z-30 flex h-16 items-center border-b">
+    <a class="text-(--color-nav-foreground) border-(--color-nav-foreground)/20 hidden h-full items-center border-r px-7 xl:flex" href="#">
+        <div class="from-theme-1 to-theme-2 flex size-[34px] items-center justify-center rounded-lg bg-gradient-to-r">
+            <div class="relative h-[20px] w-[20px] [&_div]:bg-white">
+                <img src="{{ settings.icon_white_logo.url }}" alt="logo">
+            </div>
+        </div>
+        <div class="ml-3.5">
+            <span class="text-base font-medium">NEXCODE</span>
+        </div>
+    </a>
+    <div class="flex h-full grow items-center gap-5 px-7">
+        <div class="border-(--color-nav-foreground)/30 open-mobile-menu mr-auto flex size-9 cursor-pointer items-center justify-center rounded-xl border xl:hidden">
+            <span class="size-4 stroke-[1.5] stroke-(--color) fill-(--color)/25 rotate-90 [--color:var(--color-nav-foreground)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 20V10m-6 10V4M6 20v-6" />
+                </svg>
+            </span>
+        </div>
+        <ul class="truncate gap-x-6 mr-auto hidden [--background-image-chevron:var(--background-image-chevron-light)] [--color-base:--alpha(var(--color-nav-foreground)/70%)] [--color-link:var(--color-nav-foreground)] xl:flex">
+            <li class="[&:not(:last-child)&gt;a]:text-(--color-link) text-(--color-base) before:bg-(image:--background-image-chevron) relative before:absolute before:inset-y-0 before:my-auto before:-ml-4 before:size-2 before:-rotate-90 before:bg-center before:bg-no-repeat before:opacity-70 first:before:hidden">
+                <a href="#" class="truncate gap-x-6 mr-auto hidden [--background-image-chevron:var(--background-image-chevron-light)] [--color-base:--alpha(var(--color-nav-foreground)/70%)] [--color-link:var(--color-nav-foreground)] xl:flex">
+                    Admin Dashboard
+                </a>
+            </li>
+        </ul>
+        <div class="group/profile relative size-9 flex-none">
+            <span data-content="" class="tooltip border-(--color)/5 block relative flex-none overflow-hidden rounded-full border-3 ring-1 ring-(--color)/40 size-full [--color:var(--color-nav-foreground)]">
+                <img class="absolute top-0 size-full object-cover" src="https://midone-html.vercel.app/dist/images/fakers/profile-15.jpg" alt="Midone - Tailwind Admin Dashboard Template">
+            </span>
+            <div class="hidden group-hover/profile:block">
+                <div class="box p-5 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10 before:bg-background/30 before:z-[-1] after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background after:shadow-[0px_3px_5px_#0000000b] after:z-[-1] after:backdrop-blur-md before:shadow-foreground/5 absolute right-0 top-0 z-50 -mr-0.5 -mt-0.5 flex w-64 flex-col gap-2.5 px-6 py-5 before:rounded-2xl before:shadow-xl before:backdrop-blur after:rounded-2xl">
+                    <div class="flex flex-col gap-0.5">
+                        <div class="font-medium">
+                            John Doe
+                        </div>
+                        <div class="mt-0.5 text-xs opacity-70">
+                            Admin
+                        </div>
+                    </div>
+                    <div class="bg-foreground/5 h-px"></div>
+                    <div class="flex flex-col gap-0.5">
+                        <a class="hover:bg-foreground/5 -mx-3 flex gap-2.5 rounded-lg px-4 py-1.5" href="#">
+                            <span class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="6" r="4" fill="currentColor" />
+                                    <ellipse cx="12" cy="17" fill="currentColor" opacity="8" rx="7" ry="4" />
+                                </svg>
+                            </span>
+                            Profile
+                    
+                        </a>
+                        <a class="hover:bg-foreground/5 -mx-3 flex gap-2.5 rounded-lg px-4 py-1.5" href="#">
+                            <span class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                                    <g fill="none">
+                                        <path stroke="currentColor" stroke-width="1.5" d="M2 16c0-2.828 0-4.243.879-5.121C3.757 10 5.172 10 8 10h8c2.828 0 4.243 0 5.121.879C22 11.757 22 13.172 22 16s0 4.243-.879 5.121C20.243 22 18.828 22 16 22H8c-2.828 0-4.243 0-5.121-.879C2 20.243 2 18.828 2 16Z" />
+                                        <path fill="currentColor" d="M9 16a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0" opacity="8" />
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M6 10V8a6 6 0 0 1 11.811-1.5" opacity="8" />
+                                    </g>
+                                </svg>
+                            </span>
+                            Reset Password
+                    
+                        </a>
+                    </div>
+                    <div class="bg-foreground/5 h-px"></div>
+                    <div class="flex flex-col gap-0.5">
+                        <a class="hover:bg-foreground/5 -mx-3 flex gap-2.5 rounded-lg px-4 py-1.5" href="#">
+                            <span class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20">
+                                    <g fill="currentColor">
+                                        <path d="M11.5 20a7 7 0 1 1 0-14a7 7 0 0 1 0 14" opacity="0.2" />
+                                        <path d="M4.477 5.46a.6.6 0 1 1 .854.842a6.02 6.02 0 0 0-1.731 4.24c0 3.312 2.643 5.992 5.9 5.992s5.9-2.68 5.9-5.992a6.02 6.02 0 0 0-1.731-4.24a.6.6 0 1 1 .854-.842a7.22 7.22 0 0 1 2.077 5.082c0 3.97-3.177 7.192-7.1 7.192s-7.1-3.222-7.1-7.192c0-1.93.756-3.743 2.077-5.082" />
+                                        <path d="M8.878 1.25a.6.6 0 0 1 1.2 0v7.085a.6.6 0 0 1-1.2 0z" />
+                                    </g>
+                                </svg>
+                            </span>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
