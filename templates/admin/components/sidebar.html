@@ -1,6 +1,8 @@
+{% load nav_active %}
+
 <ul class="top-menu transition-[margin] duration-200 w-[275px] xl:w-auto h-screen xl:h-auto z-50 xl:z-0 top-0 left-0 fixed xl:relative z-10 overflow-y-auto xl:overflow-y-visible -ml-[275px] [&.top-menu--mobile-menu-open]:ml-0 xl:ml-0 before:content-[''] before:fixed before:hidden [&.top-menu--mobile-menu-open]:before:block before:inset-0 before:bg-black/80 dark:before:bg-foreground/5 before:backdrop-blur before:xl:hidden after:content-[''] after:transition-[margin] after:duration-200 after:-ml-[275px] [&.top-menu--mobile-menu-open]:after:ml-0 after:fixed after:w-[275px] after:inset-0 after:bg-primary after:xl:hidden dark:after:bg-background after:bg-noise">
     <li>
-        <a href="#" class="top-menu__link top-menu__link--active">
+        <a href="{% url 'controller:dashboard' %}" class="top-menu__link {% active 'dashboard' %}">
             <div class="top-menu__link__icon">
                 <span class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
@@ -18,7 +20,7 @@
         </a>
     </li>
     <li>
-        <a href="#" class="top-menu__link">
+        <a href="{% url 'controller:projects' %}" class="top-menu__link {% active 'projects' 'addProject' 'projectDetails' 'updateProject' 'deleteProject' %}">
             <div class="top-menu__link__icon">
                 <span class="size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 48 48">
