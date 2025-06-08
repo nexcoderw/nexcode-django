@@ -39,7 +39,7 @@ def clientDetails(request, id):
         "id": id
     }
 
-    return render(request, "admin/client/show.html", context)
+    return render(request, "admin/clients/show.html", context)
 
 def updateClient(request, id):
     settings = Setting.objects.first()
@@ -49,7 +49,7 @@ def updateClient(request, id):
         "id": id
     }
 
-    return render(request, "admin/client/edit.html", context)
+    return render(request, "admin/clients/edit.html", context)
 
 def deleteClient(request, id):
     pass
@@ -61,4 +61,14 @@ def team(request):
         'settings': settings
     }
 
-    return render(request, "admin/team/index.html", context)
+    return render(request, "admin/members/index.html", context)
+
+def memberDetails(request, id):
+    settings = Setting.objects.first()
+
+    context = {
+        'settings': settings,
+        "id": id
+    }
+
+    return render(request, "admin/members/show.html", context)
