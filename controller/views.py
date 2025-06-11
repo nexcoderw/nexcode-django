@@ -222,14 +222,27 @@ def team(request):
         "paginator": paginator,
         "query": query,
     }
+
     return render(request, "admin/members/index.html", context)
 
 @superuser_required
 def addMember(request):
     settings = Setting.objects.first()
 
+    if request.method == "POST":
+        form = TeamForm(request.POST, request.FILES)
+        if form.is_valid():
+            member = form.save()
+            messages.success(request, f"✅ Team member “{member.name or 'Unnamed'}” created successfully.")
+            return redirect("controller:team")
+        else:
+            messages.error(request, "❌ Could not save the member. Please correct the errors below.")
+    else:
+        form = TeamForm()
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "form": form,
     }
 
     return render(request, "admin/members/create.html", context)
