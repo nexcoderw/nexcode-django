@@ -1,11 +1,104 @@
-{% extends 'admin/layouts/app.html' %}
+{% extends "admin/layouts/app.html" %}
 {% load static %}
 {% block content %}
 
-	<div>
-        <div class="grid grid-cols-12 gap-6">
-            Show Client
+<div class="pt-8 pb-12 px-7 relative z-10
+    before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+    after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+    after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20 max-w-4xl mx-auto">
+        <h2 class="mt-10 mb-6 text-lg font-medium">Team Member Details</h2>
+
+        <div class="box relative p-6 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+            before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+            after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+            after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md">
+
+            <div class="flex flex-col items-center md:flex-row md:items-start gap-8">
+                <!-- Member Image -->
+                <div class="w-48 h-64 rounded-lg overflow-hidden shadow-md flex-shrink-0">
+                    {% if member.image %}
+                        <img src="{{ member.image.url }}" alt="{{ member.name }}" class="object-cover w-full h-full" />
+                    {% else %}
+                        <img src="{% static 'not-found.png' %}" alt="No Photo" class="object-cover w-full h-full" />
+                    {% endif %}
+                </div>
+
+                <div class="flex-1 space-y-4">
+                    <!-- Name -->
+                    <div>
+                        <h3 class="text-2xl font-semibold">{{ member.name|default:"Unnamed Member" }}</h3>
+                        {% if member.position %}
+                        <p class="text-sm text-(--color) opacity-70 mt-1">{{ member.position }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="flex space-x-4">
+                        {% if member.linkedin %}
+                        <a href="{{ member.linkedin }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2 text-sm font-medium text-(--color) hover:underline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M6.94 5a2 2 0 1 1-4-.002a2 2 0 0 1 4 .002M7 8.48H3V21h4zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91z" />
+                            </svg>
+                            LinkedIn
+                        </a>
+                        {% endif %}
+                        {% if member.github %}
+                        <a href="{{ member.github }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2 text-sm font-medium text-(--color) hover:underline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12 2.247a10 10 0 0 0-3.162 19.487c.5.088.687-.212.687-.475c0-.237-.012-1.025-.012-1.862c-2.513.462-3.163-.613-3.363-1.175a3.64 3.64 0 0 0-1.025-1.413c-.35-.187-.85-.65-.013-.662a2 2 0 0 1 1.538 1.025a2.137 2.137 0 0 0 2.912.825a2.1 2.1 0 0 1 .638-1.338c-2.225-.25-4.55-1.112-4.55-4.937a3.9 3.9 0 0 1 1.025-2.688a3.6 3.6 0 0 1 .1-2.65s.837-.262 2.75 1.025a9.43 9.43 0 0 1 5 0c1.912-1.3 2.75-1.025 2.75-1.025a3.6 3.6 0 0 1 .1 2.65a3.87 3.87 0 0 1 1.025 2.688c0 3.837-2.338 4.687-4.562 4.937a2.37 2.37 0 0 1 .674 1.85c0 1.338-.012 2.413-.012 2.75c0 .263.187.575.687.475A10.005 10.005 0 0 0 12 2.247" />
+                            </svg>
+                            GitHub
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="text-xs text-(--color) opacity-70">
+                        <p>Created at: {{ member.created_at|date:"j M Y, H:i" }}</p>
+                        <p>Last updated: {{ member.updated_at|date:"j M Y, H:i" }}</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap gap-3 mt-6">
+                        <a href="{% url 'controller:updateMember' member.id %}"
+                           class="inline-flex items-center gap-2 rounded-lg border border-(--color)/60 bg-(--color)/20
+                                  px-4 py-2 text-(--color) text-sm font-medium hover:bg-(--color)/30
+                                  focus:outline-none focus:ring-2 focus:ring-(--color) focus:ring-offset-2">
+                            Edit Member
+                        </a>
+
+                        <a href="{% url 'controller:deleteMember' member.id %}"
+                           onclick="return confirm('Are you sure you want to delete this member? This action cannot be undone.')"
+                           class="inline-flex items-center gap-2 rounded-lg border border-(--color-danger)/80 bg-(--color-danger)/20
+                                  px-4 py-2 text-(--color-danger) text-sm font-medium hover:bg-(--color-danger)/30
+                                  focus:outline-none focus:ring-2 focus:ring-(--color-danger) focus:ring-offset-2">
+                            Delete Member
+                        </a>
+
+                        <a href="{% url 'controller:team' %}"
+                           class="inline-flex items-center gap-2 rounded-lg border border-(--color)/60 bg-(--color)/10
+                                  px-4 py-2 text-(--color) text-sm font-medium hover:bg-(--color)/20
+                                  focus:outline-none focus:ring-2 focus:ring-(--color) focus:ring-offset-2">
+                            Back to Team List
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optional: Add extra info or bio here -->
+            {% if member.position %}
+            <div class="mt-8">
+                <h4 class="font-semibold mb-2">Role Details</h4>
+                <p class="text-(--color) opacity-80">{{ member.position }}</p>
+            </div>
+            {% endif %}
+
         </div>
     </div>
+</div>
 
 {% endblock %}
