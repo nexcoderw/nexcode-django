@@ -1,5 +1,6 @@
 from home.models import *
 from controller.forms import *
+from controller.decorators import *
 from django.contrib import messages
 from django.db.models import Q, ProtectedError
 from django.contrib.auth import authenticate, login
@@ -42,6 +43,7 @@ def signIn(request):
 
     return render(request, 'admin/auth/login.html', {'settings': settings})
 
+@superuser_required
 def dashboard(request):
     settings = Setting.objects.first()
 
@@ -51,6 +53,7 @@ def dashboard(request):
 
     return render(request, 'admin/dashboard.html', context)
 
+@superuser_required
 def clients(request):
     """List, search, and paginate all Client records (newest first)."""
     settings = Setting.objects.first()
@@ -87,6 +90,7 @@ def clients(request):
 
     return render(request, "admin/clients/index.html", context)
 
+@superuser_required
 def addClient(request):
     """Create a new Client with full validation & rich feedback."""
     settings = Setting.objects.first()
@@ -116,6 +120,7 @@ def addClient(request):
 
     return render(request, "admin/clients/create.html", context)
 
+@superuser_required
 def clientDetails(request, id):
     settings = Setting.objects.first()
 
@@ -126,6 +131,7 @@ def clientDetails(request, id):
 
     return render(request, "admin/clients/show.html", context)
 
+@superuser_required
 def updateClient(request, id):
     """Edit an existing Client with rich validations & feedback."""
     settings = Setting.objects.first()
@@ -156,6 +162,7 @@ def updateClient(request, id):
 
     return render(request, "admin/clients/edit.html", context)
 
+@superuser_required
 def deleteClient(request, id):
     """
     Permanently remove a Client record.
@@ -178,6 +185,7 @@ def deleteClient(request, id):
 
     return redirect("controller:clients")
 
+@superuser_required
 def team(request):
     settings = Setting.objects.first()
 
@@ -187,6 +195,7 @@ def team(request):
 
     return render(request, "admin/members/index.html", context)
 
+@superuser_required
 def addMember(request):
     settings = Setting.objects.first()
 
@@ -196,6 +205,7 @@ def addMember(request):
 
     return render(request, "admin/members/create.html", context)
 
+@superuser_required
 def memberDetails(request, id):
     settings = Setting.objects.first()
 
@@ -206,6 +216,7 @@ def memberDetails(request, id):
 
     return render(request, "admin/members/show.html", context)
 
+@superuser_required
 def updateMember(request, id):
     settings = Setting.objects.first()
 
@@ -216,9 +227,11 @@ def updateMember(request, id):
 
     return render(request, "admin/members/edit.html", context)
 
+@superuser_required
 def deleteMember(request, id):
     pass
 
+@superuser_required
 def projects(request):
     settings = Setting.objects.first()
 
@@ -228,6 +241,7 @@ def projects(request):
 
     return render(request, "admin/projects/index.html", context)
 
+@superuser_required
 def addProject(request):
     settings = Setting.objects.first()
 
@@ -237,6 +251,7 @@ def addProject(request):
 
     return render(request, "admin/projects/create.html", context)
 
+@superuser_required
 def projectDetails(request, id):
     settings = Setting.objects.first()
 
@@ -247,6 +262,7 @@ def projectDetails(request, id):
 
     return render(request, "admin/projects/show.html", context)
 
+@superuser_required
 def updateProject(request, id):
     settings = Setting.objects.first()
 
@@ -257,9 +273,11 @@ def updateProject(request, id):
 
     return render(request, "admin/projects/edit.html", context)
 
+@superuser_required
 def deleteProject(request, id):
     pass
 
+@superuser_required
 def blogs(request):
     settings = Setting.objects.first()
 
@@ -269,6 +287,7 @@ def blogs(request):
 
     return render(request, "admin/blogs/index.html", context)
 
+@superuser_required
 def addBlog(request):
     settings = Setting.objects.first()
 
@@ -278,6 +297,7 @@ def addBlog(request):
 
     return render(request, "admin/blogs/create.html", context)
 
+@superuser_required
 def blogDetails(request, id):
     settings = Setting.objects.first()
 
@@ -288,6 +308,7 @@ def blogDetails(request, id):
 
     return render(request, "admin/blogs/show.html", context)
 
+@superuser_required
 def updateBlog(request, id):
     settings = Setting.objects.first()
 
@@ -298,9 +319,11 @@ def updateBlog(request, id):
 
     return render(request, "admin/blogs/edit.html", context)
 
+@superuser_required
 def deleteBlog(request, id):
     pass
 
+@superuser_required
 def testimonies(request):
     settings = Setting.objects.first()
 
@@ -310,6 +333,7 @@ def testimonies(request):
 
     return render(request, "admin/testimonies/index.html", context)
 
+@superuser_required
 def addTestimony(request):
     settings = Setting.objects.first()
 
@@ -319,6 +343,7 @@ def addTestimony(request):
 
     return render(request, "admin/testimonies/create.html", context)
 
+@superuser_required
 def testimonyDetails(request, id):
     settings = Setting.objects.first()
 
@@ -329,6 +354,7 @@ def testimonyDetails(request, id):
 
     return render(request, "admin/testimonies/show.html", context)
 
+@superuser_required
 def updateTestimony(request, id):
     settings = Setting.objects.first()
 
@@ -339,9 +365,11 @@ def updateTestimony(request, id):
 
     return render(request, "admin/testimonies/edit.html", context)
 
+@superuser_required
 def deleteTestimony(request, id):
     pass
 
+@superuser_required
 def contacts(request):
     settings = Setting.objects.first()
 
