@@ -2,10 +2,200 @@
 {% load static %}
 {% block content %}
 
-	<div>
-        <div class="grid grid-cols-12 gap-6">
-            Add Client
+<div
+  class="pt-8 pb-12 px-7 z-10 relative before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+         after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)] after:rounded-4xl
+         after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20">
+        <div class="mt-8 flex items-center">
+            <h2 class="mr-auto text-lg font-medium">
+                Add New Team Member
+            </h2>
+        </div>
+        <div class="mt-5 grid grid-cols-11 gap-x-6 pb-20">
+            <form method="post" enctype="multipart/form-data" class="col-span-12 2xl:col-span-12">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div
+                  class="box relative p-5 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+                         before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+                         after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+                         after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md mt-8">
+
+                    <div class="rounded-lg border p-5">
+                        <div class="flex items-center border-b pb-5 text-base font-medium">
+                            Team Member Information
+                        </div>
+
+                        <div class="mt-5 flex flex-col gap-5">
+
+                            <!-- Name -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">Full Name</div>
+                                            <div
+                                              class="text-(--color) flex cursor-pointer items-center rounded-full border px-2 py-px text-xs
+                                                     [--color:var(--color-foreground)] bg-(--color)/5 border-(--color)/15 ml-3">
+                                                Required
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-xs leading-relaxed opacity-70">
+                                            Enter the full name of the team member.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    <div class="flex flex-col gap-2.5">
+                                        {{ form.name }}
+                                        <p class="opacity-70 text-right">{{ form.name.errors }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Position -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">Position / Role</div>
+                                            <div
+                                              class="text-(--color) flex cursor-pointer items-center rounded-full border px-2 py-px text-xs
+                                                     [--color:var(--color-foreground)] bg-(--color)/5 border-(--color)/15 ml-3">
+                                                Optional
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-xs leading-relaxed opacity-70">
+                                            Specify the member’s position or role within the team.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    <div class="flex flex-col gap-2.5">
+                                        {{ form.position }}
+                                        <p class="opacity-70 text-right">{{ form.position.errors }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Image (JPEG) -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">Profile Image (JPEG)</div>
+                                            <div
+                                              class="text-(--color) flex cursor-pointer items-center rounded-full border px-2 py-px text-xs
+                                                     [--color:var(--color-foreground)] bg-(--color)/5 border-(--color)/15 ml-3">
+                                                Optional
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-xs leading-relaxed opacity-70">
+                                            Upload the member’s main profile picture (JPEG preferred).
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    <div class="flex flex-col gap-2.5">
+                                        {{ form.image }}
+                                        <p class="opacity-70 text-right">{{ form.image.errors }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Image (PNG) -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">Profile Image (PNG)</div>
+                                            <div
+                                              class="text-(--color) flex cursor-pointer items-center rounded-full border px-2 py-px text-xs
+                                                     [--color:var(--color-foreground)] bg-(--color)/5 border-(--color)/15 ml-3">
+                                                Optional
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-xs leading-relaxed opacity-70">
+                                            Optional PNG format profile image.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    <div class="flex flex-col gap-2.5">
+                                        {{ form.image_png }}
+                                        <p class="opacity-70 text-right">{{ form.image_png.errors }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LinkedIn URL -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">LinkedIn URL</div>
+                                            <div
+                                              class="text-(--color) flex cursor-pointer items-center rounded-full border px-2 py-px text-xs
+                                                     [--color:var(--color-foreground)] bg-(--color)/5 border-(--color)/15 ml-3">
+                                                Optional
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-xs leading-relaxed opacity-70">
+                                            Provide a link to the LinkedIn profile.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    <div class="flex flex-col gap-2.5">
+                                        {{ form.linkedin }}
+                                        <p class="opacity-70 text-right">{{ form.linkedin.errors }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- GitHub URL -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">GitHub URL</div>
+                                            <div
+                                              class="text-(--color) flex cursor-pointer items-center rounded-full border px-2 py-px text-xs
+                                                     [--color:var(--color-foreground)] bg-(--color)/5 border-(--color)/15 ml-3">
+                                                Optional
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-xs leading-relaxed opacity-70">
+                                            Provide a link to the GitHub profile.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    <div class="flex flex-col gap-2.5">
+                                        {{ form.github }}
+                                        <p class="opacity-70 text-right">{{ form.github.errors }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-8 flex flex-col justify-end gap-4 md:flex-row">
+                    <a href="{% url 'controller:team' %}" class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background border-(--color)/20 h-10 px-4 box w-full py-3 md:w-64">
+                        Cancel
+                    </a>
+                    <button type="submit" class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color) hover:bg-(--color)/5 [--color:var(--color-primary)] h-10 px-4 box w-full py-3 md:w-64">
+                        Submit
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
 {% endblock %}
