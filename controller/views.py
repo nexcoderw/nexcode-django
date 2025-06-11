@@ -197,10 +197,31 @@ def deleteClient(request, id):
 def team(request):
     settings = Setting.objects.first()
 
-    context = {
-        'settings': settings
-    }
+    query = request.GET.get("q", "").strip()
+    team_qs = Team.objects.all().order_by("-created_at")  # newest first
 
+    if query:
+        team_qs = team_qs.filter(
+            Q(name__icontains=query) |
+            Q(position__icontains=query)
+        )
+
+    paginator = Paginator(team_qs, 10)
+    page = request.GET.get("page", 1)
+
+    try:
+        team_page = paginator.page(page)
+    except PageNotAnInteger:
+        team_page = paginator.page(1)
+    except EmptyPage:
+        team_page = paginator.page(paginator.num_pages)
+
+    context = {
+        "settings": settings,
+        "teams": team_page,
+        "paginator": paginator,
+        "query": query,
+    }
     return render(request, "admin/members/index.html", context)
 
 @superuser_required
