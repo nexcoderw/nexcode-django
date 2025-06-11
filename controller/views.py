@@ -43,6 +43,14 @@ def signIn(request):
 
     return render(request, 'admin/auth/login.html', {'settings': settings})
 
+def signOut(request):
+    if request.user.is_authenticated:
+        logout(request)
+        messages.success(request, "✅ You have been logged out successfully.")
+    else:
+        messages.info(request, "ℹ️ You were not logged in.")
+    return redirect('controller:signIn')
+
 @superuser_required
 def dashboard(request):
     settings = Setting.objects.first()
