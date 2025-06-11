@@ -2,17 +2,45 @@ from home.models import *
 from controller.forms import *
 from django.contrib import messages
 from django.db.models import Q, ProtectedError
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def signIn(request):
     settings = Setting.objects.first()
 
-    context = {
-        'settings': settings
-    }
+    if request.method == "POST":
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
 
-    return render(request, 'admin/auth/login.html', context)
+        if not email or not password:
+            messages.error(request, "❌ Please enter both email and password.")
+            return render(request, 'admin/auth/login.html', {'settings': settings})
+
+        # Try to find the user by email (because default User uses username)
+        from django.contrib.auth.models import User
+        try:
+            user = User.objects.get(email__iexact=email)
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None:
+            # Check password and superuser status
+            user_auth = authenticate(request, username=user.username, password=password)
+            if user_auth is not None:
+                if user_auth.is_superuser:
+                    login(request, user_auth)
+                    messages.success(request, f"✅ Welcome back, Superadmin {user_auth.username}!")
+                    return redirect('controller:dashboard')
+                else:
+                    messages.error(request, "❌ Access denied: You must be a superadmin to log in here.")
+            else:
+                messages.error(request, "❌ Invalid credentials. Please check your email and password.")
+        else:
+            messages.error(request, "❌ No user found with this email address.")
+
+    return render(request, 'admin/auth/login.html', {'settings': settings})
 
 def dashboard(request):
     settings = Setting.objects.first()
