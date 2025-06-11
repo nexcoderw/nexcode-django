@@ -285,7 +285,16 @@ def updateMember(request, id):
 
 @superuser_required
 def deleteMember(request, id):
-    pass
+    member = get_object_or_404(Team, pk=id)
+    member_label = member.name or f"ID {member.pk}"
+
+    try:
+        member.delete()
+        messages.success(request, f"🗑️ Team member “{member_label}” deleted successfully.")
+    except ProtectedError:
+        messages.error(request, f"❌ Team member “{member_label}” can't be deleted because it is referenced by other records.")
+
+    return redirect("controller:team")
 
 @superuser_required
 def projects(request):
