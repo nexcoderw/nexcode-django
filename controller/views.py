@@ -262,10 +262,23 @@ def memberDetails(request, id):
 @superuser_required
 def updateMember(request, id):
     settings = Setting.objects.first()
+    member = get_object_or_404(Team, pk=id)
+
+    if request.method == "POST":
+        form = TeamForm(request.POST, request.FILES, instance=member)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✅ Team member “{member.name or 'Unnamed'}” updated successfully.")
+            return redirect("controller:team")
+        else:
+            messages.error(request, "❌ Could not update the member. Please fix the errors below.")
+    else:
+        form = TeamForm(instance=member)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "form": form,
+        "member": member,
     }
 
     return render(request, "admin/members/edit.html", context)
