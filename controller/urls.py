@@ -7,6 +7,9 @@ app_name = "controller"
 
 urlpatterns = [
     path("", signIn, name="signIn"),
+    path("logout/", signOut, name="signOut"),
+
+    # ----------Dashboard----------
     path("dashboard/", dashboard, name="dashboard"),
 
     # ---------- Clients ----------
