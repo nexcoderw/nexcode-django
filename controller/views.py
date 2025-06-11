@@ -3,8 +3,8 @@ from controller.forms import *
 from controller.decorators import *
 from django.contrib import messages
 from django.db.models import Q, ProtectedError
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
