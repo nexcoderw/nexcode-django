@@ -250,10 +250,11 @@ def addMember(request):
 @superuser_required
 def memberDetails(request, id):
     settings = Setting.objects.first()
+    member = get_object_or_404(Team, pk=id)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "member": member,
     }
 
     return render(request, "admin/members/show.html", context)
