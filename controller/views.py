@@ -310,7 +310,7 @@ def projects(request):
             Q(category__icontains=query)
         )
 
-    paginator = Paginator(portfolio_qs, 10)
+    paginator = Paginator(portfolio_qs, 12)
     page = request.GET.get("page", 1)
 
     try:
