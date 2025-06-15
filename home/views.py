@@ -218,8 +218,22 @@ def addTestimony(request):
 def getTraining(request):
     settings = Setting.objects.first()
 
+    trainings_qs = Training.objects.all().order_by('-start_date')
+
+    paginator = Paginator(trainings_qs, 12)
+    page = request.GET.get('page', 1)
+
+    try:
+        trainings_page = paginator.page(page)
+    except PageNotAnInteger:
+        trainings_page = paginator.page(1)
+    except EmptyPage:
+        trainings_page = paginator.page(paginator.num_pages)
+
     context = {
-        'settings': settings
+        'settings': settings,
+        'trainings': trainings_page,
+        'paginator': paginator,
     }
 
     return render(request, 'training/index.html', context)
