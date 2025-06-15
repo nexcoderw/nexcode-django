@@ -2,17 +2,21 @@
 {% load static %}
 {% block content %}
 
-    <header class="blog-hed">
+<header class="blog-hed">
     <div class="container section-padding bord-thin-bottom-light">
         <div class="row">
             <div class="col-lg-7">
                 <div class="caption md-mb30">
-                    <h1 class="text-indent">We are a digital agency for visually compelling about stories Hubfolio.</h1>
+                    <h1 class="text-indent">
+                        Elevate Your Skills with Industry-Leading Training Programs
+                    </h1>
                 </div>
             </div>
             <div class="col-lg-4 offset-lg-1 d-flex align-items-end">
                 <div class="text">
-                    <p>Crafting new bright brands, unique visual systems and digital experience focused on a wide range of original collabs.</p>
+                    <p>
+                        Dive deep into software development, master mobile app creation, and craft stunning UI/UX designs. Our expert-led courses empower you to build innovative digital solutions and design experiences that captivate and convert.
+                    </p>
                 </div>
             </div>
         </div>
@@ -31,7 +35,7 @@
                                     <div class="d-flex align-items-center">
                                         <div>
                                             <div class="author-img fit-img">
-                                                <img src="{% static 'img/not-found.png' %}" alt="">
+                                                <img src="{% static 'not-found.png' %}" alt="">
                                             </div>
                                         </div>
                                         <div class="author-info ml-10">
@@ -73,7 +77,7 @@
                     </div>
                 {% else %}
                     <p class="text-center text-(--color-base) opacity-70 py-20">No trainings available at the moment.</p>
-                {% endfor %}
+                {% endif %}
             </div>
             <div class="col-lg-4">
                 <div class="sidebar">
