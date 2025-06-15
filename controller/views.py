@@ -660,6 +660,7 @@ def addTraining(request):
         "settings": settings,
         "form": form,
     }
+
     return render(request, "admin/trainings/create.html", context)
 
 @superuser_required
@@ -671,7 +672,32 @@ def trainingDetails(request, id):
         "settings": settings,
         "training": training,
     }
+
     return render(request, "admin/trainings/show.html", context)
+
+@superuser_required
+def updateTraining(request, id):
+    settings = Setting.objects.first()
+    training = get_object_or_404(Training, pk=id)
+
+    if request.method == "POST":
+        form = TrainingForm(request.POST, request.FILES, instance=training)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✅ Training “{training.title}” updated successfully.")
+            return redirect("controller:trainings")
+        else:
+            messages.error(request, "❌ Could not update training. Please fix the errors below.")
+    else:
+        form = TrainingForm(instance=training)
+
+    context = {
+        "settings": settings,
+        "form": form,
+        "training": training,
+    }
+
+    return render(request, "admin/trainings/edit.html", context)
 
 @superuser_required
 def contacts(request):
