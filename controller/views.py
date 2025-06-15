@@ -461,10 +461,11 @@ def addBlog(request):
 @superuser_required
 def blogDetails(request, id):
     settings = Setting.objects.first()
+    blog = get_object_or_404(Blog, pk=id)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "blog": blog,
     }
 
     return render(request, "admin/blogs/show.html", context)
