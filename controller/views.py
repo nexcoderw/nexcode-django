@@ -543,8 +543,20 @@ def testimonies(request):
 def addTestimony(request):
     settings = Setting.objects.first()
 
+    if request.method == "POST":
+        form = TestimonyForm(request.POST)
+        if form.is_valid():
+            testimony = form.save()
+            messages.success(request, f"✅ Testimony from “{testimony.client.name if testimony.client else 'Anonymous'}” created successfully.")
+            return redirect("controller:testimonies")
+        else:
+            messages.error(request, "❌ Could not save the testimony. Please fix the errors below.")
+    else:
+        form = TestimonyForm()
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "form": form,
     }
 
     return render(request, "admin/testimonies/create.html", context)
