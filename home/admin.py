@@ -252,3 +252,11 @@ class TestimonyAdmin(admin.ModelAdmin):
         url = reverse("admin:home_testimony_delete", args=[obj.pk])
         return format_html('<a class="button" href="{}">Delete</a>', url)
     delete_link.short_description = "Delete"
+
+@admin.register(Training)
+class TrainingAdmin(admin.ModelAdmin):
+    list_display = ('title', 'status', 'price', 'start_date', 'end_date', 'created_at')
+    list_filter = ('status', 'start_date', 'end_date')
+    search_fields = ('title', 'description')
+    prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('created_at', 'updated_at')
