@@ -614,8 +614,32 @@ def deleteTestimony(request, id):
 def contacts(request):
     settings = Setting.objects.first()
 
+    query = request.GET.get("q", "").strip()
+    contact_qs = Contact.objects.all().order_by("-created_at")
+
+    if query:
+        contact_qs = contact_qs.filter(
+            Q(name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(subject__icontains=query) |
+            Q(message__icontains=query)
+        )
+
+    paginator = Paginator(contact_qs, 10)
+    page = request.GET.get("page", 1)
+
+    try:
+        contacts_page = paginator.page(page)
+    except PageNotAnInteger:
+        contacts_page = paginator.page(1)
+    except EmptyPage:
+        contacts_page = paginator.page(paginator.num_pages)
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "contacts": contacts_page,
+        "paginator": paginator,
+        "query": query,
     }
 
     return render(request, "admin/contacts/index.html", context)
