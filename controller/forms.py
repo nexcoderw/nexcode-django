@@ -84,6 +84,10 @@ class TeamForm(forms.ModelForm):
             }),
         }
 
+_input_class = ("h-10 w-full rounded-md border bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground placeholder:text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/5 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 "
+                          "focus-visible:outline-none focus-visible:ring-2 "
+                          "focus-visible:ring-foreground/5 focus-visible:ring-offset-2")
+
 class PortfolioForm(forms.ModelForm):
     class Meta:
         model = Portfolio
@@ -94,13 +98,26 @@ class PortfolioForm(forms.ModelForm):
             'deadline_date', 'project_amount'
         ]
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-            'project_initiation_date': forms.DateInput(attrs={'type': 'date'}),
-            'deadline_date': forms.DateInput(attrs={'type': 'date'}),
-            'tags': TagWidget(),
-            'team_members': forms.CheckboxSelectMultiple(),
+            'name': forms.TextInput(attrs={'class': _input_class, 'placeholder': 'Project Name'}),
+            'link': forms.TextInput(attrs={'class': _input_class, 'placeholder': 'Project Link'}),
+            'image': forms.ClearableFileInput(attrs={'class': _input_class}),
+            'big_image': forms.ClearableFileInput(attrs={'class': _input_class}),
+            'category': forms.Select(attrs={'class': _input_class}),
+            'description': forms.Textarea(attrs={'class': _input_class, 'rows': 4, 'placeholder': 'Project Description'}),
+            'tags': TagWidget(attrs={'class': _input_class}),
+            'repo_link': forms.URLInput(attrs={'class': _input_class, 'placeholder': 'Repository Link'}),
+            'figma_link': forms.URLInput(attrs={'class': _input_class, 'placeholder': 'Figma Link'}),
+            'project_category': forms.Select(attrs={'class': _input_class}),
+            'system_analysis_document': forms.ClearableFileInput(attrs={'class': _input_class}),
+            'publish': forms.CheckboxInput(attrs={'class': ''}),  # checkbox styling typically differs
+            'client': forms.Select(attrs={'class': _input_class}),
+            'team_members': forms.SelectMultiple(attrs={'class': _input_class}),
+            'contract_document': forms.ClearableFileInput(attrs={'class': _input_class}),
+            'project_initiation_date': forms.DateInput(attrs={'class': _input_class, 'type': 'date'}),
+            'deadline_date': forms.DateInput(attrs={'class': _input_class, 'type': 'date'}),
+            'project_amount': forms.NumberInput(attrs={'class': _input_class, 'placeholder': 'Project Amount'}),
         }
-    
+
     def clean_name(self):
         name = self.cleaned_data.get('name')
         if not name:
