@@ -642,6 +642,27 @@ def trainings(request):
     return render(request, "admin/trainings/index.html", context)
 
 @superuser_required
+def addTraining(request):
+    settings = Setting.objects.first()
+
+    if request.method == "POST":
+        form = TrainingForm(request.POST, request.FILES)
+        if form.is_valid():
+            training = form.save()
+            messages.success(request, f"✅ Training “{training.title}” created successfully.")
+            return redirect("controller:trainings")
+        else:
+            messages.error(request, "❌ Could not create training. Please fix the errors below.")
+    else:
+        form = TrainingForm()
+
+    context = {
+        "settings": settings,
+        "form": form,
+    }
+    return render(request, "admin/trainings/create.html", context)
+
+@superuser_required
 def contacts(request):
     settings = Setting.objects.first()
 
