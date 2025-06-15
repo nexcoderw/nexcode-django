@@ -511,8 +511,30 @@ def deleteBlog(request, id):
 def testimonies(request):
     settings = Setting.objects.first()
 
+    query = request.GET.get("q", "").strip()
+    testimony_qs = Testimony.objects.select_related('client').all().order_by("-created_at")
+
+    if query:
+        testimony_qs = testimony_qs.filter(
+            Q(message__icontains=query) |
+            Q(client__name__icontains=query)
+        )
+
+    paginator = Paginator(testimony_qs, 10)
+    page = request.GET.get("page", 1)
+
+    try:
+        testimonies_page = paginator.page(page)
+    except PageNotAnInteger:
+        testimonies_page = paginator.page(1)
+    except EmptyPage:
+        testimonies_page = paginator.page(paginator.num_pages)
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "testimonies": testimonies_page,
+        "paginator": paginator,
+        "query": query,
     }
 
     return render(request, "admin/testimonies/index.html", context)
