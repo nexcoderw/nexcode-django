@@ -3,7 +3,7 @@ from home.models import *
 from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def home(request):
     portfolio = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')[:4]
     team = Team.objects.all()[:4]

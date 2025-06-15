@@ -2,15 +2,118 @@
 {% load static %}
 {% block content %}
 
-    <header class="header-pg">
-        <div class="container">
-            <div class="text-center">
-                <div class="caption mb-100">
-                    <h1>Training</h1>
-                    <h6>( <a href="{% url 'base:home' %}">Home</a> - <span>Training</span> )</h6>
+    <header class="blog-hed">
+    <div class="container section-padding bord-thin-bottom-light">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="caption md-mb30">
+                    <h1 class="text-indent">We are a digital agency for visually compelling about stories Hubfolio.</h1>
+                </div>
+            </div>
+            <div class="col-lg-4 offset-lg-1 d-flex align-items-end">
+                <div class="text">
+                    <p>Crafting new bright brands, unique visual systems and digital experience focused on a wide range of original collabs.</p>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
+
+<div class="blog-mp section-padding">
+    <div class="container">
+        <div class="row xlg-marg">
+            <div class="col-lg-8">
+                {% if trainings %}
+                    <div class="main-blog md-mb80">
+                        {% for training in trainings %}
+                            <div class="item mb-80">
+                                <div class="info d-flex align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <div class="author-img fit-img">
+                                                <img src="{% static 'img/not-found.png' %}" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="author-info ml-10">
+                                            <span>Start Date</span>
+                                            <span class="sub-color">{{ training.start_date|date:"j M Y" }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="date ml-auto">
+                                        <span class="sub-color">
+                                            <i class="fa-regular fa-clock mr-15 opacity-7"></i>
+                                            {{ training.end_date|date:"j M Y" }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="img fit-img mt-30">
+                                    {% if training.image %}
+                                        <img src="{{ training.image.url }}" alt="{{ training.title }}">
+                                    {% else %}
+                                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                                            No Image
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="cont mt-30">
+                                    <span class="sub-color fz-14 text-u mb-15">
+                                        <a href="{% url 'base:trainingDetail' training.slug %}">
+                                            <i class="fa-solid fa-tag mr-10 opacity-7"></i> 
+                                            Web Design
+                                        </a>
+                                    </span>
+                                    <h3>
+                                        <a href="{% url 'base:trainingDetail' training.slug %}">
+                                            {{ training.title }}
+                                        </a>
+                                    </h3>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-(--color-base) opacity-70 py-20">No trainings available at the moment.</p>
+                {% endfor %}
+            </div>
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    <div class="search-box">
+                        <input type="text" name="search-post" placeholder="Search">
+                        <span class="icon pe-7s-search"></span>
+                    </div>
+                    <div class="widget catogry">
+                        <h6 class="title-widget">Categories</h6>
+                        <ul class="rest">
+                            <li>
+                                <span>
+                                    <a href="#">
+                                        Web Development
+                                    </a>
+                                </span>
+                                <span class="ml-auto">1</span>
+                            </li>
+                            <li>
+                                <span>
+                                    <a href="#">
+                                        Mobile Development
+                                    </a>
+                                </span>
+                                <span class="ml-auto">1</span>
+                            </li>
+                            <li>
+                                <span>
+                                    <a href="#">
+                                        UI/UX Design
+                                    </a>
+                                </span>
+                                <span class="ml-auto">1</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
