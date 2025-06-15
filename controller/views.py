@@ -366,10 +366,23 @@ def projectDetails(request, id):
 @superuser_required
 def updateProject(request, id):
     settings = Setting.objects.first()
+    project = get_object_or_404(Portfolio, pk=id)
+
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, request.FILES, instance=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✅ Project “{project.name or 'Unnamed'}” updated successfully.")
+            return redirect("controller:projects")
+        else:
+            messages.error(request, "❌ Could not update the project. Please fix the errors below.")
+    else:
+        form = PortfolioForm(instance=project)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "form": form,
+        "project": project,
     }
 
     return render(request, "admin/projects/edit.html", context)
