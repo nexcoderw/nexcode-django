@@ -238,6 +238,17 @@ def getTraining(request):
 
     return render(request, 'training/index.html', context)
 
+def trainingDetail(request, slug):
+    settings = Setting.objects.first()
+    training = get_object_or_404(Training, slug=slug)
+
+    context = {
+        'settings': settings,
+        'training': training,
+    }
+
+    return render(request, 'training/detail.html', context)
+
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
