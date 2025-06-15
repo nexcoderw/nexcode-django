@@ -146,3 +146,27 @@ class TestimonyForm(forms.ModelForm):
             'client': forms.Select(attrs={'class': _input_class}),
             'message': forms.Textarea(attrs={'class': _input_class, 'rows': 5, 'placeholder': 'Enter testimony message'}),
         }
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+        fields = ['title', 'image', 'description', 'price', 'start_date', 'end_date', 'status']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': _input_class, 'placeholder': 'Training Title'}),
+            'image': forms.ClearableFileInput(attrs={'class': _input_class}),
+            'description': forms.Textarea(attrs={'class': _input_class, 'rows': 5, 'placeholder': 'Describe the training'}),
+            'price': forms.NumberInput(attrs={'class': _input_class, 'placeholder': 'Price'}),
+            'start_date': forms.DateInput(attrs={'class': _input_class, 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': _input_class, 'type': 'date'}),
+            'status': forms.Select(attrs={'class': _input_class}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start = cleaned_data.get("start_date")
+        end = cleaned_data.get("end_date")
+
+        if start and end and end < start:
+            raise forms.ValidationError("End date cannot be earlier than start date.")
+
+        return cleaned_data
