@@ -123,3 +123,17 @@ class PortfolioForm(forms.ModelForm):
         if not name:
             raise forms.ValidationError("Project name is required.")
         return name
+
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = ['title', 'featured_image', 'content', 'excerpt', 'tags', 'category', 'status']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': _input_class, 'placeholder': 'Blog Title'}),
+            'featured_image': forms.ClearableFileInput(attrs={'class': _input_class}),
+            'content': forms.Textarea(attrs={'class': _input_class, 'rows': 6, 'placeholder': 'Write your blog content here...'}),
+            'excerpt': forms.Textarea(attrs={'class': _input_class, 'rows': 3, 'placeholder': 'Brief excerpt or summary'}),
+            'tags': TagWidget(attrs={'class': _input_class}),
+            'category': forms.TextInput(attrs={'class': _input_class, 'placeholder': 'Category'}),
+            'status': forms.Select(attrs={'class': _input_class}),
+        }
