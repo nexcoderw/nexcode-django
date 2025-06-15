@@ -389,7 +389,16 @@ def updateProject(request, id):
 
 @superuser_required
 def deleteProject(request, id):
-    pass
+    project = get_object_or_404(Portfolio, pk=id)
+    project_label = project.name or f"ID {project.pk}"
+
+    try:
+        project.delete()
+        messages.success(request, f"🗑️ Project “{project_label}” deleted successfully.")
+    except ProtectedError:
+        messages.error(request, f"❌ Project “{project_label}” can’t be deleted because it is referenced by other records.")
+
+    return redirect("controller:projects")
 
 @superuser_required
 def blogs(request):
