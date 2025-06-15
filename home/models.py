@@ -423,7 +423,7 @@ class Training(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     image = ProcessedImageField(
         upload_to=training_image_path,
-        processors=[ResizeToFill(1200, 675)],
+        # processors=[ResizeToFill(1200, 675)],
         format='JPEG',
         options={'quality': 90},
         null=True,
