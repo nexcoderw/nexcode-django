@@ -42,6 +42,11 @@ def client_image_path(instance, filename):
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     return f'clients/{slugify(instance.name)}_{timestamp}{file_extension}'
 
+def training_image_path(instance, filename):
+    ext = filename.split('.')[-1]
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f'trainings/training_{slugify(instance.title)}_{timestamp}.{ext}'
+
 class Client(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
@@ -406,3 +411,53 @@ class PortfolioRepo(models.Model):
 
     def __str__(self):
         return f"Repo for {self.portfolio.name}: {self.link}"
+
+class Training(models.Model):
+    STATUS_CHOICES = [
+        ('Coming Soon', 'Coming Soon'),
+        ('Happening', 'Happening'),
+        ('Ended', 'Ended'),
+    ]
+
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    image = ProcessedImageField(
+        upload_to=training_image_path,
+        processors=[ResizeToFill(1200, 675)],
+        format='JPEG',
+        options={'quality': 90},
+        null=True,
+        blank=True
+    )
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Coming Soon')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def _generate_random_number(self, length=6):
+        return ''.join(random.choices(string.digits, k=length))
+
+    def _generate_unique_slug(self):
+        base_slug = slugify(self.title)
+        random_number = self._generate_random_number()
+        slug = f"{base_slug}-{random_number}"
+        while Training.objects.filter(slug=slug).exists():
+            random_number = self._generate_random_number()
+            slug = f"{base_slug}-{random_number}"
+        return slug
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._generate_unique_slug()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Training"
+        verbose_name_plural = "Trainings"
+        ordering = ['-start_date']
