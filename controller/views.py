@@ -564,10 +564,11 @@ def addTestimony(request):
 @superuser_required
 def testimonyDetails(request, id):
     settings = Setting.objects.first()
+    testimony = get_object_or_404(Testimony, pk=id)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "testimony": testimony,
     }
 
     return render(request, "admin/testimonies/show.html", context)
