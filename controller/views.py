@@ -700,6 +700,19 @@ def updateTraining(request, id):
     return render(request, "admin/trainings/edit.html", context)
 
 @superuser_required
+def deleteTraining(request, id):
+    training = get_object_or_404(Training, pk=id)
+    label = training.title
+
+    try:
+        training.delete()
+        messages.success(request, f"🗑️ Training “{label}” deleted successfully.")
+    except ProtectedError:
+        messages.error(request, f"❌ Training “{label}” cannot be deleted because it is referenced by other records.")
+
+    return redirect("controller:trainings")
+
+@superuser_required
 def contacts(request):
     settings = Setting.objects.first()
 
