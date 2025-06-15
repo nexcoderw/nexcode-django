@@ -216,6 +216,10 @@ def addTestimony(request):
     return render(request, 'testimony.html', context)
 
 def getTraining(request):
+    context = {
+        
+    }
+
     return render(request, 'training/index.html', context)
 
 def contact(request):
