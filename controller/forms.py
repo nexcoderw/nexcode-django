@@ -137,3 +137,12 @@ class BlogForm(forms.ModelForm):
             'category': forms.TextInput(attrs={'class': _input_class, 'placeholder': 'Category'}),
             'status': forms.Select(attrs={'class': _input_class}),
         }
+
+class TestimonyForm(forms.ModelForm):
+    class Meta:
+        model = Testimony
+        fields = ['client', 'message']
+        widgets = {
+            'client': forms.Select(attrs={'class': _input_class}),
+            'message': forms.Textarea(attrs={'class': _input_class, 'rows': 5, 'placeholder': 'Enter testimony message'}),
+        }
