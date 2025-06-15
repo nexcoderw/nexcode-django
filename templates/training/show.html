@@ -1,0 +1,47 @@
+{% extends "layouts/app.html" %}
+{% load static %}
+{% block content %}
+
+<div class="pt-8 pb-12 px-7 max-w-4xl mx-auto">
+    <h1 class="mb-6 text-3xl font-bold text-center">{{ training.title }}</h1>
+
+    {% if training.image %}
+        <img src="{{ training.image.url }}" alt="{{ training.title }}"
+             class="w-full rounded-lg shadow-md object-cover max-h-96 mx-auto mb-8" />
+    {% else %}
+        <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-8">
+            <span class="text-gray-500">No Image Available</span>
+        </div>
+    {% endif %}
+
+    <div class="mb-6 whitespace-pre-line text-(--color-base)">
+        {{ training.description }}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-(--color-base) mb-10">
+        <div>
+            <h4 class="font-semibold mb-1">Price</h4>
+            <p>${{ training.price }}</p>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-1">Status</h4>
+            <p>{{ training.status }}</p>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-1">Start Date</h4>
+            <p>{{ training.start_date|date:"j M Y" }}</p>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-1">End Date</h4>
+            <p>{{ training.end_date|date:"j M Y" }}</p>
+        </div>
+    </div>
+
+    <a href="{% url 'getTraining' %}"
+       class="inline-block rounded-lg border border-(--color-primary) bg-(--color-primary)/10 px-6 py-2
+              text-(--color-primary) font-medium hover:bg-(--color-primary)/20 transition-colors">
+        ← Back to Trainings
+    </a>
+</div>
+
+{% endblock %}
