@@ -333,8 +333,20 @@ def projects(request):
 def addProject(request):
     settings = Setting.objects.first()
 
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, request.FILES)
+        if form.is_valid():
+            project = form.save()
+            messages.success(request, f"✅ Project “{project.name or 'Unnamed'}” created successfully.")
+            return redirect("controller:projects")
+        else:
+            messages.error(request, "❌ Could not save the project. Please correct the errors below.")
+    else:
+        form = PortfolioForm()
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "form": form,
     }
 
     return render(request, "admin/projects/create.html", context)
