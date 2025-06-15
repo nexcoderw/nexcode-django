@@ -611,6 +611,37 @@ def deleteTestimony(request, id):
     return redirect("controller:testimonies")
 
 @superuser_required
+def trainings(request):
+    settings = Setting.objects.first()
+
+    query = request.GET.get("q", "").strip()
+    trainings_qs = Training.objects.all().order_by("-start_date")
+
+    if query:
+        trainings_qs = trainings_qs.filter(
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(status__icontains=query)
+        )
+
+    paginator = Paginator(trainings_qs, 10)
+    page = request.GET.get("page", 1)
+
+    try:
+        trainings_page = paginator.page(page)
+    except PageNotAnInteger:
+        trainings_page = paginator.page(1)
+    except EmptyPage:
+        trainings_page = paginator.page(paginator.num_pages)
+
+    context = {
+        "settings": settings,
+        "trainings": trainings_page,
+        "paginator": paginator,
+        "query": query,
+    }
+
+    return render(request, "admin/trainings/index.html", context)
+
+@superuser_required
 def contacts(request):
     settings = Setting.objects.first()
 
