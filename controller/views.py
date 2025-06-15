@@ -576,10 +576,23 @@ def testimonyDetails(request, id):
 @superuser_required
 def updateTestimony(request, id):
     settings = Setting.objects.first()
+    testimony = get_object_or_404(Testimony, pk=id)
+
+    if request.method == "POST":
+        form = TestimonyForm(request.POST, instance=testimony)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✅ Testimony from “{testimony.client.name if testimony.client else 'Anonymous'}” updated successfully.")
+            return redirect("controller:testimonies")
+        else:
+            messages.error(request, "❌ Could not update the testimony. Please fix the errors below.")
+    else:
+        form = TestimonyForm(instance=testimony)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "form": form,
+        "testimony": testimony,
     }
 
     return render(request, "admin/testimonies/edit.html", context)
