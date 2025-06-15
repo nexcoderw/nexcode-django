@@ -1,11 +1,65 @@
-{% extends 'admin/layouts/app.html' %}
+{% extends "admin/layouts/app.html" %}
 {% load static %}
 {% block content %}
 
-	<div>
-        <div class="grid grid-cols-12 gap-6">
-            Show Client
+<div class="pt-8 pb-12 px-7 relative z-10
+    before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+    after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+    after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20 max-w-3xl mx-auto">
+        <h2 class="mt-10 mb-6 text-lg font-medium">Testimony Details</h2>
+
+        <div class="box relative p-6 before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+            before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+            after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+            after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md">
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold">
+                        Client:
+                        <span class="font-normal text-(--color)">
+                            {{ testimony.client.name }}
+                        </span>
+                    </h3>
+                    <p class="text-xs text-(--color) opacity-70 mt-1">
+                        Created at: {{ testimony.created_at|date:"j M Y, H:i" }}
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-2">Message</h4>
+                    <p class="whitespace-pre-line text-(--color) opacity-90">{{ testimony.message }}</p>
+                </div>
+
+                <div class="flex gap-3 mt-8">
+                    <a href="{% url 'controller:updateTestimony' testimony.id %}"
+                       class="inline-flex items-center gap-2 rounded-lg border border-(--color)/60 bg-(--color)/20
+                              px-4 py-2 text-(--color) text-sm font-medium hover:bg-(--color)/30
+                              focus:outline-none focus:ring-2 focus:ring-(--color) focus:ring-offset-2">
+                        Edit Testimony
+                    </a>
+
+                    <a href="{% url 'controller:deleteTestimony' testimony.id %}"
+                       onclick="return confirm('Are you sure you want to delete this testimony? This action cannot be undone.')"
+                       class="inline-flex items-center gap-2 rounded-lg border border-(--color-danger)/80 bg-(--color-danger)/20
+                              px-4 py-2 text-(--color-danger) text-sm font-medium hover:bg-(--color-danger)/30
+                              focus:outline-none focus:ring-2 focus:ring-(--color-danger) focus:ring-offset-2">
+                        Delete Testimony
+                    </a>
+
+                    <a href="{% url 'controller:testimonies' %}"
+                       class="inline-flex items-center gap-2 rounded-lg border border-(--color)/60 bg-(--color)/10
+                              px-4 py-2 text-(--color) text-sm font-medium hover:bg-(--color)/20
+                              focus:outline-none focus:ring-2 focus:ring-(--color) focus:ring-offset-2">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
+</div>
 
 {% endblock %}
