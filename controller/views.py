@@ -473,10 +473,23 @@ def blogDetails(request, id):
 @superuser_required
 def updateBlog(request, id):
     settings = Setting.objects.first()
+    blog = get_object_or_404(Blog, pk=id)
+
+    if request.method == "POST":
+        form = BlogForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✅ Blog “{blog.title or 'Untitled'}” updated successfully.")
+            return redirect("controller:blogs")
+        else:
+            messages.error(request, "❌ Could not update the blog. Please fix the errors below.")
+    else:
+        form = BlogForm(instance=blog)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "form": form,
+        "blog": blog,
     }
 
     return render(request, "admin/blogs/edit.html", context)
