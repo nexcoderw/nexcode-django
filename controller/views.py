@@ -496,7 +496,16 @@ def updateBlog(request, id):
 
 @superuser_required
 def deleteBlog(request, id):
-    pass
+    blog = get_object_or_404(Blog, pk=id)
+    blog_label = blog.title or f"ID {blog.pk}"
+
+    try:
+        blog.delete()
+        messages.success(request, f"🗑️ Blog “{blog_label}” deleted successfully.")
+    except ProtectedError:
+        messages.error(request, f"❌ Blog “{blog_label}” can’t be deleted because it is referenced by other records.")
+
+    return redirect("controller:blogs")
 
 @superuser_required
 def testimonies(request):
