@@ -437,8 +437,23 @@ def blogs(request):
 def addBlog(request):
     settings = Setting.objects.first()
 
+    if request.method == "POST":
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            blog.author = request.user
+            blog.save()
+            form.save_m2m()  # For tags
+            messages.success(request, f"✅ Blog “{blog.title or 'Untitled'}” created successfully.")
+            return redirect("controller:blogs")
+        else:
+            messages.error(request, "❌ Could not save the blog. Please correct the errors below.")
+    else:
+        form = BlogForm()
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "form": form,
     }
 
     return render(request, "admin/blogs/create.html", context)
