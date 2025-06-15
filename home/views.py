@@ -247,7 +247,7 @@ def trainingDetail(request, slug):
         'training': training,
     }
 
-    return render(request, 'training/detail.html', context)
+    return render(request, 'training/show.html', context)
 
 def contact(request):
     if request.method == 'POST':
