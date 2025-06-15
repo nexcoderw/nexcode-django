@@ -215,6 +215,9 @@ def addTestimony(request):
     }
     return render(request, 'testimony.html', context)
 
+def getTraining(request):
+    return render(request, 'training/index.html', context)
+
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
