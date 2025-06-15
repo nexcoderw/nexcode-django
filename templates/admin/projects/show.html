@@ -2,10 +2,187 @@
 {% load static %}
 {% block content %}
 
-	<div>
-        <div class="grid grid-cols-12 gap-6">
-            Show Client
+<div class="pt-8 pb-12 px-7 relative z-10
+    before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+    after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+    after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20 max-w-6xl mx-auto">
+        <h2 class="mt-10 mb-6 text-lg font-medium">Project Details</h2>
+
+        <div class="box relative p-6
+            before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+            before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+            after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+            after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Left: Images -->
+                <div>
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.name }}" class="w-full rounded-lg object-cover mb-4" />
+                    {% endif %}
+                    {% if project.big_image %}
+                        <img src="{{ project.big_image.url }}" alt="{{ project.name }} Big Image" class="w-full rounded-lg object-cover" />
+                    {% endif %}
+                </div>
+
+                <!-- Right: Info -->
+                <div class="md:col-span-2 space-y-6">
+
+                    <div>
+                        <h3 class="text-2xl font-semibold">{{ project.name|default:"Unnamed Project" }}</h3>
+                        {% if project.slug %}
+                            <p class="text-sm text-(--color) opacity-70">Slug: {{ project.slug }}</p>
+                        {% endif %}
+                        {% if project.publish %}
+                            <span class="inline-block mt-1 px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-700">
+                                Published
+                            </span>
+                        {% else %}
+                            <span class="inline-block mt-1 px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-700">
+                                Draft
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if project.description %}
+                    <div>
+                        <h4 class="font-semibold mb-1">Description</h4>
+                        <p class="text-(--color) whitespace-pre-line">{{ project.description }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if project.category %}
+                    <div>
+                        <strong>Category:</strong> {{ project.category }}
+                    </div>
+                    {% endif %}
+
+                    {% if project.project_category %}
+                    <div>
+                        <strong>Project Type:</strong> {{ project.project_category }}
+                    </div>
+                    {% endif %}
+
+                    {% if project.client %}
+                    <div>
+                        <strong>Client:</strong>
+                        <a href="{% url 'controller:clientDetails' project.client.id %}" class="text-(--color) hover:underline">
+                            {{ project.client.name|default:"Unnamed Client" }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    {% if project.team_members.all %}
+                    <div>
+                        <strong>Team Members:</strong>
+                        <ul class="list-disc list-inside">
+                            {% for member in project.team_members.all %}
+                                <li>
+                                    <a href="{% url 'controller:memberDetails' member.id %}" class="text-(--color) hover:underline">
+                                        {{ member.name|default:"Unnamed Member" }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li>No team members assigned.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                        {% if project.repo_link %}
+                        <div>
+                            <strong>Repository Link:</strong>
+                            <a href="{{ project.repo_link }}" target="_blank" rel="noopener noreferrer" class="text-(--color) hover:underline break-all">
+                                {{ project.repo_link }}
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        {% if project.figma_link %}
+                        <div>
+                            <strong>Figma Link:</strong>
+                            <a href="{{ project.figma_link }}" target="_blank" rel="noopener noreferrer" class="text-(--color) hover:underline break-all">
+                                {{ project.figma_link }}
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        {% if project.system_analysis_document %}
+                        <div>
+                            <strong>System Analysis Document:</strong>
+                            <a href="{{ project.system_analysis_document.url }}" target="_blank" class="text-(--color) hover:underline">
+                                Download
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                        {% if project.contract_document %}
+                        <div>
+                            <strong>Contract Document:</strong>
+                            <a href="{{ project.contract_document.url }}" target="_blank" class="text-(--color) hover:underline">
+                                Download
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        {% if project.project_initiation_date %}
+                        <div>
+                            <strong>Project Initiation Date:</strong>
+                            {{ project.project_initiation_date|date:"j M Y" }}
+                        </div>
+                        {% endif %}
+
+                        {% if project.deadline_date %}
+                        <div>
+                            <strong>Deadline Date:</strong>
+                            {{ project.deadline_date|date:"j M Y" }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4">
+                        <strong>Project Amount:</strong> {{ project.project_amount|default:"N/A" }}
+                    </div>
+                    <div>
+                        <strong>Amount Paid:</strong> {{ project.amount_paid|default:"0.00" }}
+                    </div>
+                    <div>
+                        <strong>Payment Status:</strong> {{ project.payment_status }}
+                    </div>
+
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="{% url 'controller:updateProject' project.id %}"
+                           class="inline-flex items-center gap-2 rounded-lg border border-(--color)/60 bg-(--color)/20
+                                  px-4 py-2 text-(--color) text-sm font-medium hover:bg-(--color)/30
+                                  focus:outline-none focus:ring-2 focus:ring-(--color) focus:ring-offset-2">
+                            Edit Project
+                        </a>
+
+                        <a href="{% url 'controller:deleteProject' project.id %}"
+                           onclick="return confirm('Are you sure you want to delete this project? This action cannot be undone.')"
+                           class="inline-flex items-center gap-2 rounded-lg border border-(--color-danger)/80 bg-(--color-danger)/20
+                                  px-4 py-2 text-(--color-danger) text-sm font-medium hover:bg-(--color-danger)/30
+                                  focus:outline-none focus:ring-2 focus:ring-(--color-danger) focus:ring-offset-2">
+                            Delete Project
+                        </a>
+
+                        <a href="{% url 'controller:projects' %}"
+                           class="inline-flex items-center gap-2 rounded-lg border border-(--color)/60 bg-(--color)/10
+                                  px-4 py-2 text-(--color) text-sm font-medium hover:bg-(--color)/20
+                                  focus:outline-none focus:ring-2 focus:ring-(--color) focus:ring-offset-2">
+                            Back to Projects List
+                        </a>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
 {% endblock %}
