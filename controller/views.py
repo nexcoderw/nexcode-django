@@ -599,7 +599,16 @@ def updateTestimony(request, id):
 
 @superuser_required
 def deleteTestimony(request, id):
-    pass
+    testimony = get_object_or_404(Testimony, pk=id)
+    label = testimony.client.name if testimony.client else f"ID {testimony.pk}"
+
+    try:
+        testimony.delete()
+        messages.success(request, f"🗑️ Testimony from “{label}” deleted successfully.")
+    except ProtectedError:
+        messages.error(request, f"❌ Testimony from “{label}” cannot be deleted because it is referenced by other records.")
+
+    return redirect("controller:testimonies")
 
 @superuser_required
 def contacts(request):
