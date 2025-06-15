@@ -354,10 +354,11 @@ def addProject(request):
 @superuser_required
 def projectDetails(request, id):
     settings = Setting.objects.first()
+    project = get_object_or_404(Portfolio, pk=id)
 
     context = {
-        'settings': settings,
-        "id": id
+        "settings": settings,
+        "project": project,
     }
 
     return render(request, "admin/projects/show.html", context)
