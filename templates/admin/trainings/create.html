@@ -1,0 +1,158 @@
+{% extends 'admin/layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+<div class="pt-8 pb-12 px-7 relative z-10
+    before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+    after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+    after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20 max-w-4xl mx-auto">
+        <div class="mt-8 flex items-center">
+            <h2 class="mr-auto text-lg font-medium">
+                Add New Training
+            </h2>
+        </div>
+
+        <div class="mt-5 grid grid-cols-12 gap-x-6">
+            <form method="post" enctype="multipart/form-data" class="col-span-12">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="box relative p-5
+                    before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+                    before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+                    after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+                    after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md">
+
+                    <div class="rounded-lg border p-5">
+                        <div class="flex items-center border-b pb-5 text-base font-medium">
+                            Training Information
+                        </div>
+
+                        <div class="mt-5 flex flex-col gap-5">
+
+                            <!-- Title -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.title.id_for_label }}">
+                                        Title
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Required</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.title }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.title.errors }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Image -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.image.id_for_label }}">
+                                        Image
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Optional</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.image }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.image.errors }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.description.id_for_label }}">
+                                        Description
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Required</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.description }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.description.errors }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.price.id_for_label }}">
+                                        Price
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Required</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.price }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.price.errors }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Start Date -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.start_date.id_for_label }}">
+                                        Start Date
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Required</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.start_date }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.start_date.errors }}</p>
+                                </div>
+                            </div>
+
+                            <!-- End Date -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.end_date.id_for_label }}">
+                                        End Date
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Required</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.end_date }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.end_date.errors }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="flex flex-col items-start xl:flex-row">
+                                <div class="w-full xl:mr-10 xl:w-64">
+                                    <label class="font-medium" for="{{ form.status.id_for_label }}">
+                                        Status
+                                        <span class="ml-2 text-xs text-(--color) font-normal">Required</span>
+                                    </label>
+                                </div>
+                                <div class="mt-3 w-full flex-1 xl:mt-0">
+                                    {{ form.status }}
+                                    <p class="text-right text-xs text-red-600 mt-1">{{ form.status.errors }}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-col justify-end gap-4 md:flex-row">
+                    <a href="{% url 'controller:trainings' %}"
+                       class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background
+                              transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                              disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color)
+                              hover:bg-(--color)/5 bg-background border-(--color)/20 h-10 px-4 box w-full py-3 md:w-64">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                        class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background
+                               transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                               disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60
+                               text-(--color) hover:bg-(--color)/5 [--color:var(--color-primary)] h-10 px-4 box w-full py-3 md:w-64">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
