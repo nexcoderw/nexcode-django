@@ -404,8 +404,31 @@ def deleteProject(request, id):
 def blogs(request):
     settings = Setting.objects.first()
 
+    query = request.GET.get("q", "").strip()
+    blog_qs = Blog.objects.all().order_by("-published_at", "-created_at")
+
+    if query:
+        blog_qs = blog_qs.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(category__icontains=query)
+        )
+
+    paginator = Paginator(blog_qs, 10)
+    page = request.GET.get("page", 1)
+
+    try:
+        blogs_page = paginator.page(page)
+    except PageNotAnInteger:
+        blogs_page = paginator.page(1)
+    except EmptyPage:
+        blogs_page = paginator.page(paginator.num_pages)
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "blogs": blogs_page,
+        "paginator": paginator,
+        "query": query,
     }
 
     return render(request, "admin/blogs/index.html", context)
