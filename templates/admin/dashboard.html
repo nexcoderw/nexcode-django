@@ -2,10 +2,208 @@
 {% load static %}
 {% block content %}
 
-	<div>
-        <div class="grid grid-cols-12 gap-6">
-            Dashboard
+<div class="space-y-8">
+
+    <h1 class="text-3xl font-semibold mb-6">Admin Dashboard</h1>
+
+    <!-- Date Filter -->
+    <form method="get" class="flex flex-wrap gap-4 items-end mb-8">
+        <div>
+            <label for="start_date" class="block font-medium mb-1">Start Date</label>
+            <input type="date" id="start_date" name="start_date" value="{{ start_date }}"
+                   class="border rounded px-3 py-2" max="{{ end_date }}">
+        </div>
+        <div>
+            <label for="end_date" class="block font-medium mb-1">End Date</label>
+            <input type="date" id="end_date" name="end_date" value="{{ end_date }}"
+                   class="border rounded px-3 py-2" min="{{ start_date }}">
+        </div>
+        <button type="submit" class="bg-(--color-primary) text-white px-4 py-2 rounded hover:bg-(--color-primary)/90 transition">
+            Filter
+        </button>
+    </form>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for label, count in [
+            ("Clients", total_clients),
+            ("Projects", total_projects),
+            ("Blogs", total_blogs),
+            ("Testimonies", total_testimonies),
+            ("Trainings", total_trainings),
+            ("Contacts", total_contacts),
+        ] %}
+        <div class="bg-background rounded-lg shadow p-5 flex flex-col items-center">
+            <div class="text-4xl font-bold text-(--color-primary)">{{ count }}</div>
+            <div class="mt-1 text-(--color-base) font-medium">{{ label }}</div>
+        </div>
+        {% endfor %}
+
+        <div class="bg-background rounded-lg shadow p-5 flex flex-col items-center">
+            <div class="text-4xl font-bold text-(--color-primary)">${{ total_project_amount|floatformat:2 }}</div>
+            <div class="mt-1 text-(--color-base) font-medium">Total Project Amount</div>
+        </div>
+        <div class="bg-background rounded-lg shadow p-5 flex flex-col items-center">
+            <div class="text-4xl font-bold text-(--color-primary)">${{ total_amount_paid|floatformat:2 }}</div>
+            <div class="mt-1 text-(--color-base) font-medium">Total Amount Paid</div>
         </div>
     </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
+
+        <!-- New Clients Chart -->
+        <div class="bg-background rounded-lg shadow p-5">
+            <h2 class="text-xl font-semibold mb-4">New Clients Over Time</h2>
+            <canvas id="clientsChart" height="200"></canvas>
+        </div>
+
+        <!-- New Projects Chart -->
+        <div class="bg-background rounded-lg shadow p-5">
+            <h2 class="text-xl font-semibold mb-4">New Projects Over Time</h2>
+            <canvas id="projectsChart" height="200"></canvas>
+        </div>
+
+        <!-- New Blogs Chart -->
+        <div class="bg-background rounded-lg shadow p-5">
+            <h2 class="text-xl font-semibold mb-4">New Blogs Over Time</h2>
+            <canvas id="blogsChart" height="200"></canvas>
+        </div>
+
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="mt-12">
+        <h2 class="text-2xl font-semibold mb-6">Recent Activities</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <!-- Recent Clients -->
+            <div class="bg-background rounded-lg shadow p-5 overflow-auto max-h-72">
+                <h3 class="font-semibold mb-3">Recent Clients</h3>
+                <ul class="divide-y divide-(--color-base)/20">
+                    {% for client in recent_clients %}
+                    <li class="py-2 text-(--color-base)">
+                        {{ client.name|default:"Unnamed" }} <br>
+                        <small class="text-xs opacity-60">{{ client.created_at|date:"j M Y, H:i" }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="py-2 opacity-70">No recent clients.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Recent Projects -->
+            <div class="bg-background rounded-lg shadow p-5 overflow-auto max-h-72">
+                <h3 class="font-semibold mb-3">Recent Projects</h3>
+                <ul class="divide-y divide-(--color-base)/20">
+                    {% for project in recent_projects %}
+                    <li class="py-2 text-(--color-base)">
+                        {{ project.name|default:"Unnamed" }} <br>
+                        <small class="text-xs opacity-60">{{ project.created_at|date:"j M Y, H:i" }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="py-2 opacity-70">No recent projects.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Recent Blogs -->
+            <div class="bg-background rounded-lg shadow p-5 overflow-auto max-h-72">
+                <h3 class="font-semibold mb-3">Recent Blogs</h3>
+                <ul class="divide-y divide-(--color-base)/20">
+                    {% for blog in recent_blogs %}
+                    <li class="py-2 text-(--color-base)">
+                        {{ blog.title|default:"Untitled" }} <br>
+                        <small class="text-xs opacity-60">{{ blog.published_at|date:"j M Y, H:i" }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="py-2 opacity-70">No recent blogs.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Recent Contacts -->
+            <div class="bg-background rounded-lg shadow p-5 overflow-auto max-h-72">
+                <h3 class="font-semibold mb-3">Recent Contacts</h3>
+                <ul class="divide-y divide-(--color-base)/20">
+                    {% for contact in recent_contacts %}
+                    <li class="py-2 text-(--color-base)">
+                        {{ contact.name|default:"No Name" }} <br>
+                        <small class="text-xs opacity-60">{{ contact.created_at|date:"j M Y, H:i" }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="py-2 opacity-70">No recent contacts.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="{% static 'js/chart.min.js' %}"></script>
+
+<script>
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1 } },
+            x: { ticks: { maxRotation: 45, minRotation: 45 } }
+        }
+    };
+
+    const clientsCtx = document.getElementById('clientsChart').getContext('2d');
+    new Chart(clientsCtx, {
+        type: 'line',
+        data: {
+            labels: {{ clients_dates|safe }},
+            datasets: [{
+                label: 'New Clients',
+                data: {{ clients_counts|safe }},
+                fill: true,
+                borderColor: 'rgba(59, 130, 246, 1)',
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                tension: 0.3,
+            }]
+        },
+        options: commonOptions,
+    });
+
+    const projectsCtx = document.getElementById('projectsChart').getContext('2d');
+    new Chart(projectsCtx, {
+        type: 'line',
+        data: {
+            labels: {{ projects_dates|safe }},
+            datasets: [{
+                label: 'New Projects',
+                data: {{ projects_counts|safe }},
+                fill: true,
+                borderColor: 'rgba(16, 185, 129, 1)',
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                tension: 0.3,
+            }]
+        },
+        options: commonOptions,
+    });
+
+    const blogsCtx = document.getElementById('blogsChart').getContext('2d');
+    new Chart(blogsCtx, {
+        type: 'line',
+        data: {
+            labels: {{ blogs_dates|safe }},
+            datasets: [{
+                label: 'New Blogs',
+                data: {{ blogs_counts|safe }},
+                fill: true,
+                borderColor: 'rgba(234, 88, 12, 1)',
+                backgroundColor: 'rgba(234, 88, 12, 0.2)',
+                tension: 0.3,
+            }]
+        },
+        options: commonOptions,
+    });
+</script>
 
 {% endblock %}
