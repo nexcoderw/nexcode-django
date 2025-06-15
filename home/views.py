@@ -216,8 +216,10 @@ def addTestimony(request):
     return render(request, 'testimony.html', context)
 
 def getTraining(request):
+    settings = Setting.objects.first()
+
     context = {
-        
+        'settings': settings
     }
 
     return render(request, 'training/index.html', context)
