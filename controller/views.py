@@ -663,6 +663,17 @@ def addTraining(request):
     return render(request, "admin/trainings/create.html", context)
 
 @superuser_required
+def trainingDetails(request, id):
+    settings = Setting.objects.first()
+    training = get_object_or_404(Training, pk=id)
+
+    context = {
+        "settings": settings,
+        "training": training,
+    }
+    return render(request, "admin/trainings/show.html", context)
+
+@superuser_required
 def contacts(request):
     settings = Setting.objects.first()
 
