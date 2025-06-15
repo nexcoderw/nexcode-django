@@ -2,7 +2,11 @@
 {% load static %}
 {% block content %}
 
-<div class="space-y-8">
+<div class="pt-8 pb-12 px-7 relative z-10
+    before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+    after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+    after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+<div class="grid grid-cols-12 gap-6">
 
     <h1 class="text-3xl font-semibold mb-6">Admin Dashboard</h1>
 
@@ -24,18 +28,18 @@
     </form>
 
     <!-- Summary Cards -->
+    <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {% for label, count in [
-            ("Clients", total_clients),
-            ("Projects", total_projects),
-            ("Blogs", total_blogs),
-            ("Testimonies", total_testimonies),
-            ("Trainings", total_trainings),
-            ("Contacts", total_contacts),
-        ] %}
+        {% for card in summary_cards %}
         <div class="bg-background rounded-lg shadow p-5 flex flex-col items-center">
-            <div class="text-4xl font-bold text-(--color-primary)">{{ count }}</div>
-            <div class="mt-1 text-(--color-base) font-medium">{{ label }}</div>
+            <div class="text-4xl font-bold text-(--color-primary)">
+                {% if card.is_currency %}
+                    ${{ card.count|floatformat:2 }}
+                {% else %}
+                    {{ card.count }}
+                {% endif %}
+            </div>
+            <div class="mt-1 text-(--color-base) font-medium">{{ card.label }}</div>
         </div>
         {% endfor %}
 
@@ -139,6 +143,7 @@
 
         </div>
     </div>
+</div>
 </div>
 
 <!-- Chart.js -->
