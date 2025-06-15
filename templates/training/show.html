@@ -2,40 +2,64 @@
 {% load static %}
 {% block content %}
 
-    <div class="pt-8 pb-12 px-7 max-w-4xl mx-auto">
-        <h1 class="mb-6 text-3xl font-bold text-center">{{ training.title }}</h1>
-
-        {% if training.image %}
-            <img src="{{ training.image.url }}" alt="{{ training.title }}"
-                class="w-full rounded-lg shadow-md object-cover max-h-96 mx-auto mb-8" />
-        {% else %}
-            <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-8">
-                <span class="text-gray-500">No Image Available</span>
-            </div>
-        {% endif %}
-
-        <div class="mb-6 whitespace-pre-line text-(--color-base)">
-            {{ training.description }}
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-(--color-base) mb-10">
-            <div>
-                <h4 class="font-semibold mb-1">Price</h4>
-                <p>${{ training.price }}</p>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-1">Status</h4>
-                <p>{{ training.status }}</p>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-1">Start Date</h4>
-                <p>{{ training.start_date|date:"j M Y" }}</p>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-1">End Date</h4>
-                <p>{{ training.end_date|date:"j M Y" }}</p>
+<header class="serv-hed2 section-padding pb-0">
+    <div class="container">
+        <div class="caption mb-80">
+            <h1 class="fz-80 fw-600">
+                {{ training.title }}
+            </h1>
+            <div class="row justify-content-end">
+                <div class="col-lg-5">
+                    <div class="text mt-30">
+                        <p>
+                            This training program is priced at <strong>{{ training.price }} RWF</strong> and is currently <strong>{{ training.status }}</strong>. 
+                            It begins on <strong>{{ training.start_date|date:"j M Y" }}</strong> and concludes on <strong>{{ training.end_date|date:"j M Y" }}</strong>. 
+                            Designed to deliver impactful learning, it offers you the opportunity to master skills that align with your schedule and aspirations.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="list mt-30">
+                        <a href="#" target="_blank" class="crv-butn mt-80">
+                            <div class="d-flex">
+                                <span class="text">Apply Now</span>
+                                <span class="icon">
+                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="container">
+        <div class="fit-img radius-15">
+            {% if training.image %}
+                <img src="{{ training.image.url }}" alt="{{ training.title }}" style="width: 500px;" />
+            {% else %}
+                <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-8">
+                    <span class="text-gray-500">No Image Available</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<section class="serv-details section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="content">
+                    <div class="text mt-30 mb-30">
+                        <p>
+                            {{ training.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}
