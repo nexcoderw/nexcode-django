@@ -57,8 +57,85 @@ def signOut(request):
 def dashboard(request):
     settings = Setting.objects.first()
 
+    # Date filter inputs (defaults: last 30 days)
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    try:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else datetime.today().date() - timedelta(days=30)
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else datetime.today().date()
+    except ValueError:
+        start_date = datetime.today().date() - timedelta(days=30)
+        end_date = datetime.today().date()
+
+    # Filter querysets by date range (created_at between start_date and end_date)
+    clients = Client.objects.filter(created_at__date__range=(start_date, end_date))
+    projects = Portfolio.objects.filter(created_at__date__range=(start_date, end_date))
+    blogs = Blog.objects.filter(published_at__date__range=(start_date, end_date))
+    testimonies = Testimony.objects.filter(created_at__date__range=(start_date, end_date))
+    trainings = Training.objects.filter(start_date__range=(start_date, end_date))
+    contacts = Contact.objects.filter(created_at__date__range=(start_date, end_date))
+
+    # Aggregate counts and sums
+    total_clients = clients.count()
+    total_projects = projects.count()
+    total_blogs = blogs.count()
+    total_testimonies = testimonies.count()
+    total_trainings = trainings.count()
+    total_contacts = contacts.count()
+
+    # Payment stats for projects in the date range
+    total_project_amount = projects.aggregate(total=Sum('project_amount'))['total'] or 0
+    total_amount_paid = projects.aggregate(total=Sum('amount_paid'))['total'] or 0
+
+    # Prepare data for charts - Daily new clients/projects/blogs over date range
+    def daily_counts(qs, date_field):
+        daily_data = qs.annotate(day=TruncDay(date_field)).values('day').annotate(count=Count('id')).order_by('day')
+        dates = []
+        counts = []
+        current_day = start_date
+        while current_day <= end_date:
+            dates.append(current_day.strftime('%Y-%m-%d'))
+            match = next((item for item in daily_data if item['day'].date() == current_day), None)
+            counts.append(match['count'] if match else 0)
+            current_day += timedelta(days=1)
+        return dates, counts
+
+    clients_dates, clients_counts = daily_counts(clients, 'created_at')
+    projects_dates, projects_counts = daily_counts(projects, 'created_at')
+    blogs_dates, blogs_counts = daily_counts(blogs, 'published_at')
+
+    # Recent activities (latest 5 each)
+    recent_clients = clients.order_by('-created_at')[:5]
+    recent_projects = projects.order_by('-created_at')[:5]
+    recent_blogs = blogs.order_by('-published_at')[:5]
+    recent_contacts = contacts.order_by('-created_at')[:5]
+
     context = {
-        'settings': settings
+        'settings': settings,
+        'total_clients': total_clients,
+        'total_projects': total_projects,
+        'total_blogs': total_blogs,
+        'total_testimonies': total_testimonies,
+        'total_trainings': total_trainings,
+        'total_contacts': total_contacts,
+        'total_project_amount': total_project_amount,
+        'total_amount_paid': total_amount_paid,
+
+        'clients_dates': clients_dates,
+        'clients_counts': clients_counts,
+        'projects_dates': projects_dates,
+        'projects_counts': projects_counts,
+        'blogs_dates': blogs_dates,
+        'blogs_counts': blogs_counts,
+
+        'recent_clients': recent_clients,
+        'recent_projects': recent_projects,
+        'recent_blogs': recent_blogs,
+        'recent_contacts': recent_contacts,
+
+        'start_date': start_date.strftime('%Y-%m-%d'),
+        'end_date': end_date.strftime('%Y-%m-%d'),
     }
 
     return render(request, 'admin/dashboard.html', context)
