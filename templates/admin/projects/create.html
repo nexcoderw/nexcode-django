@@ -2,10 +2,186 @@
 {% load static %}
 {% block content %}
 
-	<div>
-        <div class="grid grid-cols-12 gap-6">
-            Add Client
+<div class="pt-8 pb-12 px-7 relative z-10
+    before:absolute before:inset-0 before:opacity-[.07] before:bg-foreground before:rounded-4xl
+    after:absolute after:inset-0 after:bg-[color-mix(in_oklch,_var(--color-background),_var(--color-foreground)_2%)]
+    after:rounded-4xl after:border after:border-foreground/[.15] dark:after:opacity-[.59]">
+
+    <div class="relative z-20 max-w-5xl mx-auto">
+        <div class="mt-8 flex items-center">
+            <h2 class="mr-auto text-lg font-medium">Add New Project</h2>
+        </div>
+
+        <div class="mt-5 grid grid-cols-11 gap-x-6 pb-20">
+            <form method="post" enctype="multipart/form-data" class="col-span-11 2xl:col-span-11">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="box relative p-5
+                    before:absolute before:inset-0 before:mx-3 before:-mb-3 before:border before:border-foreground/10
+                    before:bg-background/30 before:shadow-[0px_3px_5px_#0000000b] before:z-[-1] before:rounded-xl
+                    after:absolute after:inset-0 after:border after:border-foreground/10 after:bg-background
+                    after:shadow-[0px_3px_5px_#0000000b] after:rounded-xl after:z-[-1] after:backdrop-blur-md mt-8">
+
+                    <div class="rounded-lg border p-5 space-y-6">
+
+                        <!-- Name & Slug -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.name.id_for_label }}">
+                                    Project Name
+                                    <span class="text-(--color) ml-1 text-xs font-normal">Required</span>
+                                </label>
+                                {{ form.name }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.name.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.slug.id_for_label }}">
+                                    Slug (auto-generated, leave blank)
+                                </label>
+                                <input type="text" value="Auto-generated on save" disabled
+                                       class="h-10 w-full rounded-md border bg-gray-100 px-3 py-2 cursor-not-allowed" />
+                            </div>
+                        </div>
+
+                        <!-- Links and Category -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.link.id_for_label }}">Project Link</label>
+                                {{ form.link }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.link.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.category.id_for_label }}">
+                                    Category
+                                </label>
+                                {{ form.category }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.category.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.project_category.id_for_label }}">
+                                    Project Category
+                                </label>
+                                {{ form.project_category }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.project_category.errors }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label class="font-medium mb-1 block" for="{{ form.description.id_for_label }}">Description</label>
+                            {{ form.description }}
+                            <p class="text-xs text-red-600 mt-1">{{ form.description.errors }}</p>
+                        </div>
+
+                        <!-- Tags -->
+                        <div>
+                            <label class="font-medium mb-1 block" for="{{ form.tags.id_for_label }}">Tags</label>
+                            {{ form.tags }}
+                            <p class="text-xs text-red-600 mt-1">{{ form.tags.errors }}</p>
+                        </div>
+
+                        <!-- Images -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.image.id_for_label }}">Main Image</label>
+                                {{ form.image }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.image.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.big_image.id_for_label }}">Big Image</label>
+                                {{ form.big_image }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.big_image.errors }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Documents -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.system_analysis_document.id_for_label }}">
+                                    System Analysis Document
+                                </label>
+                                {{ form.system_analysis_document }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.system_analysis_document.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.contract_document.id_for_label }}">
+                                    Contract Document
+                                </label>
+                                {{ form.contract_document }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.contract_document.errors }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Project Dates & Amount -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.project_initiation_date.id_for_label }}">
+                                    Project Initiation Date
+                                </label>
+                                {{ form.project_initiation_date }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.project_initiation_date.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.deadline_date.id_for_label }}">
+                                    Deadline Date
+                                </label>
+                                {{ form.deadline_date }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.deadline_date.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.project_amount.id_for_label }}">
+                                    Project Amount
+                                </label>
+                                {{ form.project_amount }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.project_amount.errors }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Publish & Client & Team Members -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                            <div class="flex items-center space-x-2">
+                                {{ form.publish }}
+                                <label for="{{ form.publish.id_for_label }}" class="font-medium">Publish Project</label>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.client.id_for_label }}">Client</label>
+                                {{ form.client }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.client.errors }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium mb-1 block" for="{{ form.team_members.id_for_label }}">
+                                    Team Members
+                                </label>
+                                {{ form.team_members }}
+                                <p class="text-xs text-red-600 mt-1">{{ form.team_members.errors }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-col justify-end gap-4 md:flex-row">
+                    <a href="{% url 'controller:projects' %}" 
+                       class="[--color:var(--color-foreground)] cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg
+                              text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2
+                              focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
+                              [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-(--color) hover:bg-(--color)/5 bg-background border-(--color)/20 h-10 px-4 box w-full py-3 md:w-64">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                        class="cursor-pointer inline-flex border items-center justify-center gap-2 whitespace-nowrap rounded-lg
+                               text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2
+                               focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
+                               [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-(--color)/20 border-(--color)/60 text-(--color)
+                               hover:bg-(--color)/5 [--color:var(--color-primary)] h-10 px-4 box w-full py-3 md:w-64">
+                        Submit
+                    </button>
+                </div>
+
+            </form>
         </div>
     </div>
+</div>
 
 {% endblock %}

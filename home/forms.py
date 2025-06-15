@@ -1,6 +1,5 @@
 from django import forms
 from home.models import *
-from taggit.forms import TagWidget
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -29,26 +28,3 @@ class TestimonyForm(forms.Form):
     message = forms.CharField(
         widget=forms.Textarea(attrs={'placeholder': 'Your Testimony', 'rows': 4, 'required': 'true'})
     )
-
-class PortfolioForm(forms.ModelForm):
-    class Meta:
-        model = Portfolio
-        fields = [
-            'name', 'link', 'image', 'big_image', 'category', 'description', 'tags', 'repo_link',
-            'figma_link', 'project_category', 'system_analysis_document', 'publish',
-            'client', 'team_members', 'contract_document', 'project_initiation_date',
-            'deadline_date', 'project_amount'
-        ]
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-            'project_initiation_date': forms.DateInput(attrs={'type': 'date'}),
-            'deadline_date': forms.DateInput(attrs={'type': 'date'}),
-            'tags': TagWidget(),
-            'team_members': forms.CheckboxSelectMultiple(),
-        }
-    
-    def clean_name(self):
-        name = self.cleaned_data.get('name')
-        if not name:
-            raise forms.ValidationError("Project name is required.")
-        return name
