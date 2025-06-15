@@ -300,8 +300,31 @@ def deleteMember(request, id):
 def projects(request):
     settings = Setting.objects.first()
 
+    query = request.GET.get("q", "").strip()
+    portfolio_qs = Portfolio.objects.all().order_by("-created_at")
+
+    if query:
+        portfolio_qs = portfolio_qs.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__icontains=query)
+        )
+
+    paginator = Paginator(portfolio_qs, 10)
+    page = request.GET.get("page", 1)
+
+    try:
+        portfolios = paginator.page(page)
+    except PageNotAnInteger:
+        portfolios = paginator.page(1)
+    except EmptyPage:
+        portfolios = paginator.page(paginator.num_pages)
+
     context = {
-        'settings': settings
+        "settings": settings,
+        "portfolios": portfolios,
+        "paginator": paginator,
+        "query": query,
     }
 
     return render(request, "admin/projects/index.html", context)
