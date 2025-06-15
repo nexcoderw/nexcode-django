@@ -78,7 +78,12 @@
 
                             <h3 class="font-semibold text-lg line-clamp-2 mb-1">{{ blog.title|default:"Untitled Blog" }}</h3>
                             <p class="text-xs text-(--color) opacity-70 mb-2">
-                                Published: {{ blog.published_at|date:"j M Y" if blog.published_at else "Not published" }}
+                                Published:
+                                {% if blog.published_at %}
+                                    {{ blog.published_at|date:"j M Y" }}
+                                {% else %}
+                                    Not published
+                                {% endif %}
                             </p>
 
                             <p class="text-sm flex-grow line-clamp-3">
