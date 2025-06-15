@@ -47,6 +47,13 @@ urlpatterns = [
     path("testimont/<int:id>/update/", updateTestimony, name="updateTestimony"),
     path("testimont/<int:id>/delete/", deleteTestimony, name="deleteTestimony"),
 
+    # ---------- Trainings ----------
+    path("trainings/", trainings, name="trainings"),
+    path("training/add/", addTraining, name="addTraining"),
+    path("training/<int:id>/", trainingDetails, name="trainingDetails"),
+    path("training/<int:id>/update/", updateTraining, name="updateTraining"),
+    path("training/<int:id>/delete/", deleteTraining, name="deleteTraining"),
+
     # ---------- Contacts ----------
     path("contacts/", contacts, name="contacts"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
