@@ -159,21 +159,10 @@ class Portfolio(models.Model):
     
     def __str__(self):
         return self.name if self.name else "Unnamed Portfolio"
-
-    def save(self, *args, **kwargs):
-        # on update, remove old Portfolio images if replaced
-        if self.pk:
-            old = Portfolio.objects.get(pk=self.pk)
-            for field in ('image', 'big_image'):
-                old_file = getattr(old, field)
-                new_file = getattr(self, field)
-                if old_file and old_file != new_file:
-                    old_file.delete(save=False)
-        super().save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
         # delete all associated files when Portfolio is deleted
-        for field in ('image', 'big_image', 'system_analysis_document', 'contract_document'):
+        for field in ('system_analysis_document', 'contract_document'):
             f = getattr(self, field)
             if f:
                 f.delete(save=False)
@@ -181,6 +170,45 @@ class Portfolio(models.Model):
     
     class Meta:
         verbose_name_plural = "Portfolios"
+
+class PortfolioImage(models.Model):
+    """
+    Stores one image per row for a Portfolio.
+    Allows multiple images (e.g. gallery, alternate views) per portfolio.
+    """
+    portfolio = models.ForeignKey(
+        Portfolio,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+    image = ProcessedImageField(
+        upload_to=portfolio_image_path,
+        processors=[ResizeToFill(1920, 1350)],
+        format='JPEG',
+        options={'quality': 90}
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # on update, delete the old file if replaced
+        if self.pk:
+            old = PortfolioImage.objects.get(pk=self.pk)
+            if old.image and old.image != self.image:
+                old.image.delete(save=False)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # remove the file when record is deleted
+        if self.image:
+            self.image.delete(save=False)
+        super().delete(*args, **kwargs)
+
+    def __str__(self):
+        return f"Image for {self.portfolio.name or 'Unnamed Portfolio'}"
+
+    class Meta:
+        verbose_name = "Portfolio Image"
+        verbose_name_plural = "Portfolio Images"
 
 class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
