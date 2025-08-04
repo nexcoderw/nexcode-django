@@ -236,7 +236,24 @@ class Team(models.Model):
         elif not self.slug:  # For new objects, generate a slug
             self.slug = self._generate_unique_slug()
         
+        # on update, remove old Team images if replaced
+        if self.pk:
+            old = Team.objects.get(pk=self.pk)
+            for field in ('image', 'image_png'):
+                old_file = getattr(old, field)
+                new_file = getattr(self, field)
+                if old_file and old_file != new_file:
+                    old_file.delete(save=False)
+
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # delete both image fields when Team member is deleted
+        for field in ('image', 'image_png'):
+            f = getattr(self, field)
+            if f:
+                f.delete(save=False)
+        super().delete(*args, **kwargs)
     
     def __str__(self):
         return self.name if self.name else "Unnamed Team Member"
