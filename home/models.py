@@ -393,7 +393,13 @@ class Blog(models.Model):
             self.slug = self._generate_unique_slug()
         if self.status == 'Published' and not self.published_at:
             self.published_at = timezone.now()
-        super(Blog, self).save(*args, **kwargs)
+
+        # on update, remove old featured_image if replaced
+        if self.pk:
+            old = Blog.objects.get(pk=self.pk)
+            if old.featured_image and old.featured_image != self.featured_image:
+                old.featured_image.delete(save=False)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.title if self.title else "Untitled Blog"
