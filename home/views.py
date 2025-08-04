@@ -97,7 +97,11 @@ def maintenance(request):
     return render(request, 'services/maintenance.html', context)
 
 def portfolio(request):
-    portfolio = Portfolio.objects.filter(publish=True, project_category='Client Project').order_by('-created_at')
+    portfolio = Portfolio.objects.filter(
+        publish=True,
+        project_category='Client Project'
+    ).prefetch_related('images')\
+     .order_by('-created_at')
     settings = Setting.objects.first()
 
     context = {
@@ -108,7 +112,10 @@ def portfolio(request):
     return render(request, 'work/index.html', context)
 
 def workDetails(request, slug):
-    work = get_object_or_404(Portfolio, slug=slug)
+    work = get_object_or_404(
+        Portfolio.objects.prefetch_related('images'),
+        slug=slug
+    )
     settings = Setting.objects.first()
     recentWork = Portfolio.objects.all().order_by('-created_at')[:3]
     recentBlog = Blog.objects.filter(status='Published').order_by('-created_at')[:3]
