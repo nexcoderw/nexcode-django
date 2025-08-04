@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 from django.core.exceptions import ValidationError
+from ckeditor_uploader.fields import RichTextUploadingField
 
 def portfolio_image_path(instance, filename):
     base, ext = os.path.splitext(filename)
@@ -102,7 +103,7 @@ class Portfolio(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     link = models.CharField(max_length=255, null=True, blank=True)
     category = models.CharField(max_length=255, null=True, blank=True, choices=CATEGORY_CHOICES)
-    description = models.TextField(null=True, blank=True)
+    description = RichTextUploadingField(null=True, blank=True)
     tags = TaggableManager(blank=True)
     
     repo_link = models.URLField(max_length=255, null=True, blank=True)
