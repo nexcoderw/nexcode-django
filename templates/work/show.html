@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid">
+        <div class="container">
             <div class="fit-img radius-15">
                 {% with work.images.first as first_image %}
                     {% if first_image %}
@@ -72,7 +72,7 @@
                                 {{ work.description }}
                             </p>
                         </div>
-                        <div class="img sm-mb30">
+                        {% comment %} <div class="img sm-mb30">
                             {% if work.images.all %}
                                 <div class="work-slider position-relative">
                                     {% for img in work.images.all %}
@@ -103,7 +103,7 @@
                             prev && prev.addEventListener('click', ()=>show(current-1));
                             next && next.addEventListener('click', ()=>show(current+1));
                             })();
-                        </script>
+                        </script> {% endcomment %}
                         <div class="main-post">
                             <div class="info-area flex pt-50 bord-thin-top">
                                 <div>
