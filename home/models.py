@@ -11,6 +11,31 @@ from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 from django.core.exceptions import ValidationError
 
+class DeleteOldFileMixin:
+    """
+    Mixin to automatically delete old file(s) from storage when
+    a FileField/ImageField is updated, and delete them when the model
+    instance is deleted.
+    """
+    file_fields: list[str] = []
+
+    def save(self, *args, **kwargs):
+        # Fetch old instance (if any)
+        try:
+            old = self.__class__.objects.get(pk=self.pk)
+        except self.__class__.DoesNotExist:
+            old = None
+
+        super().save(*args, **kwargs)
+
+        # After saving, delete any old files that were replaced
+        if old:
+            for field in self.file_fields:
+                old_file = getattr(old, field)
+                new_file = getattr(self, field)
+                if old_file and old_file != new_file:
+                    old_file.delete(save=False)
+
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
