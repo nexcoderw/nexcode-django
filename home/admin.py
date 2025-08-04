@@ -59,8 +59,19 @@ class PortfolioImageInline(admin.TabularInline):
         return "-"
     image_preview.short_description = "Preview"
 
+class PortfolioAdminForm(forms.ModelForm):
+    description = forms.CharField(
+        widget=CKEditorUploadingWidget(),
+        required=False
+    )
+
+    class Meta:
+        model = Portfolio
+        fields = '__all__'
+
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
+    form = PortfolioAdminForm
     list_display    = (
         'name', 'category', 'client_info',
         'project_category', 'publish',
