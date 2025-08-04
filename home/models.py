@@ -321,6 +321,16 @@ class Setting(models.Model):
         # Ensure only one instance of settings can exist
         if not self.pk and Setting.objects.exists():
             raise ValueError("You can only create one instance of the settings.")
+
+        # on update, remove any replaced logo/name files
+        if self.pk:
+            old = Setting.objects.get(pk=self.pk)
+            for field in ('icon_black_logo', 'name_black_logo', 'icon_white_logo', 'name_white_logo'):
+                old_file = getattr(old, field)
+                new_file = getattr(self, field)
+                if old_file and old_file != new_file:
+                    old_file.delete(save=False)
+
         super().save(*args, **kwargs)
     
     def __str__(self):
