@@ -77,7 +77,13 @@ class PortfolioAdmin(admin.ModelAdmin):
     list_per_page   = 20
     
     def client_info(self, obj):
-        return f"{obj.client.name or '-'} | {obj.client.phone_number or '-'}"
+        client = obj.client
+        if client:
+            name  = client.name or "-"
+            phone = client.phone_number or "-"
+        else:
+            name, phone = "-", "-"
+        return f"{name} | {phone}"
     client_info.short_description = 'Client Information'
 
     def total_amount_paid(self, obj):
