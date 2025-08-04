@@ -400,6 +400,12 @@ class Blog(models.Model):
             if old.featured_image and old.featured_image != self.featured_image:
                 old.featured_image.delete(save=False)
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # delete featured_image when Blog is deleted
+        if self.featured_image:
+            self.featured_image.delete(save=False)
+        super().delete(*args, **kwargs)
     
     def __str__(self):
         return self.title if self.title else "Untitled Blog"
