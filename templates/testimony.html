@@ -59,11 +59,13 @@
                                 </div>
                             </div>
                             <div class="phone fz-30 fw-600 mt-30 underline main-color">
-                                {% if settings.phone_number %}
-                                    <a href="{{ settings.phone_number }}">{{ settings.phone_number }}</a>
-                                {% else %}
-                                    +250 781 862 349
-                                {% endif %}
+                                <a href="#">
+                                    {% if settings.phone_number %}
+                                        {{ settings.phone_number }}
+                                    {% else %}
+                                        +250 781 862 349
+                                    {% endif %}
+                                </a>
                             </div>
                         </div>
                         <ul class="rest social-text d-flex mt-60 fz-16">

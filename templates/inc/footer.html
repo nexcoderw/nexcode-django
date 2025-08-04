@@ -15,30 +15,65 @@
                 </div>
                 <div class="col-lg-7">
                     <a href="#" class="contact-number fz-60">
-                        {{ settings.phone_number }}
+                        {% if settings.phone_number %}
+                            {{ settings.phone_number }}
+                        {% else %}
+                            +250 781 862 349
+                        {% endif %}
                     </a>
                     <ul class="fz-18 mt-30 rest">
                         <li class="mb-15">
-                            <a href="#">
-                                {{ settings.email }}
-                            </a>
+                            <p href="#">
+                                {% if settings.email %}
+                                    {{ settings.email }}
+                                {% else %}
+                                    nexcoderwa@gmail.com
+                                {% endif %}
+                            </p>
                         </li>
                         <li class="mb-15">
-                            <a href="#">
-                                {{ settings.second_email }}
-                            </a>
+                            <p href="#">
+                                {% if settings.second_email %}
+                                    {{ settings.second_email }}
+                                {% else %}
+                                    
+                                {% endif %}
+                            </p>
                         </li>
                         <li>
-                            <a href="#"> 
-                                {{ settings.address }}
-                            </a>
+                            <p href="#"> 
+                                {% if settings.address %}
+                                    {{ settings.address }}
+                                {% else %}
+                                    1 KN 78 St, Kigali <br> Norrsken House Kigali
+                                {% endif %}
+                            </p>
                         </li>
                     </ul>
                     <div class="social-icons">
-                        <a href="{{ settings.twitter }}" target="_blank"> <i class="fa-brands fa-x-twitter"></i> </a>
-                        <a href="{{ settings.instagram }}" target="_blank"> <i class="fa-brands fa-instagram"></i> </a>
-                        <a href="{{ settings.linkedin }}" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
-                        <a href="{{ settings.github }}" target="_blank"> <i class="fa-brands fa-github"></i> </a>
+                        {% if settings.twitter %}
+                            <a href="{{ settings.twitter }}" target="_blank"> <i class="fa-brands fa-x-twitter"></i> </a>
+                        {% else %}
+                            <a href="https://x.com/nexcodeafrica" target="_blank"> <i class="fa-brands fa-x-twitter"></i> </a>
+                        {% endif %}
+
+                        {% if settings.instagram %}
+                            <a href="{{ settings.instagram }}" target="_blank"> <i class="fa-brands fa-instagram"></i> </a>
+                        {% else %}
+                            <a href="https://www.instagram.com/nexcode.africa" target="_blank"> <i class="fa-brands fa-instagram"></i> </a>
+                        {% endif %}
+
+                        {% if settings.linkedin %}
+                            <a href="{{ settings.linkedin }}" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
+                        {% else %}
+                            <a href="https://www.linkedin.com/company/nexcode-rwanda/" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
+                        {% endif %}
+
+                        {% if settings.github %}
+                            <a href="{{ settings.github }}" target="_blank"> <i class="fa-brands fa-github"></i> </a>
+                        {% else %}
+                            <a href="https://github.com/nexcoderw/" target="_blank"> <i class="fa-brands fa-github"></i> </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
