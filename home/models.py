@@ -11,39 +11,6 @@ from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 from django.core.exceptions import ValidationError
 
-class DeleteOldFileMixin:
-    """
-    Mixin to automatically delete old file(s) from storage when
-    a FileField/ImageField is updated, and delete them when the model
-    instance is deleted.
-    """
-    file_fields: list[str] = []
-
-    def save(self, *args, **kwargs):
-        # Fetch old instance (if any)
-        try:
-            old = self.__class__.objects.get(pk=self.pk)
-        except self.__class__.DoesNotExist:
-            old = None
-
-        super().save(*args, **kwargs)
-
-        # After saving, delete any old files that were replaced
-        if old:
-            for field in self.file_fields:
-                old_file = getattr(old, field)
-                new_file = getattr(self, field)
-                if old_file and old_file != new_file:
-                    old_file.delete(save=False)
-
-    def delete(self, *args, **kwargs):
-        # Before deleting instance, delete all files
-        for field in self.file_fields:
-            f = getattr(self, field)
-            if f:
-                f.delete(save=False)
-        super().delete(*args, **kwargs)
-
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
@@ -81,8 +48,6 @@ def training_image_path(instance, filename):
     return f'trainings/training_{slugify(instance.title)}_{timestamp}.{ext}'
 
 class Client(models.Model):
-    file_fields = ['image']
-
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
@@ -99,13 +64,19 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name if self.name else "Unnamed Client"
+
+    def save(self, *args, **kwargs):
+        # on update, remove the old image file if a new one is uploaded
+        if self.pk:
+            old = Client.objects.get(pk=self.pk)
+            if old.image and old.image != self.image:
+                old.image.delete(save=False)
+        super().save(*args, **kwargs)
     
     class Meta:
         verbose_name_plural = "Clients"
 
 class Portfolio(models.Model):
-    file_fields = ['image', 'big_image', 'system_analysis_document', 'contract_document']
-
     CATEGORY_CHOICES = [
         ('Web App', 'Web App'),
         ('Logo', 'Logo'),
@@ -202,8 +173,6 @@ class Portfolio(models.Model):
         verbose_name_plural = "Portfolios"
 
 class Team(models.Model):
-    file_fields = ['image', 'image_png']
-
     name = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True)
     position = models.CharField(max_length=255, null=True, blank=True)
@@ -264,8 +233,6 @@ class Contact(models.Model):
         verbose_name_plural = "Contacts"
 
 class Setting(models.Model):
-    file_fields = ['icon_black_logo', 'name_black_logo', 'icon_white_logo', 'name_white_logo']
-
     icon_black_logo = ProcessedImageField(
         upload_to=logo_image_path,
         # processors=[ResizeToFill(600, 600)],
@@ -322,8 +289,6 @@ class Setting(models.Model):
         verbose_name_plural = "Settings"
 
 class Blog(models.Model):
-    file_fields = ['featured_image']
-
     STATUS_CHOICES = [
         ('Draft', 'Draft'),
         ('Published', 'Published'),
@@ -456,8 +421,6 @@ class PortfolioRepo(models.Model):
         return f"Repo for {self.portfolio.name}: {self.link}"
 
 class Training(models.Model):
-    file_fields = ['image']
-
     STATUS_CHOICES = [
         ('Coming Soon', 'Coming Soon'),
         ('Happening', 'Happening'),
