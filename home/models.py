@@ -532,6 +532,13 @@ class Training(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self._generate_unique_slug()
+        
+        # on update, remove old Training.image if replaced
+        if self.pk:
+            old = Training.objects.get(pk=self.pk)
+            if old.image and old.image != self.image:
+                old.image.delete(save=False)
+
         super().save(*args, **kwargs)
 
     def __str__(self):
