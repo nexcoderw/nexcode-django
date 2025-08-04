@@ -73,12 +73,37 @@
                             </p>
                         </div>
                         <div class="img sm-mb30">
-                            {% if work.image %}
-                                <img src="{{ work.image.url }}" alt="">
+                            {% if work.images.all %}
+                                <div class="work-slider position-relative">
+                                    {% for img in work.images.all %}
+                                        <div class="slide{% if forloop.first %} active{% endif %}">
+                                            <img src="{{ img.image.url }}" alt="{{ work.name }} {{ forloop.counter }}">
+                                        </div>
+                                    {% endfor %}
+                                    <button class="prev-slide">‹</button>
+                                    <button class="next-slide">›</button>
+                                </div>
                             {% else %}
-                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                                     alt="{{ work.name }}">
                             {% endif %}
                         </div>
+
+                        <script>
+                            (function(){
+                            const slides = document.querySelectorAll('.work-slider .slide');
+                            const prev   = document.querySelector('.prev-slide');
+                            const next   = document.querySelector('.next-slide');
+                            let current = 0;
+                            function show(idx){
+                                slides[current].classList.remove('active');
+                                current = (idx + slides.length) % slides.length;
+                                slides[current].classList.add('active');
+                            }
+                            prev && prev.addEventListener('click', ()=>show(current-1));
+                            next && next.addEventListener('click', ()=>show(current+1));
+                            })();
+                        </script>
                         <div class="main-post">
                             <div class="info-area flex pt-50 bord-thin-top">
                                 <div>
