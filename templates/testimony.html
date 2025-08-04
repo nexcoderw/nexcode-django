@@ -30,7 +30,11 @@
                                     <div class="morinfo mt-30">
                                         <h6 class="mb-15">Address</h6>
                                         <p>
-                                            {{ settings.address }}
+                                            {% if settings.address %}
+                                                {{ settings.address }}
+                                            {% else %}
+                                                1 KN 78 St, Kigali <br> Norrsken House Kigali
+                                            {% endif %}
                                         </p>
                                     </div>
                                 </div>
@@ -38,27 +42,51 @@
                                     <div class="morinfo mt-30">
                                         <h6 class="mb-15">Email</h6>
                                         <p>
-                                            {{ settings.email }}
+                                            {% if settings.email %}
+                                                {{ settings.email }}
+                                            {% else %}
+                                                nexcoderwa@gmail.com
+                                            {% endif %}
                                         </p>
                                         <p>
-                                            {{ settings.second_email }}
+                                            {% if settings.second_email %}
+                                                {{ settings.second_email }}
+                                            {% else %}
+                                                
+                                            {% endif %}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="phone fz-30 fw-600 mt-30 underline main-color">
-                                <a href="{{ settings.phone_number }}">{{ settings.phone_number }}</a>
+                                {% if settings.phone_number %}
+                                    <a href="{{ settings.phone_number }}">{{ settings.phone_number }}</a>
+                                {% else %}
+                                    +250 781 862 349
+                                {% endif %}
                             </div>
                         </div>
                         <ul class="rest social-text d-flex mt-60 fz-16">
                             <li class="mr-30">
-                                <a href="{{ settings.twitter }}" class="hover-this"><span class="hover-anim">Twitter</span></a>
+                                {% if settings.twitter %}
+                                    <a href="{{ settings.twitter }}" target="_blank" class="hover-this"><span class="hover-anim">X</span></a>
+                                {% else %}
+                                    <a href="https://x.com/nexcodeafrica" target="_blank" class="hover-this"><span class="hover-anim">X</span></a>
+                                {% endif %}
                             </li>
                             <li class="mr-30">
-                                <a href="{{ settings.linkedin }}" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
+                                {% if settings.linkedin %}
+                                    <a href="{{ settings.linkedin }}" target="_blank" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
+                                {% else %}
+                                    <a href="https://www.linkedin.com/company/nexcode-rwanda/" target="_blank" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
+                                {% endif %}
                             </li>
                             <li>
-                                <a href="{{ settings.instagram }}" class="hover-this"><span class="hover-anim">Instagram</span></a>
+                                {% if settings.instagram %}
+                                    <a href="{{ settings.instagram }}" target="_blank" class="hover-this"><span class="hover-anim">Instagram</span></a>
+                                {% else %}
+                                    <a href="https://www.instagram.com/nexcode.africa/" target="_blank" class="hover-this"><span class="hover-anim">Instagram</span></a>
+                                {% endif %}
                             </li>
                         </ul>
                     </div>
