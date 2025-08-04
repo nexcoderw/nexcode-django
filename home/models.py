@@ -98,27 +98,9 @@ class Portfolio(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     link = models.CharField(max_length=255, null=True, blank=True)
-    image = ProcessedImageField(
-        upload_to=portfolio_image_path,
-        processors=[ResizeToFill(1920, 1350)],
-        format='JPEG',
-        options={'quality': 90},
-        null=True,
-        blank=True,
-    )
-    big_image = ProcessedImageField(
-        upload_to=portfolio_image_path,
-        processors=[ResizeToFill(2000, 1125)],
-        format='JPEG',
-        options={'quality': 90},
-        null=True,
-        blank=True,
-    )
     category = models.CharField(max_length=255, null=True, blank=True, choices=CATEGORY_CHOICES)
     description = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     
     repo_link = models.URLField(max_length=255, null=True, blank=True)
     figma_link = models.URLField(max_length=255, null=True, blank=True)
@@ -135,6 +117,9 @@ class Portfolio(models.Model):
     
     project_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @property
     def total_amount_paid(self):
