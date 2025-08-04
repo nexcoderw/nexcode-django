@@ -1,8 +1,13 @@
 import os
+from os import getenv
 from pathlib import Path
+from datetime import timedelta
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Load environment variables from the .env file
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -75,23 +80,23 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES =  {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv("MYSQL_DB", "nexcodes"),
-#         'USER': os.getenv("MYSQL_USER", "nexcodes_user"),
-#         'PASSWORD': os.getenv("MYSQL_PASSWORD", "R7s!9qB@1vXw"),
-#         'HOST': os.getenv("MYSQL_HOST", "vmi2421856.contaboserver.net"),
-#         'PORT': os.getenv("MYSQL_PORT", "3306"),
-#     }
-# }
-
-DATABASES = {
+DATABASES =  {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("MYSQL_DB"),
+        'USER': os.getenv("MYSQL_USER"),
+        'PASSWORD': os.getenv("MYSQL_PASSWORD"),
+        'HOST': os.getenv("MYSQL_HOST"),
+        'PORT': os.getenv("MYSQL_PORT", 3306),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
