@@ -81,6 +81,8 @@ def training_image_path(instance, filename):
     return f'trainings/training_{slugify(instance.title)}_{timestamp}.{ext}'
 
 class Client(models.Model):
+    file_fields = ['image']
+
     name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
@@ -102,6 +104,8 @@ class Client(models.Model):
         verbose_name_plural = "Clients"
 
 class Portfolio(models.Model):
+    file_fields = ['image', 'big_image', 'system_analysis_document', 'contract_document']
+
     CATEGORY_CHOICES = [
         ('Web App', 'Web App'),
         ('Logo', 'Logo'),
@@ -198,6 +202,8 @@ class Portfolio(models.Model):
         verbose_name_plural = "Portfolios"
 
 class Team(models.Model):
+    file_fields = ['image', 'image_png']
+
     name = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True)
     position = models.CharField(max_length=255, null=True, blank=True)
@@ -258,6 +264,8 @@ class Contact(models.Model):
         verbose_name_plural = "Contacts"
 
 class Setting(models.Model):
+    file_fields = ['icon_black_logo', 'name_black_logo', 'icon_white_logo', 'name_white_logo']
+
     icon_black_logo = ProcessedImageField(
         upload_to=logo_image_path,
         # processors=[ResizeToFill(600, 600)],
@@ -314,6 +322,8 @@ class Setting(models.Model):
         verbose_name_plural = "Settings"
 
 class Blog(models.Model):
+    file_fields = ['featured_image']
+
     STATUS_CHOICES = [
         ('Draft', 'Draft'),
         ('Published', 'Published'),
@@ -446,6 +456,8 @@ class PortfolioRepo(models.Model):
         return f"Repo for {self.portfolio.name}: {self.link}"
 
 class Training(models.Model):
+    file_fields = ['image']
+
     STATUS_CHOICES = [
         ('Coming Soon', 'Coming Soon'),
         ('Happening', 'Happening'),
