@@ -49,10 +49,12 @@
                         </div>
                     </div>
                 {% empty %}
-                    <p>No portfolio items found.</p>
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
                 {% endfor %}
             </div>
-            <div class="text-center mt-80">
+            {% comment %} <div class="text-center mt-80">
                 <a href="{% url 'base:portfolio' %}" class="butn butn-md butn-bord butn-rounded">
                     <div class="d-flex align-items-center">
                         <span>Check Our Portfolio</span>
@@ -61,7 +63,7 @@
                         </span>
                     </div>
                 </a>
-            </div>
+            </div> {% endcomment %}
         </div>
     </section>
 

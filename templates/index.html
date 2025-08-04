@@ -275,12 +275,16 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
                 {% endfor %}
             </div>
         </div>
     </div>
 
-    <section class="team-pg pb-100">
+    {% comment %} <section class="team-pg pb-100">
         <div class="container">
             <div class="sec-head mb-80">
                 <div class="row mt-30">
@@ -333,10 +337,14 @@
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
                 {% endfor %}
             </div>
         </div>
-    </section>
+    </section> {% endcomment %}
 
     {% comment %} <section class="pricing-pg section-padding pt-0">
         <div class="container">
