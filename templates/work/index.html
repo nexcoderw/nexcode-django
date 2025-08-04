@@ -45,7 +45,13 @@
                             </div>
                         </div>
                         <div class="img fit-img mt-30">
-                            <img src="{{ work.big_image.url }}" alt="{{ work.name }}">
+                            {% with work.images.first as first_image %}
+                                {% if first_image %}
+                                    <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                                {% else %}
+                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
                 {% empty %}
