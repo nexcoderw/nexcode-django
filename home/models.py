@@ -332,6 +332,14 @@ class Setting(models.Model):
                     old_file.delete(save=False)
 
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # delete all logo/name files when Settings is deleted
+        for field in ('icon_black_logo', 'name_black_logo', 'icon_white_logo', 'name_white_logo'):
+            f = getattr(self, field)
+            if f:
+                f.delete(save=False)
+        super().delete(*args, **kwargs)
     
     def __str__(self):
         return "Website Settings"
