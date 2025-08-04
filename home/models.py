@@ -541,6 +541,12 @@ class Training(models.Model):
 
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        # delete image when Training is deleted
+        if self.image:
+            self.image.delete(save=False)
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
