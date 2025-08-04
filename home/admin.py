@@ -1,9 +1,9 @@
 from django import forms
 from home.models import *
-from django.contrib import admin
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
-from django.utils.html import format_html
 from django.urls import reverse
+from django.contrib import admin
+from django.utils.html import format_html
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
@@ -44,17 +44,40 @@ class PortfolioRepoInline(admin.TabularInline):
     model = PortfolioRepo
     extra = 1
 
+class PortfolioImageInline(admin.TabularInline):
+    model = PortfolioImage
+    extra = 1
+    readonly_fields = ('image_preview',)
+    fields = ('image_preview', 'image')
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-height: 150px; border-radius:4px;" />',
+                obj.image.url
+            )
+        return "-"
+    image_preview.short_description = "Preview"
+
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'client_info', 'project_category', 'publish', 'total_amount_paid', 'payment_status', 'edit_link', 'delete_link')
-    search_fields = ('name', 'description', 'client__name', 'client__email', 'client__phone_number')
-    list_filter = ('category', 'created_at', 'tags', 'project_category', 'publish')
-    ordering = ('-created_at',)
-    inlines = [PortfolioRepoInline, PaymentInline]
-    list_per_page = 20
+    list_display    = (
+        'name', 'category', 'client_info',
+        'project_category', 'publish',
+        'total_amount_paid', 'payment_status',
+        'edit_link', 'delete_link'
+    )
+    search_fields   = (
+        'name', 'description',
+        'client__name', 'client__email', 'client__phone_number'
+    )
+    list_filter     = ('category', 'created_at', 'tags', 'project_category', 'publish')
+    ordering        = ('-created_at',)
+    inlines         = [PortfolioImageInline, PortfolioRepoInline, PaymentInline]
+    list_per_page   = 20
     
     def client_info(self, obj):
-        return f"{obj.client.name if obj.client else '-'} | {obj.client.phone_number if obj.client else '-'}"
+        return f"{obj.client.name or '-'} | {obj.client.phone_number or '-'}"
     client_info.short_description = 'Client Information'
 
     def total_amount_paid(self, obj):
@@ -62,10 +85,11 @@ class PortfolioAdmin(admin.ModelAdmin):
     total_amount_paid.short_description = 'Amount Paid'
 
     def payment_status(self, obj):
-        """Display payment status with visual cues."""
-        if obj.payment_status == "Fully Paid":
-            return format_html('<span style="color: green; font-weight: bold;">{}</span>', obj.payment_status)
-        return format_html('<span style="color: red; font-weight: bold;">{}</span>', obj.payment_status)
+        color = 'green' if obj.payment_status == "Fully Paid" else 'red'
+        return format_html(
+            '<span style="color: {}; font-weight:bold;">{}</span>',
+            color, obj.payment_status
+        )
     payment_status.short_description = 'Payment Status'
 
     def edit_link(self, obj):
