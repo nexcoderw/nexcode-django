@@ -72,6 +72,12 @@ class Client(models.Model):
             if old.image and old.image != self.image:
                 old.image.delete(save=False)
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # when deleting the Client, also delete its image file
+        if self.image:
+            self.image.delete(save=False)
+        super().delete(*args, **kwargs)
     
     class Meta:
         verbose_name_plural = "Clients"
@@ -168,6 +174,17 @@ class Portfolio(models.Model):
     
     def __str__(self):
         return self.name if self.name else "Unnamed Portfolio"
+
+    def save(self, *args, **kwargs):
+        # on update, remove old Portfolio images if replaced
+        if self.pk:
+            old = Portfolio.objects.get(pk=self.pk)
+            for field in ('image', 'big_image'):
+                old_file = getattr(old, field)
+                new_file = getattr(self, field)
+                if old_file and old_file != new_file:
+                    old_file.delete(save=False)
+        super().save(*args, **kwargs)
     
     class Meta:
         verbose_name_plural = "Portfolios"
