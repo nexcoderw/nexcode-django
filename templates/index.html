@@ -267,11 +267,13 @@
                                 </div>
                             </div>
                             <div class="img">
-                                {% if work.image %}
-                                    <img src="{{ work.image.url }}" alt="">
-                                {% else %}
-                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
-                                {% endif %}
+                                {% with work.images.first as first_image %}
+                                    {% if first_image %}
+                                        <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                                    {% else %}
+                                        <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                    {% endif %}
+                                {% endwith %}
                             </div>
                         </div>
                     </div>
