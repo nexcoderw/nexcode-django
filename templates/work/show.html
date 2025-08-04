@@ -226,18 +226,23 @@
                                 <div class="item d-flex align-items-center">
                                     <div>
                                         <div class="img">
-                                            <a href="{% if work.image %} {{ work.link }} {% else %} {{ work.repo_link }} {% endif %}" target="_blank">
-                                                {% if work.image %}
-                                                    <img src="{{ work.image.url }}" alt="">
-                                                {% else %}
-                                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
-                                                {% endif %}
-                                                <span class="date">
-                                                    <span class="icon">
-                                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="" style="color: white;">
+                                            {% with work.images.first as first_image %}
+                                                <a href="{% if work.link %}{{ work.link }}{% else %}{{ work.repo_link }}{% endif %}"
+                                                target="_blank">
+                                                    {% if first_image %}
+                                                        <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                                                    {% else %}
+                                                        <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                                                            alt="{{ work.name }}">
+                                                    {% endif %}
+                                                    <span class="date">
+                                                        <span class="icon">
+                                                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg"
+                                                                alt="" style="color: white;">
+                                                        </span>
                                                     </span>
-                                                </span>
-                                            </a>
+                                                </a>
+                                            {% endwith %}
                                         </div>
                                     </div>
                                     <div class="cont">
