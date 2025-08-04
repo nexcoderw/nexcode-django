@@ -21,7 +21,11 @@
         <div class="cont-info valign">
             <div class="text-center full-width">
                 <div class="logo">
-                    <img src="{{ settings.icon_white_logo.url }}" alt="" style="width: 60px;">
+                    {% if settings.icon_white_logo %}
+                        <img src="{{ settings.icon_white_logo.url }}" alt="logo" style="width: 60px;">
+                    {% else %}
+                        <img src="{% static 'img/logo-w.png' %}" alt="logo" style="width: 60px;">
+                    {% endif %}
                 </div>
                 <div class="social-icon mt-40">
                     {% if settings.twitter %}
