@@ -186,6 +186,14 @@ class Portfolio(models.Model):
                     old_file.delete(save=False)
         super().save(*args, **kwargs)
     
+    def delete(self, *args, **kwargs):
+        # delete all associated files when Portfolio is deleted
+        for field in ('image', 'big_image', 'system_analysis_document', 'contract_document'):
+            f = getattr(self, field)
+            if f:
+                f.delete(save=False)
+        super().delete(*args, **kwargs)
+    
     class Meta:
         verbose_name_plural = "Portfolios"
 
