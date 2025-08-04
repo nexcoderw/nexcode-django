@@ -2,7 +2,11 @@
     <a class="text-(--color-nav-foreground) border-(--color-nav-foreground)/20 hidden h-full items-center border-r px-7 xl:flex" href="#">
         <div class="from-theme-1 to-theme-2 flex size-[34px] items-center justify-center rounded-lg bg-gradient-to-r">
             <div class="relative h-[20px] w-[20px] [&_div]:bg-white">
-                <img src="{{ settings.icon_white_logo.url }}" alt="logo">
+                {% if settings.icon_white_logo %}
+                    <img src="{{ settings.icon_white_logo.url }}" alt="logo">
+                {% else %}
+                    <img src="{% static 'img/logo-w.png' %}" alt="logo">
+                {% endif %}
             </div>
         </div>
         <div class="ml-3.5">

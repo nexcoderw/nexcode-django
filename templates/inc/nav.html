@@ -5,7 +5,11 @@
 
         <!-- Logo -->
         <a class="logo" href="{% url 'base:home' %}">
-            <img src="{{ settings.icon_white_logo.url }}" alt="logo" style="width: 50px;">
+            {% if settings.icon_white_logo %}
+                <img src="{{ settings.icon_white_logo.url }}" alt="logo" style="width: 50px;">
+            {% else %}
+                <img src="{% static 'img/logo-w.png' %}" alt="logo" style="width: 50px;">
+            {% endif %}
         </a>
 
         <!-- navbar links -->
