@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 
     #Custom apps
     'home',
-    'controller',
 ]
 
 MIDDLEWARE = [
