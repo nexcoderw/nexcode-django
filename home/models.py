@@ -36,6 +36,14 @@ class DeleteOldFileMixin:
                 if old_file and old_file != new_file:
                     old_file.delete(save=False)
 
+    def delete(self, *args, **kwargs):
+        # Before deleting instance, delete all files
+        for field in self.file_fields:
+            f = getattr(self, field)
+            if f:
+                f.delete(save=False)
+        super().delete(*args, **kwargs)
+
 def portfolio_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
