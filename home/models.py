@@ -12,9 +12,12 @@ from imagekit.models import ProcessedImageField
 from django.core.exceptions import ValidationError
 
 def portfolio_image_path(instance, filename):
-    base_filename, file_extension = os.path.splitext(filename)
+    base, ext = os.path.splitext(filename)
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
-    return f'portfolio/work_{slugify(instance.name)}_{timestamp}{file_extension}'
+    # Use instance.name if it exists (Portfolio), otherwise fall back to instance.portfolio.name (PortfolioImage)
+    name = getattr(instance, 'name', None) or getattr(instance, 'portfolio', None) and instance.portfolio.name
+    slug = slugify(name) if name else 'portfolio'
+    return f'portfolio/work_{slug}_{timestamp}{ext}'
 
 def team_image_path(instance, filename):
     base_filename, file_extension = os.path.splitext(filename)
