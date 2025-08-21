@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="author-area mt-50 bord-thin-bottom">
+                            {% comment %} <div class="author-area mt-50 bord-thin-bottom">
                                 <h5 class="mb-4" style="font-size: 18px;">Client</h5>
                                 <div class="flex">
                                     <div class="author-img mr-30">
@@ -159,9 +159,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
-                        <div class="comments-from mt-80 md-mb80">
+                        {% comment %} <div class="comments-from mt-80 md-mb80">
                             <div class="mb-60">
                                 <h3>Leave a comment</h3>
                             </div>
@@ -202,10 +202,10 @@
         
                                 </div>
                             </form>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
-                <div class="col-lg-4">
+                {% comment %} <div class="col-lg-4">
                     <div class="sidebar">
                         <div class="search-box">
                             <input type="text" name="search-post" placeholder="Search">
@@ -261,12 +261,12 @@
                             {% endfor %}
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
     </section>
 
-    <div class="blog-mp section-padding">
+    {% comment %} <div class="blog-mp section-padding">
         <div class="container">
             <div class="row xlg-marg">
                 {% for blog in recentBlog %}
@@ -305,7 +305,7 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
