@@ -1,4 +1,4 @@
-name: CI/CD API
+name: CI/CD
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
           echo "IMAGE=ghcr.io/${REPO,,}" >> $GITHUB_OUTPUT
           echo "TAG=${{ github.sha }}" >> $GITHUB_OUTPUT
 
-      - name: Build & push image
+      - name: Build & push image to GHCR
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -39,7 +39,7 @@ jobs:
             ${{ steps.meta.outputs.IMAGE }}:${{ steps.meta.outputs.TAG }}
             ${{ steps.meta.outputs.IMAGE }}:latest
 
-      - name: Smoke test (manage.py check using sqlite)
+      - name: Smoke test - manage.py check
         run: |
           echo "DJANGO_DB=sqlite" > ci.env
           docker run --rm --env-file ./ci.env \
@@ -53,77 +53,73 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Load SSH key for server
+      - name: Load SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
-      - name: Trust server host key
+      - name: Add known hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -p "${{ secrets.SERVER_SSH_PORT }}" "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy to server via SSH
+      - name: Deploy to production server
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_SSH_PORT: ${{ secrets.SERVER_SSH_PORT }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
 
-          IMAGE: ghcr.io/${{ github.repository_owner }}/nexcode-django:${{ github.sha }}
+          IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
           GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
         run: |
-          ssh -p "$SERVER_SSH_PORT" "$SERVER_USER@$SERVER_HOST" bash -s -- \
-            "$IMAGE" "$GHCR_USERNAME" "$GHCR_TOKEN" "$DEPLOY_PATH" <<'EOSSH'
+          ssh -p "$SERVER_SSH_PORT" "$SERVER_USER@$SERVER_HOST" bash -s -- "$IMAGE" "$GHCR_USERNAME" "$GHCR_TOKEN" "$DEPLOY_PATH" <<'EOSSH'
 
-          set -euo pipefail
+            set -euo pipefail
 
-          IMAGE="$1"
-          GHCR_USER="$2"
-          GHCR_TOKEN="$3"
-          DEPLOY_PATH="$4"
+            IMAGE="$1"
+            GHCR_USER="$2"
+            GHCR_TOKEN="$3"
+            DEPLOY_PATH="$4"
 
-          echo "=== Deployment Starting ==="
-          echo "Image: $IMAGE"
-          echo "Deploy Path: $DEPLOY_PATH"
-          echo "---------------------------"
+            echo "=== NexCode Deployment Starting ==="
 
-          mkdir -p "$DEPLOY_PATH"
-          cd "$DEPLOY_PATH"
+            mkdir -p "$DEPLOY_PATH"
+            cd "$DEPLOY_PATH"
 
-          echo "Logging into GHCR..."
-          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            echo "Logging in to GHCR..."
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
-          echo "Pulling new image..."
-          docker pull "$IMAGE"
+            echo "Pulling image: $IMAGE"
+            docker pull "$IMAGE"
 
-          echo "Rebuilding docker-compose.yml..."
-          cat > docker-compose.yml <<EOF
-          services:
-            web:
-              image: $IMAGE
-              container_name: nexcode
-              network_mode: host
-              restart: always
-              env_file:
-                - $DEPLOY_PATH/.env
-              volumes:
-                - $DEPLOY_PATH/staticfiles:/app/staticfiles
-                - $DEPLOY_PATH/media:/app/media
-                - $DEPLOY_PATH/.env:/app/.env:ro
-          EOF
+            echo "Writing docker-compose.yml"
+            cat > docker-compose.yml <<EOF
+            services:
+              web:
+                image: $IMAGE
+                container_name: nexcode
+                network_mode: host
+                restart: always
+                env_file:
+                  - $DEPLOY_PATH/.env
+                volumes:
+                  - $DEPLOY_PATH/staticfiles:/app/staticfiles
+                  - $DEPLOY_PATH/media:/app/media
+                  - $DEPLOY_PATH/.env:/app/.env:ro
+              EOF
 
-          echo "Starting application..."
-          docker compose up -d
+                echo "Starting services..."
+                docker compose down --remove-orphans || true
+                docker compose up -d --force-recreate
 
-          echo "Running migrations..."
-          docker compose exec -T web python manage.py migrate --noinput
+                echo "Running migrations..."
+                docker compose exec -T web python manage.py migrate --noinput
 
-          echo "Collecting static files..."
-          docker compose exec -T web python manage.py collectstatic --noinput
+                echo "Collecting static files..."
+                docker compose exec -T web python manage.py collectstatic --noinput
 
-          echo "=== Deployment Completed Successfully ==="
-
-          EOSSH
+                echo "=== Deployment Finished Successfully ==="
+              EOSSH
