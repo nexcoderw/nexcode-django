@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexcode_web
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8000:8000"   # bind to localhost; your host nginx should proxy to this
+    volumes:
+      - ./:/app                      # mount code for quick deploy (optional)
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      # - db   # uncomment if using Postgres service below
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Optional postgres service (recommended for a robust production setup)
+# db:
+#   image: postgres:15
+#   container_name: nexcode_db
+#   restart: always
+#   environment:
+#     POSTGRES_DB: ${POSTGRES_DB}
+#     POSTGRES_USER: ${POSTGRES_USER}
+#     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#   volumes:
+#     - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  static_volume:
+  media_volume:
+  # postgres_data:
