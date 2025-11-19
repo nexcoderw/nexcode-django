@@ -1,106 +1,129 @@
-name: CI/CD
+name: CI/CD API
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  tests:
+  build_and_test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
         with:
-          python-version: '3.11'
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Install dependencies
+      - name: Compute image name/tags
+        id: meta
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          REPO="${{ github.repository }}"
+          echo "IMAGE=ghcr.io/${REPO,,}" >> $GITHUB_OUTPUT
+          echo "TAG=${{ github.sha }}" >> $GITHUB_OUTPUT
 
-      - name: Run tests
-        run: echo "No tests defined - skipping"
+      - name: Build & push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.IMAGE }}:${{ steps.meta.outputs.TAG }}
+            ${{ steps.meta.outputs.IMAGE }}:latest
+
+      - name: Smoke test (manage.py check using sqlite)
+        run: |
+          echo "DJANGO_DB=sqlite" > ci.env
+          docker run --rm --env-file ./ci.env \
+            ${{ steps.meta.outputs.IMAGE }}:${{ steps.meta.outputs.TAG }} \
+            python manage.py check
+
 
   deploy:
-    needs: tests
+    needs: build_and_test
+    if: github.ref == 'refs/heads/main' && needs.build_and_test.result == 'success'
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install ssh client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client netcat-openbsd
-
-      - name: Add SSH key
+      - name: Load SSH key for server
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
-      - name: Add server host key
+      - name: Trust server host key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+          ssh-keyscan -p "${{ secrets.SERVER_SSH_PORT }}" "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy to server
+      - name: Deploy to server via SSH
         env:
-          SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_SSH_PORT: ${{ secrets.SERVER_SSH_PORT }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+
+          IMAGE: ghcr.io/${{ github.repository_owner }}/nexcode-django:${{ github.sha }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
         run: |
-          ssh ${SERVER_USER}@${SERVER_HOST} bash -e << 'EOF'
-            set -euo pipefail
-            cd "${DEPLOY_PATH}"
+          ssh -p "$SERVER_SSH_PORT" "$SERVER_USER@$SERVER_HOST" bash -s -- \
+            "$IMAGE" "$GHCR_USERNAME" "$GHCR_TOKEN" "$DEPLOY_PATH" <<'EOSSH'
 
-            echo "=== 1) Creating backup ==="
-            TIMESTAMP=$(date +'%Y%m%d%H%M%S')
-            mkdir -p backups
-            tar czf backups/code_${TIMESTAMP}.tar.gz .
-            if [ -f db.sqlite3 ]; then
-              cp db.sqlite3 backups/db_${TIMESTAMP}.sqlite3
-            fi
+          set -euo pipefail
 
-            echo "=== 2) Pulling latest code from GitHub ==="
-            git fetch origin main
-            git reset --hard origin/main
+          IMAGE="$1"
+          GHCR_USER="$2"
+          GHCR_TOKEN="$3"
+          DEPLOY_PATH="$4"
 
-            echo "=== 3) Using systemd deployment (gunicorn + venv) ==="
-            VENV="./venv"
-            if [ ! -d "$VENV" ]; then
-              VENV="/var/www/nexcode/venv"
-            fi
-            echo "Virtualenv: $VENV"
+          echo "=== Deployment Starting ==="
+          echo "Image: $IMAGE"
+          echo "Deploy Path: $DEPLOY_PATH"
+          echo "---------------------------"
 
-            echo "=== 4) Installing updated dependencies ==="
-            source $VENV/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
+          mkdir -p "$DEPLOY_PATH"
+          cd "$DEPLOY_PATH"
 
-            echo "=== 5) Running migrations ==="
-            python manage.py migrate --noinput
+          echo "Logging into GHCR..."
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
-            echo "=== 6) Collecting static files ==="
-            python manage.py collectstatic --noinput
+          echo "Pulling new image..."
+          docker pull "$IMAGE"
 
-            deactivate
-
-            echo "=== 7) Restarting systemd service (nexcode.service) ==="
-            systemctl restart nexcode.service
-
-            sleep 2
-            systemctl is-active --quiet nexcode.service || {
-              echo "Service failed to restart!"
-              systemctl status nexcode.service --no-pager
-              exit 1
-            }
-
-            echo "=== Deployment completed successfully ==="
+          echo "Rebuilding docker-compose.yml..."
+          cat > docker-compose.yml <<EOF
+          services:
+            web:
+              image: $IMAGE
+              container_name: nexcode
+              network_mode: host
+              restart: always
+              env_file:
+                - $DEPLOY_PATH/.env
+              volumes:
+                - $DEPLOY_PATH/staticfiles:/app/staticfiles
+                - $DEPLOY_PATH/media:/app/media
+                - $DEPLOY_PATH/.env:/app/.env:ro
           EOF
+
+          echo "Starting application..."
+          docker compose up -d
+
+          echo "Running migrations..."
+          docker compose exec -T web python manage.py migrate --noinput
+
+          echo "Collecting static files..."
+          docker compose exec -T web python manage.py collectstatic --noinput
+
+          echo "=== Deployment Completed Successfully ==="
+
+          EOSSH
