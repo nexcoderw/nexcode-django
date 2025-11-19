@@ -83,28 +83,35 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # Database Configuration (PostgreSQL in production, SQLite in CI)
 # -----------------------------------------------------------------------------
 
-DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
+# DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
 
-if DJANGO_DB == "sqlite":
-    # Used only for CI smoke tests or emergency fallback
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
-        }
+# if DJANGO_DB == "sqlite":
+#     # Used only for CI smoke tests or emergency fallback
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
+#         }
+#     }
+# else:
+#     # Production / development PostgreSQL
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.getenv("POSTGRES_DB"),
+#             "USER": os.getenv("POSTGRES_USER"),
+#             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#             "HOST": os.getenv("POSTGRES_HOST"),
+#             "PORT": os.getenv("POSTGRES_PORT"),
+#         }
+#     }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Production / development PostgreSQL
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB"),
-            "USER": os.getenv("POSTGRES_USER"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-            "HOST": os.getenv("POSTGRES_HOST"),
-            "PORT": os.getenv("POSTGRES_PORT"),
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
