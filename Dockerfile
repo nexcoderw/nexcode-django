@@ -1,5 +1,5 @@
 # ================================
-#   Stage 1 — Build Python deps
+#   Stage 1 — Dependency Builder
 # ================================
 FROM python:3.12-slim AS builder
 
@@ -9,19 +9,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# System deps required for pip builds
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential libpq-dev libjpeg62-turbo-dev zlib1g-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies in builder layer
 COPY requirements.txt /app/
 RUN pip install --upgrade pip setuptools wheel
 RUN pip install --prefix=/install -r requirements.txt
 
 
 # ================================
-#   Stage 2 — Final lightweight image
+#        Stage 2 — Runtime
 # ================================
 FROM python:3.12-slim
 
@@ -31,18 +29,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Runtime system dependencies (no compilers)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 libjpeg62-turbo zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Python dependencies from builder stage
 COPY --from=builder /install /usr/local
 
-# Copy Django project source
 COPY . /app
 
-# Copy & enable entrypoint
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
