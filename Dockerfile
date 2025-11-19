@@ -1,58 +1,51 @@
-# ====================
-# Builder stage
-# ====================
-FROM python:3.11-slim AS builder
+# ================================
+#   Stage 1 — Build Python deps
+# ================================
+FROM python:3.12-slim AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
-# System build deps
+# System deps required for pip builds
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    git \
-    curl \
+    build-essential libpq-dev libjpeg62-turbo-dev zlib1g-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Install dependencies in builder layer
 COPY requirements.txt /app/
+RUN pip install --upgrade pip setuptools wheel
+RUN pip install --prefix=/install -r requirements.txt
 
-RUN python -m pip install --upgrade pip
-RUN pip install --user -r requirements.txt
 
+# ================================
+#   Stage 2 — Final lightweight image
+# ================================
+FROM python:3.12-slim
 
-# ====================
-# Final stage
-# ====================
-FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
-# Runtime packages
+# Runtime system dependencies (no compilers)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 \
-    gcc \
-    libjpeg62-turbo \
+    libpq5 libjpeg62-turbo zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
-# --- FIX IS HERE ---
-# Copy entrypoint WHILE STILL ROOT
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-# --------------------
+# Copy Python dependencies from builder stage
+COPY --from=builder /install /usr/local
 
-# Copy python dependencies from builder
-COPY --from=builder /root/.local /root/.local
-
-# Add project source code
+# Copy Django project source
 COPY . /app
 
-# Create non-root user AFTER entrypoint is already copied
-RUN useradd -m appuser && chown -R appuser:appuser /app
-
-ENV PATH=/root/.local/bin:$PATH
-ENV DJANGO_SETTINGS_MODULE=nexcode.settings
-
-USER appuser
+# Copy & enable entrypoint
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
