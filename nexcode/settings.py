@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # Database Configuration (PostgreSQL in production, SQLite in CI)
 # -----------------------------------------------------------------------------
 
-# DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
+DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
 
 if DJANGO_DB == "sqlite":
     # Used only for CI smoke tests or emergency fallback
