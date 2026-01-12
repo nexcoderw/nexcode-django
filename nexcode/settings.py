@@ -2,6 +2,7 @@ import os
 from os import getenv
 from pathlib import Path
 from datetime import timedelta
+from urllib.parse import parse_qsl, urlparse
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,10 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Media storage
-    'cloudinary_storage',
-    'cloudinary',
-    
     # Third party
     'taggit',
     'django.contrib.humanize',
@@ -50,6 +47,13 @@ INSTALLED_APPS = [
     #Custom apps
     'home',
 ]
+
+# Media storage (optional)
+if USE_CLOUDINARY_MEDIA:
+    INSTALLED_APPS += [
+        'cloudinary_storage',
+        'cloudinary',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -90,28 +94,42 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # Database Configuration (PostgreSQL in production, SQLite in CI)
 # -----------------------------------------------------------------------------
 
-DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
+# DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
 
-if DJANGO_DB == "sqlite":
-    # Used only for CI smoke tests or emergency fallback
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
-        }
+# if DJANGO_DB == "sqlite":
+#     # Used only for CI smoke tests or emergency fallback
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
+#         }
+#     }
+# else:
+#     # Production / development PostgreSQL
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.getenv("POSTGRES_DB"),
+#             "USER": os.getenv("POSTGRES_USER"),
+#             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#             "HOST": os.getenv("POSTGRES_HOST"),
+#             "PORT": os.getenv("POSTGRES_PORT"),
+#         }
+#     }
+
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": tmpPostgres.path.replace('/', ''),
+        "USER": tmpPostgres.username,
+        "PASSWORD": tmpPostgres.password,
+        "HOST": tmpPostgres.hostname,
+        "PORT": 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
     }
-else:
-    # Production / development PostgreSQL
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB"),
-            "USER": os.getenv("POSTGRES_USER"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-            "HOST": os.getenv("POSTGRES_HOST"),
-            "PORT": os.getenv("POSTGRES_PORT"),
-        }
-    }
+}
 
 # DATABASES = {
 #     'default': {
