@@ -91,45 +91,35 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # -----------------------------------------------------------------------------
-# Database Configuration (PostgreSQL in production, SQLite in CI)
+# Database Configuration (PostgreSQL by default, SQLite in CI)
 # -----------------------------------------------------------------------------
 
-# DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
+DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
+database_url = os.getenv("DATABASE_URL", "")
+if isinstance(database_url, bytes):
+    database_url = database_url.decode("utf-8")
 
-# if DJANGO_DB == "sqlite":
-#     # Used only for CI smoke tests or emergency fallback
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
-#         }
-#     }
-# else:
-#     # Production / development PostgreSQL
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": os.getenv("POSTGRES_DB"),
-#             "USER": os.getenv("POSTGRES_USER"),
-#             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-#             "HOST": os.getenv("POSTGRES_HOST"),
-#             "PORT": os.getenv("POSTGRES_PORT"),
-#         }
-#     }
-
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": tmpPostgres.path.replace('/', ''),
-        "USER": tmpPostgres.username,
-        "PASSWORD": tmpPostgres.password,
-        "HOST": tmpPostgres.hostname,
-        "PORT": 5432,
-        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+if DJANGO_DB == "sqlite":
+    # Used only for CI smoke tests or emergency fallback
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
+        }
     }
-}
+else:
+    tmpPostgres = urlparse(database_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": tmpPostgres.path.replace("/", ""),
+            "USER": tmpPostgres.username,
+            "PASSWORD": tmpPostgres.password,
+            "HOST": tmpPostgres.hostname,
+            "PORT": 5432,
+            "OPTIONS": dict(parse_qsl(tmpPostgres.query)),
+        }
+    }
 
 # DATABASES = {
 #     'default': {
