@@ -9,31 +9,21 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - "127.0.0.1:8000:8000"   # bind to localhost; your host nginx should proxy to this
     volumes:
       - ./:/app                      # mount code for quick deploy (optional)
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-    depends_on:
-      # - db   # uncomment if using Postgres service below
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
 
-# Optional postgres service (recommended for a robust production setup)
-# db:
-#   image: postgres:15
-#   container_name: nexcode_db
-#   restart: always
-#   environment:
-#     POSTGRES_DB: ${POSTGRES_DB}
-#     POSTGRES_USER: ${POSTGRES_USER}
-#     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#   volumes:
-#     - postgres_data:/var/lib/postgresql/data
+# Using a hosted Postgres (e.g., Neon) via DATABASE_URL from .env
 
 volumes:
   static_volume:
