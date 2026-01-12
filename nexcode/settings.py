@@ -13,6 +13,9 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
+# Use Cloudinary for media (user uploads)?
+USE_CLOUDINARY_MEDIA = os.getenv("USE_CLOUDINARY_MEDIA", "False").lower() == "true"
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-_untchkzmmer+%6!l*uy-qyq63jvha_69e20d!c-$08jo43toh'
 
@@ -32,6 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Media storage
+    'cloudinary_storage',
+    'cloudinary',
     
     # Third party
     'taggit',
@@ -154,11 +161,23 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # used when USE_CLOUDINARY_MEDIA=False
+
+# WhiteNoise for static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_AUTOREFRESH = True
+
+# Cloudinary media storage (optional, controlled by USE_CLOUDINARY_MEDIA)
+if USE_CLOUDINARY_MEDIA:
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+        "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+    }
+    # Use Cloudinary for all FileField / ImageField by default
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
