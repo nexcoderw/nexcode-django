@@ -1,29 +1,85 @@
 import os
-from os import getenv
 from pathlib import Path
-from datetime import timedelta
 from urllib.parse import parse_qsl, urlparse
+
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# Load environment variables from the .env file
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+
+def getenv_bool(name, default=False):
+    value = os.getenv(name)
+    if value is None:
+        return default
+
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def getenv_list(name, default=None):
+    value = os.getenv(name)
+    if value is None:
+        return list(default or [])
+
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+DJANGO_ENV = os.getenv("DJANGO_ENV", "development").lower()
+ENV_FILES = [BASE_DIR / ".env"]
+if DJANGO_ENV == "production":
+    ENV_FILES = [BASE_DIR / ".env.production", BASE_DIR / ".env"]
+
+for env_file in ENV_FILES:
+    if env_file.exists():
+        load_dotenv(env_file, override=False)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # Use Cloudinary for media (user uploads)?
-USE_CLOUDINARY_MEDIA = os.getenv("USE_CLOUDINARY_MEDIA", "False").lower() == "true"
+USE_CLOUDINARY_MEDIA = getenv_bool("USE_CLOUDINARY_MEDIA", False)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_untchkzmmer+%6!l*uy-qyq63jvha_69e20d!c-$08jo43toh'
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    if DJANGO_ENV == "production":
+        raise ImproperlyConfigured("SECRET_KEY must be set when DJANGO_ENV=production.")
+
+    SECRET_KEY = "django-insecure-dev-only-key"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = getenv_bool("DEBUG", DJANGO_ENV != "production")
 
-ALLOWED_HOSTS = ["*"]
+default_allowed_hosts = ["localhost", "127.0.0.1"]
+if not DEBUG:
+    default_allowed_hosts.extend(["nexcode.africa", "www.nexcode.africa"])
+
+ALLOWED_HOSTS = getenv_list("ALLOWED_HOSTS", default_allowed_hosts)
+
+default_csrf_trusted_origins = []
+if not DEBUG:
+    default_csrf_trusted_origins = [
+        f"https://{host}"
+        for host in ALLOWED_HOSTS
+        if host and host != "*"
+    ]
+
+CSRF_TRUSTED_ORIGINS = getenv_list(
+    "CSRF_TRUSTED_ORIGINS",
+    default_csrf_trusted_origins,
+)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = getenv_bool("SECURE_SSL_REDIRECT", not DEBUG)
+SESSION_COOKIE_SECURE = getenv_bool("SESSION_COOKIE_SECURE", not DEBUG)
+CSRF_COOKIE_SECURE = getenv_bool("CSRF_COOKIE_SECURE", not DEBUG)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = os.getenv("SECURE_REFERRER_POLICY", "same-origin")
+SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "0" if DEBUG else "31536000"))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = getenv_bool("SECURE_HSTS_INCLUDE_SUBDOMAINS", not DEBUG)
+SECURE_HSTS_PRELOAD = getenv_bool("SECURE_HSTS_PRELOAD", not DEBUG)
 
 
 # Application definition
@@ -95,11 +151,9 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # -----------------------------------------------------------------------------
 
 DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
-database_url = os.getenv("DATABASE_URL", "")
-if isinstance(database_url, bytes):
-    database_url = database_url.decode("utf-8")
+database_url = os.getenv("DATABASE_URL", "").strip()
 
-if DJANGO_DB == "sqlite":
+if DJANGO_DB == "sqlite" or (not database_url and DEBUG):
     # Used only for CI smoke tests or emergency fallback
     DATABASES = {
         "default": {
@@ -108,7 +162,13 @@ if DJANGO_DB == "sqlite":
         }
     }
 else:
+    if not database_url:
+        raise ImproperlyConfigured("DATABASE_URL must be set for PostgreSQL deployments.")
+
     tmpPostgres = urlparse(database_url)
+    if not all([tmpPostgres.scheme, tmpPostgres.hostname, tmpPostgres.path]):
+        raise ImproperlyConfigured("DATABASE_URL is not a valid PostgreSQL connection string.")
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -116,7 +176,7 @@ else:
             "USER": tmpPostgres.username,
             "PASSWORD": tmpPostgres.password,
             "HOST": tmpPostgres.hostname,
-            "PORT": 5432,
+            "PORT": tmpPostgres.port or 5432,
             "OPTIONS": dict(parse_qsl(tmpPostgres.query)),
         }
     }
@@ -162,7 +222,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
@@ -174,8 +233,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # used when USE_CLOUDINARY_MEDIA=False
 
 # WhiteNoise for static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_AUTOREFRESH = True
+WHITENOISE_AUTOREFRESH = DEBUG
+WHITENOISE_USE_FINDERS = DEBUG
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Cloudinary media storage (optional, controlled by USE_CLOUDINARY_MEDIA)
 if USE_CLOUDINARY_MEDIA:
@@ -184,8 +251,9 @@ if USE_CLOUDINARY_MEDIA:
         "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
         "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
     }
-    # Use Cloudinary for all FileField / ImageField by default
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+    STORAGES["default"] = {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -223,8 +291,6 @@ JAZZMIN_SETTINGS = {
     "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
     "related_modal_active": False,
 }
-
-# CSRF_TRUSTED_ORIGINS = ['', 'https://*.127.0.0.1']
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"

@@ -1,9 +1,22 @@
 from home.forms import *
 from home.models import *
 from django.db.models import Q
+from django.db import connection
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+def healthcheck(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+    except Exception:
+        return JsonResponse({"status": "error", "database": "unavailable"}, status=503)
+
+    return JsonResponse({"status": "ok", "database": "ok"})
 
 def home(request):
     portfolio = Portfolio.objects.filter(

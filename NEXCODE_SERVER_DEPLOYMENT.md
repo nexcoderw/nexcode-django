@@ -1,0 +1,170 @@
+# Nexcode Django Deployment
+
+This adapts `SERVER_DEPLOYMENT_PLAYBOOK.md` to this Django repo and the production domain `nexcode.africa`.
+
+## Deployment Targets
+
+- Project name: `nexcode`
+- Project Linux user: `nexcode`
+- Repo URL: `https://github.com/nexcoderw/nexcode-django.git`
+- Live app path: `/var/www/nexcode/api`
+- Releases path: `/var/www/nexcode/releases/api`
+- Shared env path: `/var/www/nexcode/shared/api/.env.production`
+- Shared media path: `/var/www/nexcode/shared/media`
+- PM2 config path: `/var/www/nexcode/shared/pm2/nexcode-api.ecosystem.config.cjs`
+- Local app port: `8000`
+- Public domains: `nexcode.africa`, `www.nexcode.africa`
+
+## DNS
+
+Point these `A` records to `164.68.111.25` before requesting HTTPS:
+
+- `@ -> 164.68.111.25`
+- `www -> 164.68.111.25`
+
+Remove any broken `AAAA` records if IPv6 is not configured on the server.
+
+## One-Time Server Setup
+
+Install the Ubuntu packages the base playbook expects, plus Python runtime packages for Django:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git nginx build-essential curl unzip snapd openssh-server ufw \
+  python3 python3-venv python3-pip python3-dev libpq-dev
+```
+
+Install Node.js LTS and PM2 using the base playbook, then create the project user and directory layout:
+
+```bash
+sudo adduser nexcode
+sudo usermod -aG sudo nexcode
+
+sudo mkdir -p /var/www/nexcode/releases/api
+sudo mkdir -p /var/www/nexcode/shared/api
+sudo mkdir -p /var/www/nexcode/shared/media
+sudo mkdir -p /var/www/nexcode/shared/logs
+sudo mkdir -p /var/www/nexcode/shared/pm2
+sudo mkdir -p /var/www/nexcode/bin
+sudo chown -R nexcode:nexcode /var/www/nexcode
+```
+
+## Production Env File
+
+Create the server-side env file and keep it off Git:
+
+```bash
+sudo -u nexcode touch /var/www/nexcode/shared/api/.env.production
+sudo chmod 600 /var/www/nexcode/shared/api/.env.production
+```
+
+Use this shape:
+
+```dotenv
+DJANGO_ENV=production
+DEBUG=False
+SECRET_KEY=replace-with-a-long-random-secret
+DJANGO_DB=postgres
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require
+ALLOWED_HOSTS=nexcode.africa,www.nexcode.africa
+CSRF_TRUSTED_ORIGINS=https://nexcode.africa,https://www.nexcode.africa
+USE_CLOUDINARY_MEDIA=True
+CLOUDINARY_CLOUD_NAME=replace-me
+CLOUDINARY_API_KEY=replace-me
+CLOUDINARY_API_SECRET=replace-me
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+PORT=8000
+```
+
+## Copy Repo Deployment Files To The Server
+
+Copy these files from this repo to the server paths required by the playbook:
+
+- `deploy/bin/nexcode-api-deploy.sh` -> `/var/www/nexcode/bin/nexcode-api-deploy.sh`
+- `deploy/bin/nexcode-prune-releases.sh` -> `/var/www/nexcode/bin/nexcode-prune-releases.sh`
+- `deploy/pm2/nexcode-api.ecosystem.config.cjs` -> `/var/www/nexcode/shared/pm2/nexcode-api.ecosystem.config.cjs`
+- `deploy/nginx/nexcode.africa.conf` -> `/etc/nginx/sites-available/nexcode.africa.conf`
+
+Then make the scripts executable and enable the Nginx site:
+
+```bash
+sudo chmod +x /var/www/nexcode/bin/nexcode-api-deploy.sh
+sudo chmod +x /var/www/nexcode/bin/nexcode-prune-releases.sh
+sudo ln -s /etc/nginx/sites-available/nexcode.africa.conf /etc/nginx/sites-enabled/nexcode.africa.conf
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+## First Deploy
+
+The PM2 process must run as the `nexcode` user:
+
+```bash
+sudo -iu nexcode
+cd /var/www/nexcode/releases/api
+git clone https://github.com/nexcoderw/nexcode-django.git first-clone-check
+rm -rf first-clone-check
+exit
+
+sudo -iu nexcode /var/www/nexcode/bin/nexcode-api-deploy.sh main
+sudo -iu nexcode pm2 status
+curl -I http://127.0.0.1:8000/health/
+```
+
+If the local health check passes, issue HTTPS certificates:
+
+```bash
+sudo certbot --nginx -d nexcode.africa -d www.nexcode.africa
+sudo certbot renew --dry-run
+```
+
+## GitHub Actions Deployment
+
+This repo should deploy by SSH to the server and execute the exact commit SHA on the server. GitHub repository access remains HTTPS. Configure the GitHub `production` environment with:
+
+- `DEPLOY_HOST`
+- `DEPLOY_PORT`
+- `DEPLOY_USER`
+- `SSH_PRIVATE_KEY`
+- `SSH_KNOWN_HOSTS`
+
+`DEPLOY_USER` should normally be `nexcode`.
+
+The deploy script clones the repository over HTTPS:
+
+```text
+https://github.com/nexcoderw/nexcode-django.git
+```
+
+The SSH key in GitHub Actions is only for logging into your server. It is not a GitHub deploy key and does not need to be added under GitHub repository SSH settings.
+
+If the repository is private and HTTPS clone asks for credentials on the server, create `/home/nexcode/.netrc` with a GitHub fine-grained token instead of switching to SSH:
+
+```text
+machine github.com
+login YOUR_GITHUB_USERNAME
+password YOUR_GITHUB_TOKEN
+```
+
+## Post-Deploy Checks
+
+Run these after each deploy:
+
+```bash
+sudo -iu nexcode pm2 status
+ls -l /var/www/nexcode
+curl -I http://127.0.0.1:8000/health/
+curl -I https://nexcode.africa/health/
+curl -I https://nexcode.africa/
+```
+
+## Important Security Note
+
+The current repo contains a real-looking `.env.production` with production credentials. Treat those secrets as exposed:
+
+1. Rotate the database password.
+2. Rotate the Cloudinary credentials.
+3. Generate a fresh Django `SECRET_KEY`.
+4. Keep the real `.env.production` only on the server at `/var/www/nexcode/shared/api/.env.production`.

@@ -1,2 +1,7 @@
 venv/
 .vscode/staticfiles/
+__pycache__/
+*.pyc
+.env
+.env.production
+SERVER_DEPLOYMENT_PLAYBOOK.md
