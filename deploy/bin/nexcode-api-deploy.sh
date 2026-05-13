@@ -55,6 +55,7 @@ ln -sfn "${SHARED_MEDIA_DIR}" "${RELEASE_DIR}/media"
 "${PYTHON_BIN}" -m venv "${RELEASE_DIR}/venv"
 "${RELEASE_DIR}/venv/bin/pip" install --upgrade pip setuptools wheel
 "${RELEASE_DIR}/venv/bin/pip" install -r "${RELEASE_DIR}/requirements.txt"
+chmod +x "${RELEASE_DIR}/venv/bin/gunicorn"
 
 (
   cd "${RELEASE_DIR}"
@@ -85,7 +86,16 @@ if ! pm2 startOrReload "${PM2_CONFIG}" --only "${PROJECT_NAME}-api" --update-env
   exit 1
 fi
 
-if ! curl --fail --silent --show-error "http://127.0.0.1:${PORT}/health/" >/dev/null; then
+health_ok=false
+for _ in {1..30}; do
+  if curl --fail --silent --show-error "http://127.0.0.1:${PORT}/health/" >/dev/null; then
+    health_ok=true
+    break
+  fi
+  sleep 1
+done
+
+if [[ "${health_ok}" != "true" ]]; then
   rollback
   echo "Health check failed after deploy. Live symlink was rolled back." >&2
   exit 1
