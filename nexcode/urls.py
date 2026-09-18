@@ -13,6 +13,8 @@ urlpatterns = [
     path("", include("home.urls")),
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
+
+    path("api/admin/", include("admin_api.urls")),
 ]
 
 if settings.DEBUG:
