@@ -6,10 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
-
-
-ADMIN_GROUP_NAME = "NEXCODE_ADMIN"
-
+from admin_api.constants import NEXCODE_ADMIN_GROUP_NAME
 
 class Command(BaseCommand):
     help = "Create a Django user with access to the NEXCODE admin portal."
@@ -35,11 +32,11 @@ class Command(BaseCommand):
 
         try:
             admin_group = Group.objects.get(
-                name=ADMIN_GROUP_NAME,
+                name=NEXCODE_ADMIN_GROUP_NAME,
             )
         except Group.DoesNotExist as error:
             raise CommandError(
-                f"{ADMIN_GROUP_NAME} does not exist. "
+                f"{NEXCODE_ADMIN_GROUP_NAME} does not exist. "
                 "Run the admin_api migrations first."
             ) from error
 
