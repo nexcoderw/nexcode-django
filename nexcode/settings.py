@@ -3,7 +3,7 @@ from pathlib import Path
 from urllib.parse import parse_qsl, urlparse
 
 from django.core.exceptions import ImproperlyConfigured
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +25,11 @@ def getenv_list(name, default=None):
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-DJANGO_ENV = os.getenv("DJANGO_ENV", "development").lower()
+# Read the mode without overriding process variables or production-file priority.
+local_mode = dotenv_values(BASE_DIR / ".env").get("DJANGO_ENV", "development")
+DJANGO_ENV = os.getenv("DJANGO_ENV", local_mode or "development").strip().lower()
+if DJANGO_ENV not in {"development", "production"}:
+    raise ImproperlyConfigured("DJANGO_ENV must be development or production.")
 ENV_FILES = [BASE_DIR / ".env"]
 if DJANGO_ENV == "production":
     ENV_FILES = [BASE_DIR / ".env.production", BASE_DIR / ".env"]
@@ -44,13 +48,12 @@ USE_CLOUDINARY_MEDIA = getenv_bool("USE_CLOUDINARY_MEDIA", False)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
-    if DJANGO_ENV == "production":
-        raise ImproperlyConfigured("SECRET_KEY must be set when DJANGO_ENV=production.")
-
-    SECRET_KEY = "django-insecure-dev-only-key"
+    raise ImproperlyConfigured("SECRET_KEY must be set in the environment or .env file.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv_bool("DEBUG", DJANGO_ENV != "production")
+if DJANGO_ENV == "production" and DEBUG:
+    raise ImproperlyConfigured("DEBUG must be False in production.")
 
 # Keep canonical URLs independent of incoming hosts and tracking parameters.
 SITE_URL = os.getenv("SITE_URL", "https://nexcode.africa").rstrip("/")
@@ -122,6 +125,7 @@ INSTALLED_APPS = [
 
     #Custom apps
     'home',
+    'admin_api',
 ]
 
 # Media storage (optional)
@@ -271,6 +275,10 @@ if USE_CLOUDINARY_MEDIA:
         "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
         "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
     }
+    if not all(CLOUDINARY_STORAGE.values()):
+        raise ImproperlyConfigured(
+            "Cloudinary media requires CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET."
+        )
     STORAGES["default"] = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     }
