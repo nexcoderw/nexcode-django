@@ -21,4 +21,9 @@ urlpatterns = [
         auth.me_view,
         name="me",
     ),
+    path(
+        "logout/",
+        auth.logout_view,
+        name="logout",
+    ),
 ]
