@@ -18,7 +18,11 @@ from admin_api.serializers.auth import (
     parse_login_payload,
     serialize_admin,
 )
-
+from admin_api.security.login_throttle import (
+    get_login_retry_after,
+    record_login_failure,
+    reset_login_throttle,
+)
 
 def csrf_token_view(request):
     if request.method != "GET":
@@ -69,17 +73,39 @@ def login_view(request):
     if error == LOGIN_ERROR_INVALID_CREDENTIALS:
         return invalid_credentials_response()
 
+    email = payload["email"]
+
+    retry_after = get_login_retry_after(
+        email
+    )
+
+    if retry_after is not None:
+        return login_throttled_response(
+            retry_after
+        )
+
     user = authenticate(
         request=request,
-        username=payload["email"],
+        username=email,
         password=payload["password"],
     )
 
-    if user is None:
+    if (
+        user is None
+        or not is_nexcode_admin(user)
+    ):
+        retry_after = record_login_failure(
+            email
+        )
+
+        if retry_after is not None:
+            return login_throttled_response(
+                retry_after
+            )
+
         return invalid_credentials_response()
 
-    if not is_nexcode_admin(user):
-        return invalid_credentials_response()
+    reset_login_throttle(email)
 
     django_login(
         request,
@@ -157,6 +183,26 @@ def invalid_credentials_response():
         status=401,
     )
 
+    response["Cache-Control"] = "no-store"
+
+    return response
+
+
+def login_throttled_response(retry_after):
+    response = JsonResponse(
+        {
+            "status": "error",
+            "message": (
+                "Too many sign-in attempts. "
+                "Please try again later."
+            ),
+        },
+        status=429,
+    )
+
+    response["Retry-After"] = str(
+        retry_after
+    )
     response["Cache-Control"] = "no-store"
 
     return response
