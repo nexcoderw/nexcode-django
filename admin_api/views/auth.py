@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 
@@ -120,6 +121,23 @@ def me_view(request):
                     request.user
                 ),
             },
+        }
+    )
+
+    response["Cache-Control"] = "no-store"
+
+    return response
+
+def logout_view(request):
+    if request.method != "POST":
+        return method_not_allowed(["POST"])
+
+    django_logout(request)
+
+    response = JsonResponse(
+        {
+            "status": "success",
+            "message": "Signed out successfully.",
         }
     )
 
