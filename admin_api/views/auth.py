@@ -1,16 +1,22 @@
-import json
-
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 
 from admin_api.constants import (
     NEXCODE_ADMIN_REMEMBER_SESSION_SECONDS,
 )
-from admin_api.permissions import is_nexcode_admin
+from admin_api.permissions import (
+    is_nexcode_admin,
+    nexcode_admin_required,
+)
+from admin_api.serializers.auth import (
+    LOGIN_ERROR_INVALID_CREDENTIALS,
+    LOGIN_ERROR_INVALID_REMEMBER_ME,
+    LOGIN_ERROR_INVALID_REQUEST,
+    parse_login_payload,
+    serialize_admin,
+)
 
 
 def csrf_token_view(request):
@@ -35,9 +41,11 @@ def login_view(request):
     if request.method != "POST":
         return method_not_allowed(["POST"])
 
-    payload = parse_json_request(request)
+    payload, error = parse_login_payload(
+        request.body
+    )
 
-    if payload is None:
+    if error == LOGIN_ERROR_INVALID_REQUEST:
         return JsonResponse(
             {
                 "status": "error",
@@ -46,20 +54,7 @@ def login_view(request):
             status=400,
         )
 
-    email = payload.get("email")
-    password = payload.get("password")
-    remember_me = payload.get(
-        "remember_me",
-        False,
-    )
-
-    if not isinstance(email, str):
-        return invalid_credentials_response()
-
-    if not isinstance(password, str):
-        return invalid_credentials_response()
-
-    if not isinstance(remember_me, bool):
+    if error == LOGIN_ERROR_INVALID_REMEMBER_ME:
         return JsonResponse(
             {
                 "status": "error",
@@ -70,20 +65,13 @@ def login_view(request):
             status=400,
         )
 
-    email = email.strip().lower()
-
-    if not email or not password:
-        return invalid_credentials_response()
-
-    try:
-        validate_email(email)
-    except ValidationError:
+    if error == LOGIN_ERROR_INVALID_CREDENTIALS:
         return invalid_credentials_response()
 
     user = authenticate(
         request=request,
-        username=email,
-        password=password,
+        username=payload["email"],
+        password=payload["password"],
     )
 
     if user is None:
@@ -97,7 +85,7 @@ def login_view(request):
         user,
     )
 
-    if remember_me:
+    if payload["remember_me"]:
         request.session.set_expiry(
             NEXCODE_ADMIN_REMEMBER_SESSION_SECONDS
         )
@@ -119,34 +107,25 @@ def login_view(request):
     return response
 
 
-def serialize_admin(user):
-    return {
-        "id": user.pk,
-        "email": user.email,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "full_name": (
-            user.get_full_name().strip()
-            or user.email
-        ),
-    }
+@nexcode_admin_required
+def me_view(request):
+    if request.method != "GET":
+        return method_not_allowed(["GET"])
 
+    response = JsonResponse(
+        {
+            "status": "success",
+            "data": {
+                "admin": serialize_admin(
+                    request.user
+                ),
+            },
+        }
+    )
 
-def parse_json_request(request):
-    try:
-        payload = json.loads(
-            request.body or b"{}"
-        )
-    except (
-        json.JSONDecodeError,
-        UnicodeDecodeError,
-    ):
-        return None
+    response["Cache-Control"] = "no-store"
 
-    if not isinstance(payload, dict):
-        return None
-
-    return payload
+    return response
 
 
 def invalid_credentials_response():
