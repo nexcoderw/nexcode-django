@@ -1,31 +1,148 @@
-{% extends "layouts/app.html" %}
+{% extends 'layouts/app.html' %}
+{% load static %}
 {% block content %}
+
     <header class="header-pg">
         <div class="container">
-            <h1>Tell us what you want to build</h1>
-            <p class="page-intro mt-30">Whether you have a new idea or an existing system that needs attention, start with the problem you want to solve.</p>
+            <div class="text-center">
+                <div class="caption mb-100">
+                    <h1>Get In Touch</h1>
+                    <h6>( <a href="#0">Home</a> - <span>Contact</span> )</h6>
+                </div>
+            </div>
+        </div>
+        <div class="google-map">
+            <iframe id="gmap_canvas"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5519.180794946687!2d30.0609718!3d-1.9460127000000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca426aacbc701%3A0xcb963db68a4ac89b!2sLa%20Bonne%20Adresse%2C%20KN%202%20Roundabout%2C%20Kigali!5e1!3m2!1sen!2srw!4v1730112679970!5m2!1sen!2srw">
+            </iframe>
         </div>
     </header>
-    <section class="contact-pg section-padding pt-0">
+
+    <section class="contact-pg section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5">
-                    <h2 class="fz-30">A useful starting point</h2>
-                    <p class="mt-30">Tell us who the work is for, what you need it to do, and any timing or budget constraints. We will reply using the email address you provide.</p>
-                    <p class="mt-20">For an existing product, include its public website if available. Please do not send passwords or private account details.</p>
-                    <a class="butn-under mt-30"
-                       href="https://www.linkedin.com/company/nexcode-africa/"
-                       target="_blank"
-                       rel="noopener noreferrer">Connect on LinkedIn</a>
+                <div class="col-lg-5 valign">
+                    <div class="full-width md-mb80">
+                        <div class="sec-head md-mb80">
+                            <h2 class="text-u">
+                                Let's make your <br> brand <span class="fw-200">brilliant!</span>
+                            </h2>
+                            <p class="mt-20 mb-20">
+                                If you would like to work with us or just want to get in touch, we’d love to hear from you!
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="morinfo mt-30">
+                                        <h6 class="mb-15">email</h6>
+                                        <p>
+                                            {% if settings.address %}
+                                                {{ settings.address }}
+                                            {% else %}
+                                                1 KN 78 St, Kigali <br> Norrsken House Kigali
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="morinfo mt-30">
+                                        <h6 class="mb-15">Email</h6>
+                                        <p>
+                                            {% if settings.email %}
+                                                {{ settings.email }}
+                                            {% else %}
+                                                nexcoderwa@gmail.com
+                                            {% endif %}
+                                        </p>
+                                        <p>
+                                            {% if settings.second_email %}
+                                                {{ settings.second_email }}
+                                            {% else %}
+                                                
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="phone fz-30 fw-600 mt-30 underline main-color">
+                                <a href="#">
+                                    {% if settings.phone_number %}
+                                        {{ settings.phone_number }}
+                                    {% else %}
+                                        +250 781 862 349
+                                    {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                        <ul class="rest social-text d-flex mt-60 fz-16">
+                            <li class="mr-30">
+                                {% if settings.twitter %}
+                                    <a href="{{ settings.twitter }}" target="_blank" class="hover-this"><span class="hover-anim">X</span></a>
+                                {% else %}
+                                    <a href="https://x.com/nexcodeafrica" target="_blank" class="hover-this"><span class="hover-anim">X</span></a>
+                                {% endif %}
+                            </li>
+                            <li class="mr-30">
+                                {% if settings.linkedin %}
+                                    <a href="{{ settings.linkedin }}" target="_blank" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
+                                {% else %}
+                                    <a href="https://www.linkedin.com/company/nexcode-rwanda/" target="_blank" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if settings.instagram %}
+                                    <a href="{{ settings.instagram }}" target="_blank" class="hover-this"><span class="hover-anim">Instagram</span></a>
+                                {% else %}
+                                    <a href="https://www.instagram.com/nexcode.africa/" target="_blank" class="hover-this"><span class="hover-anim">Instagram</span></a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-lg-6 offset-lg-1">
-                    <form method="post" action="{% url 'base:contact' %}">
-                        {% csrf_token %}
-                        {% include "inc/form-fields.html" %}
-                        <button class="butn butn-md butn-bord butn-rounded" type="submit">Send project enquiry</button>
-                    </form>
+                <div class="col-lg-6 offset-lg-1 valign">
+                    <div class="full-width">
+                        <div class="sec-head mb-50">
+                            <h6 class="sub-head">Send a <span class="fw-200">message</span></h6>
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="messages"></div>
+                            <div class="controls row">
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-30">
+                                        {{ form.name }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-30">
+                                        {{ form.email }}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group mb-30">
+                                        {{ form.subject }}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        {{ form.message }}
+                                    </div>
+                                    <div class="mt-30">
+                                        <button type="submit" class="butn butn-md butn-bord butn-rounded">
+                                            <div class="d-flex align-items-center">
+                                                <span>Let's Talking</span>
+                                                <span class="icon ml-10">
+                                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
 {% endblock %}
