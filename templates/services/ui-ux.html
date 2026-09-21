@@ -1,1 +1,264 @@
-{% extends "services/detail.html" %}
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+    <header class="serv-hed2 section-padding pb-0">
+        <div class="container">
+            <div class="caption mb-80">
+                <h1 class="fz-80 fw-600">UI/UX <br /> Design</h1>
+                <div class="row justify-content-end">
+                    <div class="col-lg-5">
+                        <div class="text mt-30">
+                            <p>
+                                At NEXCODE, we craft user-centric designs that focus on delivering seamless and intuitive experiences. Our design process is grounded in creativity, usability, and user behavior insights, ensuring that your product is not only visually appealing but also highly functional.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="list mt-30">
+                            <ul>
+                                <li>User Research & Insights</li>
+                                <li>Wireframing & Prototyping</li>
+                                <li>UI/UX Design and Optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="fit-img radius-15">
+                <img src="{% static 'img/services/ui1.jpg' %}" alt="">
+            </div>
+        </div>
+    </header>
+
+    <section class="serv-details section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content">
+                        <h3>We combine design with user experience</h3>
+                        <div class="text mt-30 mb-30">
+                            <p>
+                                At NEXCODE, our approach to UI/UX design is centered around the user. We blend design aesthetics with functionality to create digital experiences that are intuitive, engaging, and impactful. Our team uses the latest tools and methodologies to deliver exceptional user interfaces that enhance user experience.
+                            </p>
+                        </div>
+                        <div class="text">
+                            <p>
+                                Every product we design undergoes rigorous user testing, ensuring that it aligns with your target audience’s needs and preferences. We are committed to providing a seamless journey from the first interaction to the last, creating designs that leave a lasting impression.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-80">
+                <div class="col-md-6">
+                    <div class="img sm-mb30">
+                        <img src="{% static 'img/services/ui3.jpg' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="img">
+                        <img src="{% static 'img/services/ui2.jpg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-80">
+                <div class="col-lg-7">
+                    <div class="content">
+                        <h3>UI/UX Process for User-Centric Design</h3>
+                        <div class="text mt-30 mb-50">
+                            <p>
+                                Our design process is methodical and user-focused. We combine research, ideation, and testing to create products that users love. Here's a look at how we build intuitive, seamless digital experiences.
+                            </p>
+                        </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item active">
+                                <h2 class="accordion-header" id="heading2">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse2"
+                                        aria-expanded="false" aria-controls="collapse2">
+                                        <span>1.</span>User Research & Insights
+                                    </button>
+                                </h2>
+                                <div id="collapse2" class="accordion-collapse collapse show"
+                                    aria-labelledby="heading2" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We conduct thorough user research to understand the needs, behaviors, and pain points of your target audience, forming the foundation for an effective design strategy.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading1">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse1" aria-expanded="true"
+                                        aria-controls="collapse1">
+                                        <span>2.</span>Wireframing & Prototyping
+                                    </button>
+                                </h2>
+                                <div id="collapse1" class="accordion-collapse collapse"
+                                    aria-labelledby="heading1" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We create detailed wireframes and prototypes to visualize the design layout, ensuring the user flow is simple, effective, and aligned with user expectations.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading3">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse3"
+                                        aria-expanded="false" aria-controls="collapse3">
+                                        <span>3.</span>UI/UX Design and Optimization
+                                    </button>
+                                </h2>
+                                <div id="collapse3" class="accordion-collapse collapse"
+                                    aria-labelledby="heading3" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            Our design team fine-tunes the interface for visual appeal and ensures usability, focusing on delivering an intuitive experience that meets your business goals.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading4">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse4"
+                                        aria-expanded="false" aria-controls="collapse4">
+                                        <span>4.</span>User Testing
+                                    </button>
+                                </h2>
+                                <div id="collapse4" class="accordion-collapse collapse"
+                                    aria-labelledby="heading4" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We perform user testing to validate design assumptions, uncover issues, and refine the design, ensuring the product is easy to use and meets user needs.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading5">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse5"
+                                        aria-expanded="false" aria-controls="collapse5">
+                                        <span>5.</span>Launch & Feedback
+                                    </button>
+                                </h2>
+                                <div id="collapse5" class="accordion-collapse collapse"
+                                    aria-labelledby="heading5" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <p>
+                                            After launch, we gather user feedback to identify areas of improvement and continuously optimize the design to better serve users.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'base:services' %}" class="crv-butn mt-80">
+                                <div class="d-flex">
+                                    <span class="text">View all services</span>
+                                    <span class="icon">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-pg section-padding pt-0">
+        <div class="container">
+            <div class="text-center">
+                <div class="caption mb-100">
+                    <h1>Pricing</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Basic pack</h6>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Ideal for startups or small businesses looking for essential design solutions.</li>
+                                <li>Basic user interface design and simple experience enhancements.</li>
+                                <li>1 round of revisions after initial design presentation.</li>
+                                <li>Up to 1 user testing session.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Standard pack</h6>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Enhanced user interface design with a focus on usability.</li>
+                                <li>Up to 2 rounds of revisions after initial design.</li>
+                                <li>3 user testing sessions for iterative improvements.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Premium pack</h6>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Comprehensive UI/UX design and experience optimization.</li>
+                                <li>Unlimited revisions and user testing sessions.</li>
+                                <li>Complete user-centered design strategy for your product.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
