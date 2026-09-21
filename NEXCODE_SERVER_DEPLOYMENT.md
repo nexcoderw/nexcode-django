@@ -86,7 +86,7 @@ PORT=8000
 
 After deployment, verify `/robots.txt`, `/sitemap.xml`, and the rendered canonical URLs. The sitemap excludes draft or scheduled articles, unpublished projects, and the feedback form. Submit the sitemap through the site's existing Search Console property when ready.
 
-Install the updated `requirements.txt` before restarting: public rich text now uses the pinned `nh3` sanitizer. Run static collection as usual for the new content stylesheet and navigation script. No database migration is required for this change.
+Install the updated `requirements.txt` before restarting: public rich text now uses the pinned `nh3` sanitizer. Run static collection as usual to publish the restored original animation script. The shared layout loads the original stylesheets and animation libraries; the redesign override stylesheet is no longer used. No database migration is required for this change.
 
 Company copy follows the supplied [NEXCODE LinkedIn profile](https://www.linkedin.com/company/nexcode-africa/about/). Page-specific service copy lives in `home/content.py`; metadata defaults live in `home/seo.py`. Article, project, team and training records remain managed through Django admin. Review existing rich content after deployment: supported formatting is preserved, while executable HTML, embedded frames and arbitrary inline styles are removed.
 
