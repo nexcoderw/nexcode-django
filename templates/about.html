@@ -1,300 +1,39 @@
-{% extends 'layouts/app.html' %}
-{% load static %}
+{% extends "layouts/app.html" %}
 {% block content %}
-
     <header class="header-pg">
         <div class="container">
-            <div class="text-center">
-                <div class="caption mb-100">
-                    <h1>About Us</h1>
-                    <h6>( <a href="#0">Home</a> - <span>About US</span> )</h6>
-                </div>
-            </div>
+            <h1>A technology studio rooted in Kigali</h1>
+            <p class="page-intro mt-30">NEXCODE was founded in 2019. From Norrsken House Kigali, we work with businesses and teammates across time zones to turn practical needs into digital products.</p>
         </div>
     </header>
-
-    <section class="about-pg-sec section-padding">
+    <section class="section-padding pt-0">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="sec-head md-mb30">
-                        <div class="bract">{ <span>Who We Are</span> }</div>
-                    </div>
+                <div class="col-lg-5">
+                    <h2>Close to the people who use the work</h2>
                 </div>
-                <div class="col-lg-9">
-                    <div class="text">
-                        <h3 class="fw-400 text-indent">
-                            An independent web design and branding agency in Rwanda set up in 2020 who care, build relationships, have industry experience.
-                        </h3>
-                    </div>
+                <div class="col-lg-6 offset-lg-1">
+                    <p>Our work spans websites, mobile applications and smart-card platforms. We have worked across finance, hospitality, construction, travel and public safety, where clear information and dependable workflows matter every day.</p>
+                    <p class="mt-20">We listen to the people doing the work, make the idea tangible through design, and build around the task it needs to support. The team behind the product remains a point of contact as it evolves.</p>
                 </div>
+            </div>
+            <div class="row mt-80 pt-50 bord-thin-top-light">
+                <div class="col-lg-5">
+                    <h2>Ways to work with us</h2>
+                </div>
+                <div class="col-lg-6 offset-lg-1">
+                    <h3 class="fz-24 mb-20">A product shaped around your business</h3>
+                    <p>Commission a website, application or integration for your requirements. Explore the <a class="underline" href="{% url 'base:services' %}">services we offer</a> to find a starting point.</p>
+                    <h3 class="fz-24 mt-40 mb-20">An existing system with ongoing support</h3>
+                    <p>Ask about ready-to-use systems such as Attendify for workforce attendance and meal counts, or Mucyora for phone records and theft reporting. Availability, setup and support are discussed around your needs.</p>
+                </div>
+            </div>
+            <div class="mt-80">
+                <h2>Meet the people behind the work</h2>
+                <p class="mt-20 page-intro">Get to know the team or explore our published projects before starting a conversation.</p>
+                <a class="butn-under mt-30 mr-30" href="{% url 'base:team' %}">Meet the team</a>
+                <a class="butn-under mt-30" href="{% url 'base:portfolio' %}">Explore our work</a>
             </div>
         </div>
     </section>
-
-    {% comment %} <section class="numbers-sec section-padding pt-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="item mb-60">
-                        <h2><span>50+</span></h2>
-                        <p>Software Systems & Websites</p>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item mb-60">
-                        <h2><span>5+</span></h2>
-                        <p>Experience years</p>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item md-mb60">
-                        <h2><span>60+</span></h2>
-                        <p>Happy Clients</p>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="item">
-                        <h2><span>70%</span></h2>
-                        <p>Increased branded awareness</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> {% endcomment %}
-
-    <section class="services-min">
-        <div class="container section-padding pt-30 bord-thin-top-light">
-            <div class="sec-head mb-80">
-                <div class="d-flex">
-                    <div>
-                        <span class="sub-head">Our Expertise</span>
-                    </div>
-                    <div class="ml-auto">
-                        <div class="bract">{ <span>7k+ Clients</span> }</div>
-                    </div>
-                </div>
-                <div class="row mt-30">
-                    <div class="col-lg-7 offset-lg-3">
-                        <div>
-                            <h2>How we take your <br> business to the next level</h2>
-                            <a href="{% url 'base:portfolio' %}" class="butn-under mt-15">
-                                View All Works 
-                                <span class="icon invert">
-                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 d-flex align-items-end">
-                    <div class="md-mb50">
-                        <div class="vid-butn">
-                            <a href="{% url 'base:team' %}" class="vid">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <div class="fit-img">
-                                            <img src="https://uithemez.com/i/kyan/inner-pages/assets/imgs/serv/1.jpg" alt="">
-                                            <span class="icon"><i class="fa-solid fa-play"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="cont">
-                                        <span>Hear from K. Daniels</span>
-                                        <span>Founder of NEXCODE</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="serv-items">
-                        <div class="item">
-                            <h2 style="font-size: 24px;">Software <br>Development</h2>
-                            <div class="tags">
-                                <span>Custom Software Solutions</span>
-                                <span>Enterprise System Integration</span>
-                                <span>Cloud-Based Applications</span>
-                            </div>
-                            <div class="img fit-img">
-                                <img src="{% static 'img/services/1.jpg' %}" alt="">
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h2 style="font-size: 24px;">UI/UX Design</h2>
-                            <div class="tags">
-                                <span>User Research & Prototyping</span>
-                                <span>Interface Design</span>
-                                <span>Usability Testing</span>
-                            </div>
-                            <div class="img fit-img">
-                                <img src="{% static 'img/services/2.jpg' %}" alt="">
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h2 style="font-size: 24px;">Mobile App Development</h2>
-                            <div class="tags">
-                                <span>Native iOS & Android Apps</span>
-                                <span>Cross-Platform App Development</span>
-                                <span>App Maintenance & Support</span>
-                            </div>
-                            <div class="img fit-img">
-                                <img src="{% static 'img/services/3.jpg' %}" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="team-marq section-padding pt-0">
-        <div class="swiper team-swiper swiper-container">
-            <div class="swiper-wrapper">
-                {% for member in team %}
-                    <div class="swiper-slide">
-                        <div class="item">
-                            <div class="img">
-                                {% if member.image %}
-                                    <img src="{{ member.image.url }}" alt="{{ member.name }}">
-                                {% else %}
-                                    <img src="{% static 'img/image404.jpg' %}" alt="Dummy Image">
-                                {% endif %}
-                                <div class="social-icons">
-                                    {% if member.linkedin %}
-                                        <a href="{{ member.linkedin }}" target="_blank">
-                                            <i class="fa-brands fa-linkedin"></i>
-                                        </a>
-                                    {% endif %}
-                                    {% if member.github %}
-                                        <a href="{{ member.github }}" target="_blank">
-                                            <i class="fa-brands fa-github"></i>
-                                        </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="cont">
-                                <h6>
-                                    <a href="{% url 'base:getTeamMember' member.slug %}">
-                                        {{ member.name }}
-                                    </a>
-                                </h6>
-                                <span>
-                                    {{ member.position }}
-                                </span>
-                                <div class="shap-left-bottom">
-                                    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                        class="w-11 h-11">
-                                        <path
-                                            d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                            fill="#100f0f"></path>
-                                    </svg>
-                                </div>
-                                <div class="shap-right-top">
-                                    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                        class="w-11 h-11">
-                                        <path
-                                            d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                            fill="#100f0f"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-
 {% endblock %}
-
-{% block js %}
-
-    <script>
-        $(function () {
-
-			"use strict";
-
-			var team = new Swiper(".team-marq .team-swiper", {
-				slidesPerView: 4,
-				spaceBetween: 50,
-				centeredSlides: true,
-				speed: 8000,
-				autoplay: {
-					delay: 0,
-				},
-				loop: true,
-				allowTouchMove: false,
-				disableOnInteraction: true,
-				breakpoints: {
-					0: {
-						slidesPerView: 2,
-					},
-					480: {
-						slidesPerView: 2,
-					},
-					787: {
-						slidesPerView: 3,
-					},
-					991: {
-						slidesPerView: 4,
-					},
-					1200: {
-						slidesPerView: 4,
-					}
-				}
-			});
-
-			$('.accordion .accordion-item').on('click', function () {
-				$(this).addClass("active").siblings().removeClass("active");
-			});
-
-			// Services active
-
-			$('.services-cst .item').on('mouseenter', function () {
-				$('.services-cst .item').removeClass('active');
-				$(this).addClass('active');
-
-				if ($(this).hasClass('active')) {
-					return false;
-				}
-			});
-
-			$(function () {
-				let cards = gsap.utils.toArray(".cards .card-item");
-
-				let stickDistance = 0;
-
-				let firstCardST = ScrollTrigger.create({
-					trigger: cards[0],
-					start: "center center"
-				});
-
-				let lastCardST = ScrollTrigger.create({
-					trigger: cards[cards.length - 1],
-					start: "bottom bottom"
-				});
-
-				cards.forEach((card, index) => {
-					var scale = 1 - (cards.length - index) * 0.025;
-					let scaleDown = gsap.to(card, { scale: scale, 'transform-origin': '"50% ' + (lastCardST.start + stickDistance) + '"' });
-
-					ScrollTrigger.create({
-						trigger: card,
-						start: "center center",
-						end: () => lastCardST.start + stickDistance,
-						pin: true,
-						pinSpacing: false,
-						ease: "none",
-						animation: scaleDown,
-						toggleActions: "restart none none reverse"
-					});
-				});
-			});
-
-		});
-    </script>
-
-{% endblock js %}
