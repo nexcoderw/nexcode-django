@@ -63,6 +63,8 @@ Use this shape:
 ```dotenv
 DJANGO_ENV=production
 DEBUG=False
+SITE_URL=https://nexcode.africa
+SEARCH_ENGINE_INDEXING=True
 SECRET_KEY=replace-with-a-long-random-secret
 DJANGO_DB=postgres
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require
@@ -77,6 +79,16 @@ SESSION_COOKIE_SECURE=True
 CSRF_COOKIE_SECURE=True
 PORT=8000
 ```
+
+## Search indexing and content
+
+`SITE_URL` is the trusted HTTPS origin for canonical links, social metadata and sitemap entries. Keep `SEARCH_ENGINE_INDEXING=True` only on the public production site. Development and preview deployments must use `False`; their public pages send `noindex` and their sitemap is disabled. Protect private staging environments with authentication as well.
+
+After deployment, verify `/robots.txt`, `/sitemap.xml`, and the rendered canonical URLs. The sitemap excludes draft or scheduled articles, unpublished projects, and the feedback form. Submit the sitemap through the site's existing Search Console property when ready.
+
+Install the updated `requirements.txt` before restarting: public rich text now uses the pinned `nh3` sanitizer. Run static collection as usual for the new content stylesheet and navigation script. No database migration is required for this change.
+
+Company copy follows the supplied [NEXCODE LinkedIn profile](https://www.linkedin.com/company/nexcode-africa/about/). Page-specific service copy lives in `home/content.py`; metadata defaults live in `home/seo.py`. Article, project, team and training records remain managed through Django admin. Review existing rich content after deployment: supported formatting is preserved, while executable HTML, embedded frames and arbitrary inline styles are removed.
 
 ## Copy Repo Deployment Files To The Server
 
