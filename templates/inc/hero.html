@@ -1,60 +1,21 @@
 {% load static %}
-
 <header class="header-ca">
     <div class="container">
         <div class="row justify-content-between">
             <div class="col-lg-7">
-                <div class="caption">
-                    <h1>
-                        Transforming Visions into Digital Reality
-                    </h1>
-                </div>
+                <h1>Software built around your business</h1>
             </div>
-            <div class="col-lg-3">
-                <div class="text">
-                    <p class="text-u fz-16 mt-4 mt-lg-0">
-                        NEXCODE turns your ideas into impactful software, websites, mobile apps, and digital marketing solutions.
-                    </p>
-                    <a href="{% url 'base:about' %}" class="crv-butn mt-40">
-                        <div class="d-flex">
-                            <span class="text">More about us</span>
-                            <span class="icon">
-                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
-                            </span>
-                        </div>
-                    </a>
-                </div>
+            <div class="col-lg-4">
+                <p class="mt-30">From Kigali, we build websites, mobile apps and business systems that turn everyday tasks into simpler workflows.</p>
+                <a href="{% url 'base:services' %}" class="butn-under mt-30">Explore our services</a>
             </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="imgWrapper">
-            <div class="main-img bg-img" data-background="{% static 'img/hero/4.jpg' %}">
-                <div class="vid-butn">
-                    {% comment %} <a href="#0" class="crv-butn vid">
-                        <div class="d-flex">
-                            <span class="text">Play Showreel</span>
-                            <span class="icon pe-7s-play"></span>
-                        </div>
-                    </a> {% endcomment %}
-                    <div class="shap-left-bottom">
-                        <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            class="w-11 h-11">
-                            <path
-                                d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                fill="#0d0d0d"></path>
-                        </svg>
-                    </div>
-                    <div class="shap-right-top">
-                        <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            class="w-11 h-11">
-                            <path
-                                d="M11 1.54972e-06L0 0L2.38419e-07 11C1.65973e-07 4.92487 4.92487 1.62217e-06 11 1.54972e-06Z"
-                                fill="#0d0d0d"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-60 hero-image">
+            <img src="{% static 'img/hero/4.jpg' %}"
+                 alt=""
+                 width="1600"
+                 height="900"
+                 fetchpriority="high">
         </div>
     </div>
 </header>
