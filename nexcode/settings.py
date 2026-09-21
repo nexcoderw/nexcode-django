@@ -52,6 +52,25 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv_bool("DEBUG", DJANGO_ENV != "production")
 
+# Keep canonical URLs independent of incoming hosts and tracking parameters.
+SITE_URL = os.getenv("SITE_URL", "https://nexcode.africa").rstrip("/")
+site_origin = urlparse(SITE_URL)
+if (
+    site_origin.scheme != "https"
+    or not site_origin.hostname
+    or site_origin.path
+    or site_origin.query
+    or site_origin.fragment
+    or site_origin.username
+    or site_origin.password
+):
+    raise ImproperlyConfigured(
+        "SITE_URL must be an HTTPS origin without a path or credentials."
+    )
+SEARCH_ENGINE_INDEXING = getenv_bool(
+    "SEARCH_ENGINE_INDEXING", DJANGO_ENV == "production" and not DEBUG
+)
+
 default_allowed_hosts = ["localhost", "127.0.0.1"]
 if not DEBUG:
     default_allowed_hosts.extend(["nexcode.africa", "www.nexcode.africa"])
@@ -92,6 +111,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
 
     # Third party
     'taggit',
