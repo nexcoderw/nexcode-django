@@ -1,56 +1,37 @@
-{% extends 'layouts/app.html' %}
-{% load static %}
+{% extends "layouts/app.html" %}
 {% block content %}
-
     <header class="header-pg">
         <div class="container">
-            <div class="text-center">
-                <div class="caption mb-100">
-                    <h1>Team</h1>
-                    <h6>( <a href="#0">Home</a> - <span>Team</span> )</h6>
-                </div>
-            </div>
+            <h1>The people behind NEXCODE</h1>
+            <p class="page-intro mt-30">Meet our team and explore their roles, professional profiles and published work.</p>
         </div>
     </header>
-
     <section class="team-pg pb-100">
         <div class="container">
             <div class="row">
                 {% for member in team %}
-                    <div class="col-lg-3 col-md-6">
-                        <div class="item mb-40">
-                            <div class="img fit-img">
-                                {% if member.image %}
-                                    <img src="{{ member.image.url }}" alt="{{ member.name }}">
-                                {% else %}
-                                    <img src="{% static 'img/image404.jpg' %}" alt="Dummy Image">
-                                {% endif %}
-                                <div class="social-icon">
-                                    <a href="{{ member.linkedin }}" target="_blank">
-                                        <i class="fa-brands fa-linkedin"></i>
-                                    </a>
-                                    <a href="{{ member.github }}" target="_blank">
-                                        <i class="fa-brands fa-github"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="cont text-center">
-                                <h6>
-                                    <a href="#">
-                                        {{ member.name }}
-                                    </a>
-                                </h6>
-                                <p>{{ member.position }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <article class="col-lg-3 col-md-6 mb-40">
+                        {% if member.image %}
+                            <a href="{% url 'base:getTeamMember' member.slug %}">
+                                <img class="team-portrait"
+                                     src="{{ member.image.url }}"
+                                     alt="{{ member.name }}"
+                                     width="1333"
+                                     height="1694"
+                                     loading="lazy"
+                                     decoding="async">
+                            </a>
+                        {% endif %}
+                        <h2 class="fz-24 mt-20">
+                            <a href="{% url 'base:getTeamMember' member.slug %}">{{ member.name }}</a>
+                        </h2>
+                        <p>{{ member.position }}</p>
+                    </article>
                 {% empty %}
-                    <h5 class="text-center">
-                        Coming Soon
-                    </h5>
+                    <p>Team profiles are being updated. <a href="{% url 'base:contact' %}" class="underline">Contact the studio</a> to discuss who can help with your project.</p>
                 {% endfor %}
             </div>
+            {% include "inc/pagination.html" %}
         </div>
     </section>
-
 {% endblock %}
