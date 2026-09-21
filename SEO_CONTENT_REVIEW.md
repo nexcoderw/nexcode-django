@@ -1,5 +1,7 @@
 # Public website content and SEO review
 
+> Historical report: the design restoration reinstates the page templates and animations from `c8e2578`, including their earlier visible copy. Shared SEO metadata, sitemap/robots endpoints, and backend publication rules remain. The layout, content, accessibility, and performance findings below describe the superseded redesign, not the restored pages. No tests or browser checks were run for the restoration; verification is reserved for the user.
+
 ## Scope and content sources
 
 Reviewed all 19 public page types: home, about, services, six service details, work list/detail, team list/detail, articles list/detail, training list/detail, contact, and feedback.
