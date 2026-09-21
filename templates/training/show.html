@@ -1,65 +1,49 @@
 {% extends "layouts/app.html" %}
-{% load static %}
+{% load content_tags %}
 {% block content %}
-
-<header class="serv-hed2 section-padding pb-0">
-    <div class="container">
-        <div class="caption mb-80">
-            <h1 class="fz-80 fw-600">
-                {{ training.title }}
-            </h1>
-            <div class="row justify-content-end">
-                <div class="col-lg-5">
-                    <div class="text mt-30">
-                        <p>
-                            This training program is priced at <strong>{{ training.price }} RWF</strong> and is currently <strong>{{ training.status }}</strong>. 
-                            It begins on <strong>{{ training.start_date|date:"j M Y" }}</strong> and concludes on <strong>{{ training.end_date|date:"j M Y" }}</strong>. 
-                            Designed to deliver impactful learning, it offers you the opportunity to master skills that align with your schedule and aspirations.
-                        </p>
-                    </div>
+    <header class="header-pg">
+        <div class="container">
+            <a class="butn-under mb-30" href="{% url 'base:getTraining' %}">All training</a>
+            <h1>{{ training.title }}</h1>
+        </div>
+    </header>
+    <section class="section-padding pt-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    {% if training.image %}
+                        <img class="article-cover mb-40"
+                             src="{{ training.image.url }}"
+                             alt="{{ training.title }}"
+                             width="1200"
+                             height="675"
+                             fetchpriority="high">
+                    {% endif %}
+                    <h2 class="mb-30">About this session</h2>
+                    <div class="rich-content">{{ training.description|rich_text }}</div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="list mt-30">
-                        <a href="#" target="_blank" class="crv-butn mt-80">
-                            <div class="d-flex">
-                                <span class="text">Apply Now</span>
-                                <span class="icon">
-                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
-                                </span>
-                            </div>
-                        </a>
-                    </div>
+                    <h2 class="fz-30">Session details</h2>
+                    <dl class="mt-30">
+                        <dt>Dates</dt>
+                        <dd>
+                            {{ training.start_date|date:'j F Y' }} – {{ training.end_date|date:'j F Y' }}
+                        </dd>
+                        <dt>Fee</dt>
+                        <dd>
+                            {{ training.price }} RWF
+                        </dd>
+                        <dt>Status</dt>
+                        <dd>
+                            {{ training.status }}
+                        </dd>
+                    </dl>
+                    <a class="butn-under mt-30"
+                       href="{% url 'base:contact' %}?service={{ training.title|urlencode }}">
+                        {% if training.status == "Ended" %}Ask about future sessions{% else %}Enquire about this session{% endif %}
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="fit-img radius-15">
-            {% if training.image %}
-                <img src="{{ training.image.url }}" alt="{{ training.title }}" style="width: 500px;" />
-            {% else %}
-                <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg mb-8">
-                    <span class="text-gray-500">No Image Available</span>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</header>
-
-<section class="serv-details section-padding">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <div class="content">
-                    <div class="text mt-30 mb-30">
-                        <p>
-                            {{ training.description }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
+    </section>
 {% endblock %}
