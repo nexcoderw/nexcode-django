@@ -1,62 +1,346 @@
-{% extends "layouts/app.html" %}
-{% load content_tags %}
+{% extends 'layouts/app.html' %}
+{% load static content_tags %}
+{% load humanize %}
 {% block content %}
-    <header class="header-pg">
+
+    <header class="serv-hed2 section-padding pb-0">
         <div class="container">
-            <nav aria-label="Breadcrumb" class="mb-30">
-                <a href="{% url 'base:portfolio' %}">Work</a> / <span aria-current="page">{{ work.name }}</span>
-            </nav>
-            <h1>{{ work.name }}</h1>
-            {% if work.category %}
-                <p class="mt-20">{{ work.category }}</p>
-            {% endif %}
-        </div>
-    </header>
-    <section class="section-padding pt-0">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-9">
-                    {% if images %}
-                        <img class="detail-cover mb-50"
-                             src="{{ images.0.image.url }}"
-                             alt="{{ work.name }} project preview"
-                             width="1920"
-                             height="1350"
-                             fetchpriority="high">
-                    {% endif %}
-                    <h2 class="mb-30">About the project</h2>
-                    <div class="rich-content">
-                        {% if work.description %}{{ work.description|rich_text }}{% else %}
-                            <p>A detailed project story is being prepared. Contact our team to discuss the work.</p>
-                        {% endif %}
+            <div class="caption mb-80">
+                <h1 class="fz-80 fw-600">
+                    {{ work.name }}
+                </h1>
+                <div class="row justify-content-end">
+                    <div class="col-lg-5">
+                        <div class="text mt-30">
+                            {% comment %} <p>
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus eius numquam accusantium ex ipsa cum quaerat labore nihil praesentium quasi.
+                            </p> {% endcomment %}
+                        </div>
                     </div>
-                    {% with live_url=work.link|public_url %}
-                        {% if live_url %}
-                            <a href="{{ live_url }}"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="butn-under mt-30">Visit {{ work.name }}</a>
-                        {% endif %}
-                    {% endwith %}
-                    {% with repo_url=work.repo_link|public_url %}
-                        {% if repo_url %}
-                            <a href="{{ repo_url }}"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="butn-under mt-30 ml-20">View public repository</a>
-                        {% endif %}
-                    {% endwith %}
-                    {% for item in images|slice:'1:' %}
-                        <img class="detail-cover mt-40"
-                             src="{{ item.image.url }}"
-                             alt="{{ work.name }} screenshot {{ forloop.counter|add:1 }}"
-                             width="1920"
-                             height="1350"
-                             loading="lazy"
-                             decoding="async">
-                    {% endfor %}
+                    <div class="col-lg-4">
+                        <div class="list mt-30">
+                            <ul>
+                                {% if work.link %}
+                                    <a href="{{ work.link }}" target="_blank" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">Visit {{ work.name }}</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ work.repo_link }}" target="_blank" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">Repository</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="fit-img radius-15">
+                {% with work.images.first as first_image %}
+                    {% if first_image %}
+                        <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                    {% else %}
+                        <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                            alt="{{ work.name }}">
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </header>
+
+    <section class="serv-details section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="content">
+                        <h3>
+                            About the project
+                        </h3>
+                        <div class="text mt-30 mb-30">
+                            <p>
+                                {{ work.description|rich_text }}
+                            </p>
+                        </div>
+                        {% comment %} <div class="img sm-mb30">
+                            {% if work.images.all %}
+                                <div class="work-slider position-relative">
+                                    {% for img in work.images.all %}
+                                        <div class="slide{% if forloop.first %} active{% endif %}">
+                                            <img src="{{ img.image.url }}" alt="{{ work.name }} {{ forloop.counter }}">
+                                        </div>
+                                    {% endfor %}
+                                    <button class="prev-slide">‹</button>
+                                    <button class="next-slide">›</button>
+                                </div>
+                            {% else %}
+                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                                     alt="{{ work.name }}">
+                            {% endif %}
+                        </div>
+
+                        <script>
+                            (function(){
+                            const slides = document.querySelectorAll('.work-slider .slide');
+                            const prev   = document.querySelector('.prev-slide');
+                            const next   = document.querySelector('.next-slide');
+                            let current = 0;
+                            function show(idx){
+                                slides[current].classList.remove('active');
+                                current = (idx + slides.length) % slides.length;
+                                slides[current].classList.add('active');
+                            }
+                            prev && prev.addEventListener('click', ()=>show(current-1));
+                            next && next.addEventListener('click', ()=>show(current+1));
+                            })();
+                        </script> {% endcomment %}
+                        <div class="main-post">
+                            <div class="info-area flex pt-50 bord-thin-top">
+                                <div>
+                                    <div class="tags flex">
+                                        <div class="valign">
+                                            <span>Tags :</span>
+                                        </div>
+                                        <div>
+                                            {% for tag in work.tags.all %}
+                                                <a href="#">
+                                                    {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-auto">
+                                    <div class="share-icon flex">
+                                        <div class="valign">
+                                            <span>Share :</span>
+                                        </div>
+                                        <div>
+                                            <a href="https://www.facebook.com/">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            <a href="https://www.twitter.com/">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                            <a href="https://www.youtube.com/">
+                                                <i class="fab fa-youtube"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} <div class="author-area mt-50 bord-thin-bottom">
+                                <h5 class="mb-4" style="font-size: 18px;">Client</h5>
+                                <div class="flex">
+                                    <div class="author-img mr-30">
+                                        <div class="img">
+                                            {% if work.client.image %}
+                                                <img src="{{ work.client.image.url }}" alt="" class="circle-img">
+                                            {% else %}
+                                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="cont valign">
+                                        <div class="full-width">
+                                            <h6 class="fw-600 mb-10">
+                                                {{ work.client.name }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> {% endcomment %}
+                        </div>
+                        {% comment %} <div class="comments-from mt-80 md-mb80">
+                            <div class="mb-60">
+                                <h3>Leave a comment</h3>
+                            </div>
+                            <form id="contact-form" method="post">
+        
+                                <div class="messages"></div>
+        
+                                <div class="controls row">
+        
+                                    <div class="col-lg-6">
+                                        <div class="form-group mb-30">
+                                            <input id="form_name" type="text" name="name"
+                                                placeholder="Name" required="required">
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-lg-6">
+                                        <div class="form-group mb-30">
+                                            <input id="form_email" type="email" name="email"
+                                                placeholder="Email" required="required">
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <textarea id="form_message" name="message"
+                                                placeholder="Message" rows="4"
+                                                required="required"></textarea>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="mt-30">
+                                                <button type="submit">
+                                                    <span class="text">Post Comment</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                            </form>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+                {% comment %} <div class="col-lg-4">
+                    <div class="sidebar">
+                        <div class="search-box">
+                            <input type="text" name="search-post" placeholder="Search">
+                            <span class="icon pe-7s-search"></span>
+                        </div>
+                        <div class="widget catogry">
+                            <h6 class="title-widget">Categories</h6>
+                            <ul class="rest">
+                                <li>
+                                    <span><a href="#">Business</a></span>
+                                    <span class="ml-auto">33</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="widget last-post-thum">
+                            <h6 class="title-widget">Latest Project</h6>
+                            {% for work in recentWork %}
+                                <div class="item d-flex align-items-center">
+                                    <div>
+                                        <div class="img">
+                                            {% with work.images.first as first_image %}
+                                                <a href="{% if work.link %}{{ work.link }}{% else %}{{ work.repo_link }}{% endif %}"
+                                                target="_blank">
+                                                    {% if first_image %}
+                                                        <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                                                    {% else %}
+                                                        <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                                                            alt="{{ work.name }}">
+                                                    {% endif %}
+                                                    <span class="date">
+                                                        <span class="icon">
+                                                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg"
+                                                                alt="" style="color: white;">
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                    <div class="cont">
+                                        <span class="tag">
+                                            <a href="{% url 'base:workDetails' work.slug %}">
+                                                {{ work.category }}
+                                            </a>
+                                        </span>
+                                        <h6>
+                                            <a href="{% url 'base:workDetails' work.slug %}">
+                                                {{ work.name }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+            </div>
+        </div>
     </section>
+
+    {% comment %} <div class="blog-mp section-padding">
+        <div class="container">
+            <div class="row xlg-marg">
+                {% for blog in recentBlog %}
+                    <div class="col-lg-4 bord">
+                        <div class="item">
+                            <a href="{% url 'base:getBlogDetails' blog.slug %}" class="info d-flex align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <div class="author-img fit-img">
+                                            <img src="{% static 'img/logo-w.png' %}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="author-info ml-10">
+                                        <span>{{ blog.author }}</span>
+                                    </div>
+                                </div>
+                                <div class="date ml-auto">
+                                    <!-- Add a span with data-created-at attribute -->
+                                    <span class="sub-color time-ago" data-created-at="{{ blog.created_at|date:"c" }}">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </a>
+                            <a href="{% url 'base:getBlogDetails' blog.slug %}" class="img fit-img mt-30">
+                                <img src="{{ blog.featured_image.url }}" alt="">
+                            </a>
+                            <div class="cont mt-30">
+                                <h6>
+                                    <a href="{% url 'base:getBlogDetails' blog.slug %}">
+                                        {{ blog.title }}
+                                    </a>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeAgoElements = document.querySelectorAll('.time-ago');
+    
+            timeAgoElements.forEach(function(element) {
+                const createdAt = new Date(element.getAttribute('data-created-at'));
+                const now = new Date();
+                let diffInSeconds = Math.floor((now - createdAt) / 1000);
+    
+                if (diffInSeconds < 0) {
+                    // Future date handling
+                    element.textContent = 'Just now';
+                    return;
+                }
+    
+                const diffInMinutes = Math.floor(diffInSeconds / 60);
+                const diffInHours = Math.floor(diffInMinutes / 60);
+    
+                if (diffInHours < 1) {
+                    if (diffInMinutes < 1) {
+                        element.textContent = 'Just now';
+                    } else {
+                        element.textContent = `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+                    }
+                } else if (diffInHours < 24) {
+                    element.textContent = `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+                } else {
+                    // Format the date as Month Day, Year (e.g., January 1, 2025)
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = createdAt.toLocaleDateString(undefined, options);
+                    element.textContent = formattedDate;
+                }
+            });
+        });
+    </script>
+
 {% endblock %}
