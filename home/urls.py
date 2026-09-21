@@ -1,37 +1,31 @@
-from home.views import *
 from django.conf import settings
-from django.urls import path, re_path
 from django.conf.urls.static import static
+from django.urls import path
 
-app_name = 'base'
+from home import views
+
+app_name = "base"
 
 urlpatterns = [
-    path('', home, name="home"),
-    path('about/', about, name="about"),
-
-    path('services/', services, name="services"),
-    path('services/software-development/', softwareDev, name="softwareDev"),
-    path('services/ui-ux/', uiUx, name="uiUx"),
-    path('services/digital-marketing/', digitalMarketing, name="digitalMarketing"),
-    path('services/mobile-development/', mobileDev, name="mobileDev"),
-    path('services/networking/', networking, name="networking"),
-    path('services/maintenance/', maintenance, name="maintenance"),
-
-    path('portfolio/', portfolio, name="portfolio"),
-    path('work/<slug>', workDetails, name="workDetails"),
-
-    path('team/', team, name="team"),
-    path('team/<slug>/', getTeamMember, name="getTeamMember"),
-
-    path('blogs/', blogs, name="blogs"),
-    path('blog/<slug>/', getBlogDetails, name="getBlogDetails"),
-
-    path('testimony/', addTestimony, name="addTestimony"),
-
-    path('training/', getTraining, name="getTraining"),
-    path('training/<slug:slug>/', trainingDetail, name='trainingDetail'),
-
-    path('contact/', contact, name="contact"),
+    path("", views.home, name="home"),
+    path("about/", views.about, name="about"),
+    path("services/", views.services, name="services"),
+    path("services/software-development/", views.service_page, name="softwareDev"),
+    path("services/ui-ux/", views.service_page, name="uiUx"),
+    path("services/digital-marketing/", views.service_page, name="digitalMarketing"),
+    path("services/mobile-development/", views.service_page, name="mobileDev"),
+    path("services/networking/", views.service_page, name="networking"),
+    path("services/maintenance/", views.service_page, name="maintenance"),
+    path("portfolio/", views.portfolio, name="portfolio"),
+    path("work/<slug>", views.workDetails, name="workDetails"),
+    path("team/", views.team, name="team"),
+    path("team/<slug>/", views.getTeamMember, name="getTeamMember"),
+    path("blogs/", views.blogs, name="blogs"),
+    path("blog/<slug>/", views.getBlogDetails, name="getBlogDetails"),
+    path("testimony/", views.addTestimony, name="addTestimony"),
+    path("training/", views.getTraining, name="getTraining"),
+    path("training/<slug:slug>/", views.trainingDetail, name="trainingDetail"),
+    path("contact/", views.contact, name="contact"),
 ]
 
 if settings.DEBUG:
