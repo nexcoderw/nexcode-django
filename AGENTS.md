@@ -15,3 +15,9 @@ These instructions apply throughout this repository. Before changing files, read
 - These rules guide future changes; they do not authorize an unsolicited refactor, deployment, or production data change.
 - Keep these instructions and linked rules synchronized when project conventions change. Read any more specific `AGENTS.md` that applies to the files being changed.
 - At completion, explain the change and verification results, then provide the exact per-file `git add` and `git commit -m "Message"` commands required by `.agents/git.md`. Generate commands by default; execute staging or commits only when explicitly requested. Never run `git push` or publish commits through another tool.
+
+## User-controlled testing and design preservation
+
+- Do not run tests, browser checks, linters, format checks, builds, or performance audits unless the user explicitly requests them. Provide the relevant commands for the user to run instead. This instruction overrides verification requirements in the linked project rules. Read-only source and Git inspection remains allowed.
+- Preserve the established page structure, styles, fonts, and animations during content or SEO work. Do not redesign pages or remove animation dependencies without an explicit request. The original design restored in this task comes from `c8e2578`.
+- Report checks as not run when delegated to the user; never imply the restored design has been visually verified.
