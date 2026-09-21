@@ -1,0 +1,12 @@
+{% if page_obj.has_other_pages %}
+    <nav class="page-navigation mt-40" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+            <a href="{% if page_obj.previous_page_number == 1 %}{{ request.path }}{% else %}?page={{ page_obj.previous_page_number }}{% endif %}"
+               rel="prev">Previous page</a>
+        {% endif %}
+        <span aria-current="page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" rel="next">Next page</a>
+        {% endif %}
+    </nav>
+{% endif %}
