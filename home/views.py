@@ -57,7 +57,7 @@ def home(request):
 
 
 def about(request):
-    return render_page(request, "about.html")
+    return render_page(request, "about.html", {"team": Team.objects.all()})
 
 
 def services(request):
@@ -111,7 +111,7 @@ def getTeamMember(request, slug):
     return render_page(
         request,
         "team/show.html",
-        {"member": member, "portfolio": page, "page_obj": page},
+        {"member": member, "portfolio": page, "portfolios": page, "page_obj": page},
         title=f"{member.name} — {member.position or 'Team'}",
         description=f"Meet {member.name}, {member.position or 'a team member'} at NEXCODE. Explore their published projects and professional profiles.",
         image=member.image.url if member.image else None,
