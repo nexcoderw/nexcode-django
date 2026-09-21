@@ -1,60 +1,658 @@
-{% extends "layouts/app.html" %}
+{% extends 'layouts/app.html' %}
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 {% block content %}
-    {% include "inc/hero.html" %}
-    <section class="section-padding pt-0">
+
+    {% include 'inc/hero.html' %}
+
+    <section class="intro section-padding pt-0">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center position-re">
+                        <h2>
+                            An independent <span>web design</span> and <span>branding agency</span> in
+                            Rwanda set up in 2020 who care, build relationships, have industry
+                            experience.
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-cst section-padding pt-0">
+        <div class="container">
+            <div class="sec-sm-head text-center mb-30">
+                <div class="bract">{ <span>Our Services</span> }</div>
+            </div>
+            <div class="item">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-4">
+                                <span class="numb">001</span>
+                            </div>
+                            <div class="col-md-8">
+                                <p>
+                                    Building powerful software tailored to your business needs, ensuring seamless performance and innovation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-8">
+                                <h2 style="font-size: 30px">Software Development</h2>
+                            </div>
+                            <div class="col-md-4 d-flex">
+                                <a href="{% url 'base:softwareDev' %}" class="ml-auto">
+                                    <span class="icon invert">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item active">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-4">
+                                <span class="numb">002</span>
+                            </div>
+                            <div class="col-md-8">
+                                <h2 style="font-size: 30px">UI/UX</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-8">
+                                <p>
+                                    Crafting stunning and intuitive designs that captivate users and enhance their digital experience.
+                                </p>
+                            </div>
+                            <div class="col-md-4 d-flex">
+                                <a href="{% url 'base:uiUx' %}" class="ml-auto">
+                                    <span class="icon invert">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-4">
+                                <span class="numb">003</span>
+                            </div>
+                            <div class="col-md-8">
+                                <p>
+                                    Optimizing your infrastructure with reliable, scalable networking solutions that enhance connectivity and performance across your business operations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-8">
+                                <h2 style="font-size: 30px">Networking</h2>
+                            </div>
+                            <div class="col-md-4 d-flex">
+                                <a href="{% url 'base:networking' %}" class="ml-auto">
+                                    <span class="icon invert">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-4">
+                                <span class="numb">004</span>
+                            </div>
+                            <div class="col-md-8">
+                                <h2 style="font-size: 30px">Mobile App Development</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-8">
+                                <p>
+                                    Creating feature-rich mobile applications that deliver exceptional user experiences on any device.
+                                </p>
+                            </div>
+                            <div class="col-md-4 d-flex">
+                                <a href="{% url 'base:mobileDev' %}" class="ml-auto">
+                                    <span class="icon invert">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-4">
+                                <span class="numb">005</span>
+                            </div>
+                            <div class="col-md-8">
+                                <p>
+                                    Elevating your brand with strategic marketing campaigns that boost visibility and drive engagement.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-8">
+                                <h2 style="font-size: 30px">Digital Marketing</h2>
+                            </div>
+                            <div class="col-md-4 d-flex">
+                                <a href="{% url 'base:digitalMarketing' %}" class="ml-auto">
+                                    <span class="icon invert">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="row d-flex align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-4">
+                                <span class="numb">006</span>
+                            </div>
+                            <div class="col-md-8">
+                                <h2 style="font-size: 30px">Maintenance</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-8">
+                                <p>
+                                    Ensuring seamless operations with proactive maintenance services that enhance system performance, reduce downtime, and extend the lifespan of your technology.
+                                </p>
+                            </div>
+                            <div class="col-md-4 d-flex">
+                                <a href="{% url 'base:maintenance' %}" class="ml-auto">
+                                    <span class="icon invert">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="works-mp section-padding pt-0">
+        <div class="container-xxl">
+            <div class="sec-head mb-80">
+                <div class="d-flex">
+                    <div>
+                        <span class="sub-head">Selected Work</span>
+                    </div>
+                    <div class="ml-auto">
+                        <div class="bract">{ <span>2020 - 2024</span> }</div>
+                    </div>
+                </div>
+                <div class="row mt-30">
+                    <div class="col-lg-5 offset-lg-3 col-md-7">
+                        <div class="sm-mb30">
+                            <h2>Our Recent <br> Work</h2>
+                            <a href="{% url 'base:portfolio' %}" class="butn-under mt-15">
+                                View All Works
+                                <span class="icon invert">
+                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-5">
+                        <div class="text">
+                            <span>Creating forms that last. <br>
+                                <span class="opacity-5 mt-10">
+                                    Discover our latest projects, showcasing NEXCODE's commitment to building enduring and impactful digital solutions.
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row gallery">
+                {% for work in portfolio %}
+                    <div class="col-lg-3 items">
+                        <div class="item">
+                            <div class="cont d-flex align-items-center">
+                                <div>
+                                    <h5 style="font-size: 24px;">
+                                        {{ work.name|truncatechars:27 }}.
+                                    </h5>
+                                    <span>
+                                        {% for tag in work.tags.all %}
+                                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="ml-auto">
+                                    <a href="{% url 'base:workDetails' work.slug %}">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="img">
+                                {% with work.images.first as first_image %}
+                                    {% if first_image %}
+                                        <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                                    {% else %}
+                                        <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% comment %} <section class="team-pg pb-100">
+        <div class="container">
+            <div class="sec-head mb-80">
+                <div class="row mt-30">
+                    <div class="col-lg-5 offset-lg-3 col-md-7">
+                        <div class="sm-mb30">
+                            <h2>Our Team</h2>
+                            <a href="{% url 'base:team' %}" class="butn-under mt-15">
+                                View All Team Members 
+                                <span class="icon invert">
+                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-5">
+                        <div class="text">
+                            <span>Passionate and Skilled Professionals. <br>
+                                <span class="opacity-5 mt-10">Meet the talented individuals driving NEXCODE success.</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for member in team %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="item mb-40">
+                            <div class="img fit-img">
+                                {% if member.image %}
+                                    <img src="{{ member.image.url }}" alt="{{ member.name }}">
+                                {% else %}
+                                    <img src="{% static 'img/image404.jpg' %}" alt="Dummy Image">
+                                {% endif %}
+                                <div class="social-icon">
+                                    <a href="{{ member.linkedin }}" target="_blank">
+                                        <i class="fa-brands fa-linkedin"></i>
+                                    </a>
+                                    <a href="{{ member.github }}" target="_blank">
+                                        <i class="fa-brands fa-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cont text-center">
+                                <h6>
+                                    <a href="{% url 'base:getTeamMember' member.slug %}">
+                                        {{ member.name }}
+                                    </a>
+                                </h6>
+                                <p>{{ member.position }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
+                {% endfor %}
+            </div>
+        </div>
+    </section> {% endcomment %}
+
+    {% comment %} <section class="pricing-pg section-padding pt-0">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5">
-                    <h2>A clear route from idea to working product</h2>
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Basic pack</h6>
+                            <h2 class="fz-70 mb-5">$9.99</h2>
+                            <span class="sub-color">Per Month</span>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Adipiscing elit sed do.</li>
+                                <li>Eusmod tempor incididunt ut.</li>
+                                <li>labore et dolore magna.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 offset-lg-1">
-                    <p>Start with a process you want to improve or a product you want to bring to market. We help you define the essentials, design the experience and build a first release you can review with your team.</p>
-                    <a class="butn-under mt-30" href="{% url 'base:about' %}">Get to know NEXCODE</a>
+                <div class="col-lg-4">
+                    <div class="item md-mb50">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Standard pack</h6>
+                            <h2 class="fz-70 mb-5">$29.99</h2>
+                            <span class="sub-color">Per Month</span>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Adipiscing elit sed do.</li>
+                                <li>Eusmod tempor incididunt ut.</li>
+                                <li>labore et dolore magna.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="item">
+                        <div class="head text-center pb-40 bord-thin-bottom-light">
+                            <h6 class="text-u fz-20 mb-40">Premium pack</h6>
+                            <h2 class="fz-70 mb-5">$49.99</h2>
+                            <span class="sub-color">Per Month</span>
+                        </div>
+                        <div class="list mt-40">
+                            <ul class="rest">
+                                <li>Adipiscing elit sed do.</li>
+                                <li>Eusmod tempor incididunt ut.</li>
+                                <li>labore et dolore magna.</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-40">
+                            <a href="#0" class="butn butn-md butn-bord butn-rounded">
+                                <div class="d-flex align-items-center">
+                                    <span>Get Started</span>
+                                    <span class="icon invert ml-10">
+                                        <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="section-padding pt-0">
-        <div class="container">{% include "inc/service-list.html" %}</div>
-    </section>
-    <section class="section-padding pt-0">
+    </section> {% endcomment %}
+
+    <section class="faqs-pg section-padding pt-0">
         <div class="container">
-            <div class="d-flex flex-wrap justify-content-between mb-40">
-                <h2>Selected work</h2>
-                <a class="butn-under" href="{% url 'base:portfolio' %}">View all projects</a>
+            <div class="row lg-marg">
+                <div class="col-lg-5 md-mb30">
+                    <div class="fit-img img">
+                        <img src="{% static 'img/faq.jpg' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-7 pt-30 pb-30">
+                    <div class="sec-head mb-60">
+                        <h6 class="sub-head mb-15">Questions & Answers</h6>
+                        <h2>Providing clarity on FAQs</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item active">
+                                    <h4 class="accordion-header" id="heading2">
+                                        <button class="accordion-button collapsed" type="button"
+                                            style="font-size: 20px;"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse2"
+                                            aria-expanded="false" aria-controls="collapse2">
+                                            What services does NEXCODE provide?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse2" class="accordion-collapse collapse show"
+                                        aria-labelledby="heading2" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>
+                                                NEXCODE offers comprehensive solutions including software development, UI/UX design, mobile app development, and strategic digital marketing to help your business thrive in the digital landscape.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading3">
+                                        <button class="accordion-button collapsed" type="button"
+                                            style="font-size: 20px;"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse3"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            How does NEXCODE ensure project quality?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse3" class="accordion-collapse collapse"
+                                        aria-labelledby="heading3" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>
+                                                At NEXCODE, we implement rigorous quality assurance processes, leverage industry best practices, and collaborate closely with clients to deliver high-quality, reliable, and scalable digital solutions.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading4">
+                                        <button class="accordion-button collapsed" type="button"
+                                            style="font-size: 20px;"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse4"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            What is the typical timeline for a project with NEXCODE?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse4" class="accordion-collapse collapse"
+                                        aria-labelledby="heading4" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>
+                                                Project timelines at NEXCODE vary based on scope and complexity. We provide a detailed project plan with milestones and deadlines to ensure timely delivery while maintaining the highest standards of quality.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading5">
+                                        <button class="accordion-button collapsed" type="button"
+                                            style="font-size: 20px;"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse5"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            How does NEXCODE approach UI/UX design?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse5" class="accordion-collapse collapse"
+                                        aria-labelledby="heading5" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>
+                                                NEXCODE focuses on creating intuitive and engaging user experiences by conducting thorough research, user testing, and iterative design processes to ensure our UI/UX solutions meet both user needs and business objectives.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header" id="heading1">
+                                        <button class="accordion-button collapsed" type="button"
+                                            style="font-size: 20px;"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse1"
+                                            aria-expanded="false" aria-controls="collapse3">
+                                            How can I get started with NEXCODE?
+                                        </button>
+                                    </h4>
+                                    <div id="collapse1" class="accordion-collapse collapse"
+                                        aria-labelledby="heading1" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <p>
+                                                Getting started with NEXCODE is simple. Contact us through our website or reach out via email to schedule a consultation. Our team will work with you to understand your requirements and develop a tailored plan to achieve your digital goals.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {% include "inc/project-list.html" %}
         </div>
     </section>
-    <section class="section-padding pt-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5">
-                    <h2>Before we start</h2>
-                </div>
-                <div class="col-lg-6 offset-lg-1">
-                    <details class="content-faq">
-                        <summary>What should I bring to the first conversation?</summary>
-                        <p>Describe the problem, who the product is for, and any deadline or budget constraints. Screens, examples and a short description of your current process are helpful; a technical specification is not required.</p>
-                    </details>
-                    <details class="content-faq">
-                        <summary>Do I need a custom build?</summary>
-                        <p>Not always. If an existing system fits your needs, ask about a managed setup. A custom build is useful when your workflows or integrations need a more specific approach.</p>
-                    </details>
-                    <details class="content-faq">
-                        <summary>How are cost and timing agreed?</summary>
-                        <p>We discuss features, dependencies and delivery priorities before proposing a scope. Changes to that scope are reviewed together so their effect on cost and timing is clear.</p>
-                    </details>
-                    <details class="content-faq">
-                        <summary>What happens after launch?</summary>
-                        <p>Hosting, updates and support are agreed as part of the project or a separate maintenance plan. Tell us who will manage the product day to day so the handover fits your team.</p>
-                    </details>
-                </div>
-            </div>
-        </div>
-    </section>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- ORANGE PANEL ---
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".imgWrapper",
+                scrub: true,
+                pin: true,
+                start: "40% 50%",
+                end: "+=100%",
+            }
+        })
+
+            .to(".imgWrapper .main-img", {
+                clipPath: 'inset(0% 0%)',
+                scale: 1,
+                ease: 'Linear.easeNone'
+            })
+
+        $(function () {
+
+            "use strict";
+
+            if (window.innerWidth > 991) {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: ".testimonials-ca .sec-head",
+                        start: "top",
+                        endTrigger: ".testimonials-ca .container",
+                        end: "bottom bottom",
+                        pin: true,
+                        pinSpacing: false
+                    }
+                });
+            }
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            ScrollTrigger.create({
+                trigger: ".work-ca .sec-lg-head",
+                start: "center center",
+                endTrigger: ".work-ca",
+                end: "bottom bottom",
+                pin: true,
+            });
+
+            // Services active
+
+            $('.services-cst .item').on('mouseenter', function () {
+                $('.services-cst .item').removeClass('active');
+                $(this).addClass('active');
+
+                if ($(this).hasClass('active')) {
+                    return false;
+                }
+            });
+
+        });
+
+
+        $(function () {
+            var width = $(window).width();
+            if (width > 991) {
+
+                "use strict";
+
+                $(function () {
+                    let cards = gsap.utils.toArray(".cards .card-item");
+
+                    let stickDistance = 0;
+
+                    let firstCardST = ScrollTrigger.create({
+                        trigger: cards[0],
+                        start: "center center"
+                    });
+
+                    let lastCardST = ScrollTrigger.create({
+                        trigger: cards[cards.length - 1],
+                        start: "bottom bottom"
+                    });
+
+                    cards.forEach((card, index) => {
+                        var scale = 1 - (cards.length - index) * 0;
+                        let scaleDown = gsap.to(card, { scale: scale, 'transform-origin': '"50% ' + (lastCardST.start + stickDistance) + '"' });
+
+                        ScrollTrigger.create({
+                            trigger: card,
+                            start: "center center",
+                            end: () => lastCardST.start + stickDistance,
+                            pin: true,
+                            pinSpacing: false,
+                            ease: "none",
+                            animation: scaleDown,
+                            toggleActions: "restart none none reverse"
+                        });
+                    });
+                });
+
+            }
+        });
+
+    </script>
 {% endblock %}
