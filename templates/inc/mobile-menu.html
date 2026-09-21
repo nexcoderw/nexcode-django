@@ -1,46 +1,96 @@
-<div class="hamenu"
-     id="mobile-navigation"
-     role="dialog"
-     aria-modal="true"
-     aria-label="Navigation"
-     hidden>
-    <button class="close-menu ti-close"
-            type="button"
-            aria-label="Close navigation"></button>
-    <div class="container-fluid">
-        <nav class="menu-links" aria-label="Mobile navigation">
+{% load static %}
+<div class="hamenu">
+    <div class="close-menu cursor-pointer ti-close"></div>
+    <div class="container-fluid rest d-lg-flex">
+        <div class="menu-links">
             <ul class="main-menu rest">
                 <li>
-                    <a class="link" href="{% url 'base:home' %}">Home</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:about' %}">About</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:services' %}">Services</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:portfolio' %}">Work</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:team' %}">Team</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:blogs' %}">Insights</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:getTraining' %}">Training</a>
-                </li>
-                <li>
-                    <a class="link" href="{% url 'base:contact' %}">Contact</a>
+                    <div class="o-hidden">
+                        <a href="{% url 'base:home' %}" class="link"><span class="fill-text" data-text="Home">Home</span></a>
+                        <a href="{% url 'base:about' %}" class="link"><span class="fill-text" data-text="About Us">About Us</span></a>
+                        <a href="{% url 'base:services' %}" class="link"><span class="fill-text" data-text="Our Services">Our Services</span></a>
+                        <a href="{% url 'base:portfolio' %}" class="link"><span class="fill-text" data-text="Our Work">Our Work</span></a>
+                        <a href="{% url 'base:team' %}" class="link"><span class="fill-text" data-text="Our Team">Our Team</span></a>
+                        <a href="{% url 'base:blogs' %}" class="link"><span class="fill-text" data-text="News">News</span></a>
+                        <a href="{% url 'base:getTraining' %}" class="link"><span class="fill-text" data-text="Training">Training</span></a>
+                        <a href="{% url 'base:contact' %}" class="link"><span class="fill-text" data-text="Contact Us">Contact Us</span></a>
+                    </div>
                 </li>
             </ul>
-        </nav>
+        </div>
+        <div class="cont-info valign">
+            <div class="text-center full-width">
+                <div class="logo">
+                    {% if settings.icon_white_logo %}
+                        <img src="{{ settings.icon_white_logo.url }}" alt="logo" style="width: 60px;">
+                    {% else %}
+                        <img src="{% static 'img/logo-w.png' %}" alt="logo" style="width: 60px;">
+                    {% endif %}
+                </div>
+                <div class="social-icon mt-40">
+                    {% if settings.twitter %}
+                        <a href="{{ settings.twitter }}" target="_blank"> <i class="fa-brands fa-x-twitter"></i> </a>
+                    {% else %}
+                        <a href="https://x.com/nexcodeafrica" target="_blank"> <i class="fa-brands fa-x-twitter"></i> </a>
+                    {% endif %}
+
+                    {% if settings.instagram %}
+                        <a href="{{ settings.instagram }}" target="_blank"> <i class="fa-brands fa-instagram"></i> </a>
+                    {% else %}
+                        <a href="https://www.instagram.com/nexcode.africa" target="_blank"> <i class="fa-brands fa-instagram"></i> </a>
+                    {% endif %}
+
+                    {% if settings.linkedin %}
+                        <a href="{{ settings.linkedin }}" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
+                    {% else %}
+                        <a href="https://www.linkedin.com/company/nexcode-rwanda/" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
+                    {% endif %}
+
+                    {% if settings.github %}
+                        <a href="{{ settings.github }}" target="_blank"> <i class="fa-brands fa-github"></i> </a>
+                    {% else %}
+                        <a href="https://github.com/nexcoderw/" target="_blank"> <i class="fa-brands fa-github"></i> </a>
+                    {% endif %}
+                </div>
+                <div class="item mt-30">
+                    <h5>
+                        {% if settings.address %}
+                            {{ settings.address }}
+                        {% else %}
+                            1 KN 78 St, Kigali <br> Norrsken House Kigali
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="item mt-10">
+                    <h5>
+                        <p>
+                            {% if settings.email %}
+                                {{ settings.email }}
+                            {% else %}
+                                nexcoderwa@gmail.com
+                            {% endif %}
+                        </p>
+                    </h5>
+                    <h5>
+                        <p>
+                            {% if settings.second_email %}
+                                {{ settings.second_email }}
+                            {% else %}
+                                
+                            {% endif %}
+                        </p>
+                    </h5>
+                    <h5 class="underline">
+                        <p>
+                            {% if settings.phone_number %}
+                                {{ settings.phone_number }}
+                            {% else %}
+                                +250 781 862 349
+                            {% endif %}
+                        </p>
+                    </h5>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<noscript>
-    <nav class="container fallback-nav"
-         aria-label="Navigation without JavaScript">
-        <a href="{% url 'base:home' %}">Home</a> · <a href="{% url 'base:about' %}">About</a> · <a href="{% url 'base:services' %}">Services</a> · <a href="{% url 'base:portfolio' %}">Work</a> · <a href="{% url 'base:team' %}">Team</a> · <a href="{% url 'base:blogs' %}">Insights</a> · <a href="{% url 'base:getTraining' %}">Training</a>
-    </nav>
-</noscript>
