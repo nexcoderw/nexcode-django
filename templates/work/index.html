@@ -1,15 +1,76 @@
-{% extends "layouts/app.html" %}
+{% extends 'layouts/app.html' %}
+{% load static %}
 {% block content %}
+
     <header class="header-pg">
         <div class="container">
-            <h1>Our work</h1>
-            <p class="page-intro mt-30">Explore published client projects in software, mobile applications and design. Open a project to learn what it involves.</p>
+            <div class="text-center">
+                <div class="caption mb-100">
+                    <h1>Portfolio</h1>
+                    <h6>( <a href="{% url 'base:home' %}">Home</a> - <span>Portfolio</span> )</h6>
+                </div>
+            </div>
         </div>
     </header>
-    <section class="section-padding pt-0">
+
+    <section class="work-card section-padding">
         <div class="container">
-            {% include "inc/project-list.html" %}
-            {% include "inc/pagination.html" %}
+            <div class="cards">
+                {% for work in portfolio %}
+                    <div class="card-item">
+                        <div class="d-lg-flex align-items-end">
+                            <div>
+                                <div class="tags">
+                                    {% for tag in work.tags.all %}
+                                        <a href="{% url 'base:workDetails' work.slug %}">
+                                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                                <h3 class="title">
+                                    <a href="{% url 'base:workDetails' work.slug %}">
+                                        {{ work.name }}
+                                    </a>
+                                </h3>
+                            </div>
+                            <div class="ml-auto">
+                                <a href="{% url 'base:workDetails' work.slug %}" class="butn butn-md butn-bord butn-rounded">
+                                    <div class="d-flex align-items-center">
+                                        <span>View Project</span>
+                                        <span class="icon invert ml-10">
+                                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="img fit-img mt-30">
+                            {% with work.images.first as first_image %}
+                                {% if first_image %}
+                                    <img src="{{ first_image.image.url }}" alt="{{ work.name }}">
+                                {% else %}
+                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
+                {% endfor %}
+            </div>
+            {% comment %} <div class="text-center mt-80">
+                <a href="{% url 'base:portfolio' %}" class="butn butn-md butn-bord butn-rounded">
+                    <div class="d-flex align-items-center">
+                        <span>Check Our Portfolio</span>
+                        <span class="icon invert ml-10">
+                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                        </span>
+                    </div>
+                </a>
+            </div> {% endcomment %}
         </div>
     </section>
+
 {% endblock %}
