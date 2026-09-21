@@ -1,200 +1,36 @@
-{% extends 'layouts/app.html' %}
-{% load static %}
+{% extends "layouts/app.html" %}
+{% load content_tags %}
 {% block content %}
-
-    <header class="post-header pt-20">
-        <div class="container-xl bg-img mt-80" data-background="{{ blog.featured_image.url }}" data-overlay-dark="4">
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="caption">
-                        <!-- Display blog tags dynamically -->
-                        <div class="tags fz-14">
-                            {% for tag in blog.tags.all %}
-                                <a href="#">{{ tag.name }}</a>
-                            {% empty %}
-                                <a href="#0">Uncategorized</a>
-                            {% endfor %}
-                        </div>
-                        <h1 class="fz-55 mt-30">
-                            {{ blog.title }}
-                        </h1>
-                    </div>
-                    <div class="info d-flex mt-40 align-items-center">
-                        <div class="left-info sm-mb30">
-                            <div class="d-flex align-items-center">
-                                <div class="author-info">
-                                    <div class="d-flex align-items-center">
-                                        <!-- Display author's profile image if available -->
-                                        {% if blog.author.profile.image %}
-                                            <a href="#" class="circle-60">
-                                                <img src="{{ blog.author.profile.image.url }}" alt="{{ blog.author.username }}" class="circle-img">
-                                            </a>
-                                        {% else %}
-                                            <a href="#" class="circle-60">
-                                                <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ blog.author.username }}" class="circle-img">
-                                            </a>
-                                        {% endif %}
-                                        <a href="#" class="ml-20">
-                                            <span class="opacity-7 mb-5">{{ blog.author.get_full_name|default:blog.author.username }}</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="date ml-50">
-                                    <!-- Add a span with data-published-at attribute -->
-                                    <a href="#0">
-                                        <span class="opacity-7 mb-5">Published</span>
-                                        <h6 class="fz-16 time-published" data-published-at="{{ blog.published_at_iso }}">
-                                            Loading...
-                                        </h6>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right-info ml-auto">
-                            <div>
-                                <span class="pe-7s-comment fz-18 mr-10"></span>
-                                <span class="opacity-7">02 Comments</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <article>
+        <header class="header-pg">
+            <div class="container">
+                <a class="butn-under mb-30" href="{% url 'base:blogs' %}">All insights</a>
+                <h1>{{ blog.title }}</h1>
+                <p class="mt-30">By {% if blog.author %}{{ blog.author.get_full_name|default:blog.author.username }}{% else %}NEXCODE Africa{% endif %}{% if blog.published_at %} · <time datetime="{{ blog.published_at|date:'c' }}">{{ blog.published_at|date:'j F Y' }}</time>
+{% endif %}
+</p>
+</div>
+</header>
+<div class="section-padding pt-0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                {% if blog.featured_image %}
+                    <img class="article-cover mb-50"
+                         src="{{ blog.featured_image.url }}"
+                         alt="{{ blog.title }}"
+                         width="1200"
+                         height="628"
+                         fetchpriority="high">
+                {% endif %}
+                <div class="rich-content">{{ blog.content|rich_text }}</div>
+                {% if blog.tags.all %}
+                    <p class="mt-40">Topics: {% for tag in blog.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </p>
+                {% endif %}
             </div>
         </div>
-    </header>
-
-    <section class="blog section-padding">
-        <div class="container">
-            <div class="row xlg-marg">
-                <div class="col-lg-8">
-                    <div class="main-post">
-                        <div class="item pb-60">
-                            <article>
-                                <div class="text">
-                                    <!-- Render content safely to display HTML from CKEditor -->
-                                    {{ blog.content|safe }}
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="comments-from mt-80 md-mb80">
-                        <div class="mb-60">
-                            <h3>Leave a comment</h3>
-                        </div>
-                        <form id="contact-form" method="post" action="#">
-                            {% csrf_token %}
-                            <div class="messages"></div>
-                            <div class="controls row">
-                                <div class="col-lg-6">
-                                    <div class="form-group mb-30">
-                                        <input id="form_name" type="text" name="name" placeholder="Name" required="required">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group mb-30">
-                                        <input id="form_email" type="email" name="email" placeholder="Email" required="required">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <textarea id="form_message" name="message" placeholder="Message" rows="4" required="required"></textarea>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="mt-30">
-                                            <button type="submit">
-                                                <span class="text">Post Comment</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="sidebar">
-                        <div class="search-box">
-                            <input type="text" name="search-post" placeholder="Search">
-                            <span class="icon pe-7s-search"></span>
-                        </div>
-                        <div class="widget category">
-                            <h6 class="title-widget">Categories</h6>
-                            <ul class="rest">
-                                {% for category in blog_categories %}
-                                    <li>
-                                        <span><a href="{% url 'base:blog_by_category' category.slug %}">{{ category.name }}</a></span>
-                                        <span class="ml-auto">{{ category.blog_set.count }}</span>
-                                    </li>
-                                {% empty %}
-                                    <li><span>No categories available.</span></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="widget last-post-thum">
-                            <h6 class="title-widget">Latest Posts</h6>
-                            {% for latest_blog in latest_blogs %}
-                                <div class="item d-flex align-items-center">
-                                    <div>
-                                        <div class="img">
-                                            <a href="{% url 'base:getBlogDetails' latest_blog.slug %}">
-                                                <img src="{{ latest_blog.featured_image.url }}" alt="{{ latest_blog.title }}">
-                                                <span class="date">
-                                                    <span>{{ latest_blog.published_at|date:"d / M" }}</span>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="cont">
-                                        <span class="tag">
-                                            {% for tag in latest_blog.tags.all %}
-                                                <a href="{% url 'base:blog_by_tag' tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
-                                            {% empty %}
-                                                <a href="#0">Uncategorized</a>
-                                            {% endfor %}
-                                        </span>
-                                        <h6><a href="{% url 'base:getBlogDetails' latest_blog.slug %}">{{ latest_blog.title }}</a></h6>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <p>No latest posts available.</p>
-                            {% endfor %}
-                        </div>
-                        <div class="widget tags">
-                            <h6 class="title-widget">Tags</h6>
-                            <div>
-                                {% for tag in all_tags %}
-                                    <a href="{% url 'base:blog_by_tag' tag.slug %}">{{ tag.name }}</a>
-                                {% empty %}
-                                    <a href="#0">No tags available</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- JavaScript to handle dynamic 'published_at' display -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const timePublishedElements = document.querySelectorAll('.time-published');
-
-            timePublishedElements.forEach(function(element) {
-                const publishedAt = new Date(element.getAttribute('data-published-at'));
-                const now = new Date();
-                const diffInMilliseconds = now - publishedAt;
-                const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-
-                if (diffInHours < 24) {
-                    element.textContent = `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
-                } else {
-                    // Format the date as Month Day, Year (e.g., January 1, 2025)
-                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                    const formattedDate = publishedAt.toLocaleDateString(undefined, options);
-                    element.textContent = formattedDate;
-                }
-            });
-        });
-    </script>
-
+    </div>
+</div>
+</article>
 {% endblock %}
