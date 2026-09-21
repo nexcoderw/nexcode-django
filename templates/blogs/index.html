@@ -1,43 +1,108 @@
-{% extends "layouts/app.html" %}
+{% extends 'layouts/app.html' %}
+{% load static %}
 {% block content %}
-    <header class="header-pg">
-        <div class="container">
-            <h1>News and insights</h1>
-            <p class="page-intro mt-30">Updates from the studio and perspectives on software, design and building useful digital products.</p>
+
+    <header class="blog-hed">
+        <div class="container section-padding bord-thin-bottom-light">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="caption md-mb30">
+                        <h1 class="text-indent">
+                            Behind the Code: Stories and Strategies.
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-lg-4 offset-lg-1 d-flex align-items-end">
+                    <div class="text">
+                        <p>
+                            Get an insider’s view of NEXCODE's journey. Explore our stories, design strategies, and the technology driving our digital success.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
-    <section class="section-padding pt-0">
+
+    <div class="blog-mp section-padding">
         <div class="container">
-            <div class="row">
+            <div class="row xlg-marg">
                 {% for blog in blogs %}
-                    <article class="col-lg-4 col-md-6 mb-50">
-                        {% if blog.featured_image %}
-                            <a href="{% url 'base:getBlogDetails' blog.slug %}">
-                                <img class="article-cover"
-                                     src="{{ blog.featured_image.url }}"
-                                     alt="{{ blog.title }}"
-                                     width="1200"
-                                     height="628"
-                                     loading="lazy"
-                                     decoding="async">
+                    <div class="col-lg-4 bord">
+                        <div class="item">
+                            <a href="{% url 'base:getBlogDetails' blog.slug %}" class="info d-flex align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <div class="author-img fit-img">
+                                            <img src="{% static 'img/logo-w.png' %}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="author-info ml-10">
+                                        <span>{{ blog.author }}</span>
+                                    </div>
+                                </div>
+                                <div class="date ml-auto">
+                                    <!-- Add a span with data-created-at attribute -->
+                                    <span class="sub-color time-ago" data-created-at="{{ blog.created_at|date:"c" }}">
+                                        Loading...
+                                    </span>
+                                </div>
                             </a>
-                        {% endif %}
-                        <h2 class="fz-30 mt-20">
-                            <a href="{% url 'base:getBlogDetails' blog.slug %}">{{ blog.title }}</a>
-                        </h2>
-                        <p class="mt-15">
-                            <time datetime="{{ blog.published_at|default:blog.created_at|date:'c' }}">{{ blog.published_at|default:blog.created_at|date:'j F Y' }}</time>
-                        </p>
-                        {% if blog.excerpt %}
-                            <p class="mt-15">{{ blog.excerpt|striptags|truncatewords:28 }}</p>
-                        {% endif %}
-                    </article>
+                            <a href="{% url 'base:getBlogDetails' blog.slug %}" class="img fit-img mt-30">
+                                <img src="{{ blog.featured_image.url }}" alt="">
+                            </a>
+                            <div class="cont mt-30">
+                                <h6>
+                                    <a href="{% url 'base:getBlogDetails' blog.slug %}">
+                                        {{ blog.title }}
+                                    </a>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
                 {% empty %}
-                    <p>New articles are on the way. In the meantime, <a class="underline"
-    href="{% url 'base:portfolio' %}">explore our published projects</a>.</p>
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
                 {% endfor %}
             </div>
-            {% include "inc/pagination.html" %}
         </div>
-    </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeAgoElements = document.querySelectorAll('.time-ago');
+    
+            timeAgoElements.forEach(function(element) {
+                const createdAt = new Date(element.getAttribute('data-created-at'));
+                const now = new Date();
+                let diffInSeconds = Math.floor((now - createdAt) / 1000);
+    
+                if (diffInSeconds < 0) {
+                    // Future date handling
+                    element.textContent = 'Just now';
+                    return;
+                }
+    
+                const diffInMinutes = Math.floor(diffInSeconds / 60);
+                const diffInHours = Math.floor(diffInMinutes / 60);
+    
+                if (diffInHours < 1) {
+                    if (diffInMinutes < 1) {
+                        element.textContent = 'Just now';
+                    } else {
+                        element.textContent = `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+                    }
+                } else if (diffInHours < 24) {
+                    element.textContent = `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+                } else {
+                    // Format the date as Month Day, Year (e.g., January 1, 2025)
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = createdAt.toLocaleDateString(undefined, options);
+                    element.textContent = formattedDate;
+                }
+            });
+        });
+    </script>
+    
+
 {% endblock %}
