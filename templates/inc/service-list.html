@@ -1,0 +1,10 @@
+<div class="row">
+    {% for name, service in services.items %}
+        <div class="col-lg-6 mb-50">
+            <h2 class="fz-30 mb-20">
+                <a href="{% url 'base:'|add:name %}">{{ service.title }}</a>
+            </h2>
+            <p>{{ service.intro }}</p>
+        </div>
+    {% endfor %}
+</div>
