@@ -101,44 +101,14 @@
                 <div class="col-lg-6 offset-lg-1 valign">
                     <div class="full-width">
                         <div class="sec-head mb-50">
-                            <h6 class="sub-head">Send a <span class="fw-200">message</span></h6>
+                            <h6 class="sub-head">Get in <span class="fw-200">touch</span></h6>
                         </div>
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="messages"></div>
-                            <div class="controls row">
-                                <div class="col-lg-6">
-                                    <div class="form-group mb-30">
-                                        {{ form.name }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group mb-30">
-                                        {{ form.email }}
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group mb-30">
-                                        {{ form.subject }}
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        {{ form.message }}
-                                    </div>
-                                    <div class="mt-30">
-                                        <button type="submit" class="butn butn-md butn-bord butn-rounded">
-                                            <div class="d-flex align-items-center">
-                                                <span>Let's Talking</span>
-                                                <span class="icon ml-10">
-                                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
-                                                </span>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        <p>Tell us about your project or the support you need. Email our team and we will reply directly.</p>
+                        <div class="mt-30">
+                            <a href="mailto:nexcoderwa@gmail.com?subject={{ email_subject }}" class="butn butn-md butn-bord butn-rounded">
+                                <span>Email NEXCODE</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
