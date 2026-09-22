@@ -1,27 +1,51 @@
-def serialize_team_member(team_member):
+def serialize_team_member(
+    team_member,
+):
     return {
         "id": team_member.pk,
         "name": team_member.name,
         "slug": team_member.slug,
-        "position": team_member.position,
+        "position":
+            team_member.position,
         "image": _file_url(
             team_member.image
         ),
         "image_png": _file_url(
             team_member.image_png
         ),
-        "linkedin": team_member.linkedin,
-        "github": team_member.github,
+        "linkedin":
+            team_member.linkedin,
+        "github":
+            team_member.github,
         "created_at": (
-            team_member.created_at.isoformat()
+            team_member
+            .created_at
+            .isoformat()
         ),
         "updated_at": (
-            team_member.updated_at.isoformat()
+            team_member
+            .updated_at
+            .isoformat()
         ),
     }
 
 
-def _file_url(file_field):
+def serialize_form_errors(
+    form,
+):
+    return {
+        field: [
+            str(error)
+            for error in errors
+        ]
+        for field, errors
+        in form.errors.items()
+    }
+
+
+def _file_url(
+    file_field,
+):
     if not file_field:
         return None
 
