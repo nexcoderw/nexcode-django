@@ -17,4 +17,5 @@ staticfiles/
 
 # Keep local credentials and environment variants out of source/build contexts.
 .env.*
-!.env.example
+!.env.example.local
+!.env.example.production

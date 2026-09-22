@@ -22,7 +22,7 @@
 - Validate user input with Django forms or explicit server-side validation. Enforce authorization and publication visibility in queries, including detail routes.
 - Preserve CSRF protection and template escaping. Sanitize permitted rich text; never mark arbitrary user input safe or inject it into HTML strings.
 - Pass structured data to JavaScript using safe serialization such as `json_script`; avoid interpolating template values directly into executable JavaScript.
-- Keep secrets in environment variables. Document variable names and harmless examples in `.env.example` without copying real values.
+- Keep secrets in environment variables. Document variable names and safe setup guidance in `.env.example.local` and `.env.example.production` without copying real values.
 - Use transactions for related database writes that must succeed together, and database constraints for invariants that must survive concurrent requests.
 - Use semantic HTML, accessible form labels, keyboard operation, visible focus, and layouts that handle mobile screens, empty data, and long content.
 - Keep dependencies minimal. Explain the need for new packages and check compatibility with the project's declared runtime before adding them.

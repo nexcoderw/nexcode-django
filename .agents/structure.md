@@ -25,7 +25,7 @@ NEXCODE is a Django application with server-rendered templates, plain CSS and Ja
 | `deploy/` | Server deployment scripts, Nginx and PM2 configuration. |
 | `docker/`, `Dockerfile`, `docker-compose.yml` | Container startup and runtime configuration. |
 | `.github/workflows/` | CI and deployment automation. |
-| `.env.example`, `requirements.txt` | Documented environment variables and pinned Python dependencies. |
+| `.env.example.local`, `.env.example.production`, `requirements.txt` | Local and production variable templates and pinned Python dependencies. |
 | `NEXCODE_SERVER_DEPLOYMENT.md` | Server deployment instructions. |
 
 ## Placement rules

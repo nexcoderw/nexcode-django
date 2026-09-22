@@ -58,7 +58,7 @@ sudo -u nexcode touch /var/www/nexcode/shared/api/.env.production
 sudo chmod 600 /var/www/nexcode/shared/api/.env.production
 ```
 
-Use `.env.example` as the authoritative variable-name template. Every assignment there is intentionally blank: fill required values before startup and leave only unused integration credentials blank. Django now requires a private `SECRET_KEY` in every environment and rejects production debug mode. The server-managed `.env.production` remains supported and is linked to `.env` by the deployment script. Never commit either private file.
+Use `.env.example.production` as the production variable-name template and `.env.example.local` for local development. Both contain intentionally blank assignments. Fill the production values in the server-managed `.env.production` before startup. Django requires a private `SECRET_KEY` in every environment and rejects production debug mode. The deployment script links `.env.production` to `.env`; never commit either private file.
 
 Production configuration example (placeholders only):
 
@@ -72,7 +72,6 @@ DJANGO_DB=postgres
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require
 ALLOWED_HOSTS=nexcode.africa,www.nexcode.africa
 CSRF_TRUSTED_ORIGINS=https://nexcode.africa,https://www.nexcode.africa
-USE_CLOUDINARY_MEDIA=True
 CLOUDINARY_CLOUD_NAME=replace-me
 CLOUDINARY_API_KEY=replace-me
 CLOUDINARY_API_SECRET=replace-me
