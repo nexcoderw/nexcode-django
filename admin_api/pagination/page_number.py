@@ -2,8 +2,16 @@ from django.core.paginator import (
     Paginator,
 )
 
+
 DEFAULT_PAGE_SIZE = 20
 MAX_PAGE_SIZE = 100
+
+
+class PaginationError(
+    ValueError
+):
+    pass
+
 
 def paginate_queryset(
     queryset,
@@ -35,7 +43,7 @@ def paginate_queryset(
         page_size
         > MAX_PAGE_SIZE
     ):
-        raise ValueError(
+        raise PaginationError(
             "page_size cannot exceed "
             f"{MAX_PAGE_SIZE}."
         )
@@ -49,20 +57,21 @@ def paginate_queryset(
         page_number
     )
 
-    metadata = {
-        "page": page.number,
-        "page_size": page_size,
-        "total_items":
-            paginator.count,
-        "total_pages":
-            paginator.num_pages,
-        "has_next":
-            page.has_next(),
-        "has_previous":
-            page.has_previous(),
-    }
-
-    return page, metadata
+    return (
+        page,
+        {
+            "page": page.number,
+            "page_size": page_size,
+            "total_items":
+                paginator.count,
+            "total_pages":
+                paginator.num_pages,
+            "has_next":
+                page.has_next(),
+            "has_previous":
+                page.has_previous(),
+        },
+    )
 
 
 def _positive_integer(
@@ -77,13 +86,13 @@ def _positive_integer(
         TypeError,
         ValueError,
     ):
-        raise ValueError(
+        raise PaginationError(
             f"{field_name} must be "
             "a positive integer."
         )
 
     if value < 1:
-        raise ValueError(
+        raise PaginationError(
             f"{field_name} must be "
             "a positive integer."
         )
