@@ -9,12 +9,12 @@ app_name = "team"
 urlpatterns = [
     path(
         "",
-        team.team_list_view,
-        name="list",
+        team.team_collection_view,
+        name="collection",
     ),
     path(
         "<int:team_id>/",
-        team.team_detail_view,
-        name="detail",
+        team.team_item_view,
+        name="item",
     ),
 ]
