@@ -1,20 +1,31 @@
-from django.db import (
-    models,
-    transaction,
-)
+import logging
+
+from django.db import transaction
 from django.db.models.signals import (
     post_delete,
     post_save,
     pre_save,
 )
+from django.dispatch import receiver
 
-from home.models import Setting, Team
-
-
-FILE_MODELS = (Setting, Team)
+from home.models import Team
 
 
-def capture_replaced_files(
+logger = logging.getLogger(
+    __name__
+)
+
+TEAM_FILE_FIELDS = (
+    "image",
+    "image_png",
+)
+
+
+@receiver(
+    pre_save,
+    sender=Team,
+)
+def capture_replaced_team_files(
     sender,
     instance,
     **kwargs,
@@ -22,71 +33,77 @@ def capture_replaced_files(
     if not instance.pk:
         return
 
-    try:
-        previous = (
-            sender.objects.get(
-                pk=instance.pk
-            )
-        )
-    except sender.DoesNotExist:
+    previous = (
+        Team.objects.filter(
+            pk=instance.pk
+        ).first()
+    )
+
+    if previous is None:
         return
 
-    replaced = []
+    replaced_files = []
 
-    for field in _file_fields(
-        sender
+    for field_name in (
+        TEAM_FILE_FIELDS
     ):
-        old_file = getattr(
+        previous_file = getattr(
             previous,
-            field.name,
+            field_name,
         )
 
-        new_file = getattr(
+        current_file = getattr(
             instance,
-            field.name,
+            field_name,
         )
 
-        old_name = getattr(
-            old_file,
+        previous_name = getattr(
+            previous_file,
             "name",
             "",
         )
 
-        new_name = getattr(
-            new_file,
+        current_name = getattr(
+            current_file,
             "name",
             "",
         )
 
         if (
-            old_name
-            and old_name
-            != new_name
+            previous_name
+            and previous_name
+            != current_name
         ):
-            replaced.append(
+            replaced_files.append(
                 (
-                    old_file.storage,
-                    old_name,
+                    previous_file.storage,
+                    previous_name,
                 )
             )
 
-    instance._replaced_media_files = (
-        replaced
+    instance._replaced_team_files = (
+        replaced_files
     )
 
 
-def delete_replaced_files(
+@receiver(
+    post_save,
+    sender=Team,
+)
+def delete_replaced_team_files(
     sender,
     instance,
     **kwargs,
 ):
-    replaced = getattr(
+    replaced_files = getattr(
         instance,
-        "_replaced_media_files",
+        "_replaced_team_files",
         (),
     )
 
-    for storage, name in replaced:
+    for storage, name in (
+        replaced_files
+    ):
         _delete_after_commit(
             storage,
             name,
@@ -94,25 +111,29 @@ def delete_replaced_files(
 
     if hasattr(
         instance,
-        "_replaced_media_files",
+        "_replaced_team_files",
     ):
         delattr(
             instance,
-            "_replaced_media_files",
+            "_replaced_team_files",
         )
 
 
-def delete_instance_files(
+@receiver(
+    post_delete,
+    sender=Team,
+)
+def delete_team_files(
     sender,
     instance,
     **kwargs,
 ):
-    for field in _file_fields(
-        sender
+    for field_name in (
+        TEAM_FILE_FIELDS
     ):
         file_value = getattr(
             instance,
-            field.name,
+            field_name,
         )
 
         name = getattr(
@@ -130,55 +151,28 @@ def delete_instance_files(
         )
 
 
-def _file_fields(model):
-    return (
-        field
-        for field in model._meta.fields
-        if isinstance(
-            field,
-            models.FileField,
-        )
-    )
-
-
 def _delete_after_commit(
     storage,
     name,
 ):
     transaction.on_commit(
-        lambda: storage.delete(
-            name
+        lambda: _safe_delete(
+            storage,
+            name,
         )
     )
 
 
-for model in FILE_MODELS:
-    pre_save.connect(
-        capture_replaced_files,
-        sender=model,
-        weak=False,
-        dispatch_uid=(
-            f"capture-replaced-files-"
-            f"{model._meta.label_lower}"
-        ),
-    )
-
-    post_save.connect(
-        delete_replaced_files,
-        sender=model,
-        weak=False,
-        dispatch_uid=(
-            f"delete-replaced-files-"
-            f"{model._meta.label_lower}"
-        ),
-    )
-
-    post_delete.connect(
-        delete_instance_files,
-        sender=model,
-        weak=False,
-        dispatch_uid=(
-            f"delete-instance-files-"
-            f"{model._meta.label_lower}"
-        ),
-    )
+def _safe_delete(
+    storage,
+    name,
+):
+    try:
+        storage.delete(name)
+    except Exception:
+        logger.exception(
+            "Failed to delete media file.",
+            extra={
+                "storage_name": name,
+            },
+        )
