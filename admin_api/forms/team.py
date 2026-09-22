@@ -1,9 +1,17 @@
+from urllib.parse import urlparse
+
 from django import forms
 
 
 MAX_TEAM_IMAGE_BYTES = (
     10 * 1024 * 1024
 )
+
+ALLOWED_TEAM_IMAGE_FORMATS = {
+    "JPEG",
+    "PNG",
+    "WEBP",
+}
 
 
 class TeamCreateForm(forms.Form):
@@ -37,32 +45,48 @@ class TeamCreateForm(forms.Form):
         return _validate_image(
             self.cleaned_data.get(
                 "image"
-            ),
+            )
         )
 
     def clean_image_png(self):
         image = _validate_image(
             self.cleaned_data.get(
                 "image_png"
-            ),
+            )
         )
 
-        if (
-            image
-            and getattr(
-                image,
-                "image",
+        if image:
+            image_format = getattr(
+                image.image,
+                "format",
                 None,
             )
-            and image.image.format
-            != "PNG"
-        ):
-            raise forms.ValidationError(
-                "The transparent image "
-                "must be a PNG file."
-            )
+
+            if image_format != "PNG":
+                raise forms.ValidationError(
+                    "The cutout image "
+                    "must be a PNG file."
+                )
 
         return image
+
+    def clean_linkedin(self):
+        return _validate_domain(
+            self.cleaned_data.get(
+                "linkedin"
+            ),
+            "linkedin.com",
+            "LinkedIn",
+        )
+
+    def clean_github(self):
+        return _validate_domain(
+            self.cleaned_data.get(
+                "github"
+            ),
+            "github.com",
+            "GitHub",
+        )
 
 
 class TeamUpdateForm(
@@ -98,6 +122,31 @@ class TeamUpdateForm(
         )
 
         if (
+            "name" in self.data
+            and not cleaned_data.get(
+                "name"
+            )
+        ):
+            self.add_error(
+                "name",
+                "Name cannot be empty.",
+            )
+
+        if (
+            "position" in self.data
+            and not cleaned_data.get(
+                "position"
+            )
+        ):
+            self.add_error(
+                "position",
+                (
+                    "Position cannot "
+                    "be empty."
+                ),
+            )
+
+        if (
             cleaned_data.get(
                 "remove_image"
             )
@@ -131,36 +180,6 @@ class TeamUpdateForm(
                 ),
             )
 
-        if (
-            "name" in self.data
-            and not cleaned_data.get(
-                "name"
-            )
-        ):
-            self.add_error(
-                "name",
-                "Name cannot be empty.",
-            )
-
-        if (
-            "position" in self.data
-            and not cleaned_data.get(
-                "position"
-            )
-        ):
-            self.add_error(
-                "position",
-                (
-                    "Position cannot "
-                    "be empty."
-                ),
-            )
-
-        supplied_fields = (
-            set(self.data.keys())
-            | set(self.files.keys())
-        )
-
         editable_fields = {
             "name",
             "position",
@@ -171,6 +190,11 @@ class TeamUpdateForm(
             "remove_image",
             "remove_image_png",
         }
+
+        supplied_fields = (
+            set(self.data.keys())
+            | set(self.files.keys())
+        )
 
         if not (
             supplied_fields
@@ -197,4 +221,49 @@ def _validate_image(image):
             "10 MB."
         )
 
+    image_format = getattr(
+        image.image,
+        "format",
+        None,
+    )
+
+    if (
+        image_format
+        not in ALLOWED_TEAM_IMAGE_FORMATS
+    ):
+        raise forms.ValidationError(
+            "Supported image formats are "
+            "JPEG, PNG, and WebP."
+        )
+
     return image
+
+
+def _validate_domain(
+    value,
+    expected_domain,
+    label,
+):
+    if not value:
+        return value
+
+    hostname = (
+        urlparse(value)
+        .hostname
+        or ""
+    ).lower()
+
+    valid = (
+        hostname
+        == expected_domain
+        or hostname.endswith(
+            f".{expected_domain}"
+        )
+    )
+
+    if not valid:
+        raise forms.ValidationError(
+            f"Enter a valid {label} URL."
+        )
+
+    return value
