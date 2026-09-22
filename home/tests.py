@@ -7,7 +7,7 @@ from xml.etree import ElementTree
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from home.models import Contact, Team
+from home.models import Team
 from home.seo import PAGES, json_ld
 from home.templatetags.content_tags import rich_text
 
@@ -99,34 +99,16 @@ class PublicPageTests(TestCase):
             self.assertEqual(response["X-Robots-Tag"], "noindex, follow")
             self.assertEqual(self.client.get("/sitemap.xml").status_code, 404)
 
-    def test_contact_validates_and_saves(self):
-        invalid = self.client.post(
-            "/contact/",
-            {
-                "name": "Sample Client",
-                "email": "invalid",
-                "subject": "Website",
-                "message": "Hello",
-            },
-        )
-        self.assertContains(invalid, "Enter a valid email address.")
-        self.assertEqual(Contact.objects.count(), 0)
-        valid = self.client.post(
-            "/contact/",
-            {
-                "name": "Sample Client",
-                "email": "client@example.com",
-                "subject": "Website",
-                "message": "Hello",
-            },
-        )
-        self.assertRedirects(valid, "/contact/")
-        self.assertEqual(Contact.objects.count(), 1)
+    def test_contact_offers_direct_email_and_rejects_posts(self):
+        response = self.client.get("/contact/")
+        self.assertContains(response, "mailto:nexcoderwa@gmail.com")
+        self.assertEqual(self.client.post("/contact/").status_code, 405)
 
-    def test_service_enquiry_prefills_subject(self):
+    def test_service_enquiry_sets_email_subject(self):
         response = self.client.get("/contact/?service=Mobile%20app%20development")
-        self.assertEqual(
-            response.context["form"]["subject"].value(), "Mobile app development"
+        self.assertContains(
+            response,
+            "subject=Enquiry%20about%20Mobile%20app%20development",
         )
 
     def test_json_ld_escapes_script_delimiters(self):
