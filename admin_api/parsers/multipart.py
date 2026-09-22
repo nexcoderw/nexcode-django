@@ -40,7 +40,7 @@ def parse_multipart_payload(
         )
 
         return parser.parse()
-    except MultiPartParserError:
+    except MultiPartParserError as error:
         raise MultipartPayloadError(
             "Invalid multipart payload."
-        )
+        ) from error
