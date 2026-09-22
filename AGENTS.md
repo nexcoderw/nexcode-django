@@ -8,6 +8,9 @@ These instructions apply throughout this repository. Before changing files, read
 4. [Performance](.agents/performance.md) — efficient Django queries, lightweight pages, and measured results.
 5. [SEO](.agents/seo.md) — content, metadata, discoverability, and indexing.
 
+6. [Environment and secrets](.agents/environment.md) — private configuration and documented variable names.
+7. [Design preservation](.agents/design.md) — preserve the established appearance and animation behavior.
+
 ## Working agreement
 
 - Inspect the current files and Git state before editing. Make focused changes that satisfy the task and preserve unrelated work.
