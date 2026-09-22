@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from django.views.generic import RedirectView
 
 from home import views
 
@@ -10,12 +11,37 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
     path("services/", views.services, name="services"),
-    path("services/software-development/", views.service_page, name="softwareDev"),
-    path("services/ui-ux/", views.service_page, name="uiUx"),
-    path("services/digital-marketing/", views.service_page, name="digitalMarketing"),
-    path("services/mobile-development/", views.service_page, name="mobileDev"),
-    path("services/networking/", views.service_page, name="networking"),
-    path("services/maintenance/", views.service_page, name="maintenance"),
+    # Retired detail URLs retain permanent redirects for existing bookmarks.
+    path(
+        "services/software-development/",
+        RedirectView.as_view(pattern_name="base:services", permanent=True),
+        name="softwareDev",
+    ),
+    path(
+        "services/ui-ux/",
+        RedirectView.as_view(pattern_name="base:services", permanent=True),
+        name="uiUx",
+    ),
+    path(
+        "services/digital-marketing/",
+        RedirectView.as_view(pattern_name="base:services", permanent=True),
+        name="digitalMarketing",
+    ),
+    path(
+        "services/mobile-development/",
+        RedirectView.as_view(pattern_name="base:services", permanent=True),
+        name="mobileDev",
+    ),
+    path(
+        "services/networking/",
+        RedirectView.as_view(pattern_name="base:services", permanent=True),
+        name="networking",
+    ),
+    path(
+        "services/maintenance/",
+        RedirectView.as_view(pattern_name="base:services", permanent=True),
+        name="maintenance",
+    ),
     path("portfolio/", views.portfolio, name="portfolio"),
     path("work/<slug>", views.workDetails, name="workDetails"),
     path("team/", views.team, name="team"),
