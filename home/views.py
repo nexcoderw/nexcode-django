@@ -64,13 +64,6 @@ def services(request):
     return render_page(request, "services/index.html", {"services": SERVICES})
 
 
-def service_page(request):
-    service = SERVICES[request.resolver_match.url_name]
-    return render_page(
-        request, f"services/{service['slug']}.html", {"service": service}
-    )
-
-
 def portfolio(request):
     page = page_for(
         request,
