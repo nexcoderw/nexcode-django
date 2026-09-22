@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none" aria-label="NEXCODE">
+  <rect width="96" height="96" rx="22" fill="#100F0F"/>
+  <path d="M28 68V28h8l31 36V28" stroke="#FFFFFF" stroke-width="7" stroke-linecap="square" stroke-linejoin="bevel"/>
+  <path d="M51 22h23v23M22 51v23h23" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="bevel"/>
+  <path d="M18 18l13 13M65 65l13 13" stroke="#FFFFFF" stroke-width="3"/>
+  <circle cx="17" cy="17" r="5" fill="#100F0F" stroke="#FFFFFF" stroke-width="3"/>
+  <circle cx="79" cy="79" r="5" fill="#100F0F" stroke="#FFFFFF" stroke-width="3"/>
+  <circle cx="17" cy="17" r="1.5" fill="#E8474D"/>
+  <circle cx="79" cy="79" r="1.5" fill="#E8474D"/>
+</svg>

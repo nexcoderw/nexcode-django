@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="NEXCODE">
+  <rect width="64" height="64" rx="13" fill="#100F0F"/>
+  <path d="M19 47V17h5l21 27V17" stroke="#FFFFFF" stroke-width="5" stroke-linecap="square" stroke-linejoin="bevel"/>
+  <path d="M11 11l10 10M44 43l10 10" stroke="#FFFFFF" stroke-width="2.5"/>
+  <circle cx="10" cy="10" r="4" fill="#100F0F" stroke="#FFFFFF" stroke-width="2.5"/>
+  <circle cx="54" cy="54" r="4" fill="#100F0F" stroke="#FFFFFF" stroke-width="2.5"/>
+  <circle cx="10" cy="10" r="1.3" fill="#E8474D"/>
+  <circle cx="54" cy="54" r="1.3" fill="#E8474D"/>
+</svg>
