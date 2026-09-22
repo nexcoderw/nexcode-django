@@ -2,7 +2,7 @@
     {% for name, service in services.items %}
         <div class="col-lg-6 mb-50">
             <h2 class="fz-30 mb-20">
-                <a href="{% url 'base:'|add:name %}">{{ service.title }}</a>
+                <a href="{% url 'base:contact' %}?service={{ service.title|urlencode }}">{{ service.title }}</a>
             </h2>
             <p>{{ service.intro }}</p>
         </div>
