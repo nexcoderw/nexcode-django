@@ -26,4 +26,19 @@ urlpatterns = [
         auth.logout_view,
         name="logout",
     ),
+    path(
+        "password-reset/request/",
+        auth.password_reset_request_view,
+        name="password-reset-request",
+    ),
+    path(
+        "password-reset/verify/",
+        auth.password_reset_verify_view,
+        name="password-reset-verify",
+    ),
+    path(
+        "password-reset/confirm/",
+        auth.password_reset_confirm_view,
+        name="password-reset-confirm",
+    ),
 ]
