@@ -8,26 +8,10 @@ from django.db.models.signals import (
     pre_save,
 )
 
-from home.models import (
-    Blog,
-    Client,
-    Portfolio,
-    PortfolioImage,
-    Setting,
-    Team,
-    Training,
-)
+from home.models import Setting, Team
 
 
-FILE_MODELS = (
-    Blog,
-    Client,
-    Portfolio,
-    PortfolioImage,
-    Setting,
-    Team,
-    Training,
-)
+FILE_MODELS = (Setting, Team)
 
 
 def capture_replaced_files(
