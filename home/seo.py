@@ -26,29 +26,13 @@ PAGES = {
         "Software, Design and Technology Services",
         "Explore NEXCODE services: custom software, mobile apps, UI/UX design, networking, digital marketing and maintenance. Find the right support for your business.",
     ),
-    "portfolio": (
-        "Our Software and Design Projects",
-        "Explore published NEXCODE projects in software, mobile applications and design. See the work and discuss a similar challenge with our Kigali team.",
-    ),
     "team": (
         "Meet the NEXCODE Team",
-        "Meet the people behind NEXCODE. Explore team roles, professional profiles and published projects from our technology studio in Kigali.",
-    ),
-    "blogs": (
-        "News and Insights from NEXCODE",
-        "Read published news and insights from NEXCODE on software, design and building useful digital products. Explore the latest from our Kigali studio.",
-    ),
-    "getTraining": (
-        "Technology Training and Workshops",
-        "Explore NEXCODE training sessions and workshops. Check published dates, course details and fees, or contact our team about upcoming opportunities.",
+        "Meet the people behind NEXCODE. Explore team roles and professional profiles from our technology studio in Kigali.",
     ),
     "contact": (
         "Contact NEXCODE in Kigali",
         "Discuss a software project, an existing system or technical support with NEXCODE. Send your requirements to our team at Norrsken House Kigali.",
-    ),
-    "addTestimony": (
-        "Share Your Experience with NEXCODE",
-        "Worked with NEXCODE? Share feedback about your project and tell us what went well or what we could improve.",
     ),
 }
 
@@ -81,7 +65,6 @@ def render_page(
     title=None,
     description=None,
     image=None,
-    article=None,
 ):
     context = dict(context or {})
     route = request.resolver_match.url_name
@@ -102,7 +85,7 @@ def render_page(
     image_url = absolute_url(image or static("img/logo-w.png"))
     if urlsplit(image_url).scheme not in {"http", "https"}:
         image_url = absolute_url(static("img/logo-w.png"))
-    indexable = settings.SEARCH_ENGINE_INDEXING and route != "addTestimony"
+    indexable = settings.SEARCH_ENGINE_INDEXING
     organization = {
         "@type": "Organization",
         "@id": settings.SITE_URL + "/#organization",
@@ -112,25 +95,6 @@ def render_page(
         "sameAs": ["https://www.linkedin.com/company/nexcode-africa/"],
     }
     graph = [organization]
-    if article is not None:
-        entry = {
-            "@type": "BlogPosting",
-            "headline": article.title,
-            "description": page_description,
-            "mainEntityOfPage": canonical,
-            "image": image_url,
-            "dateModified": article.updated_at.isoformat(),
-            "publisher": {"@id": organization["@id"]},
-            "author": {"@type": "Organization", "name": "NEXCODE Africa"},
-        }
-        if article.published_at:
-            entry["datePublished"] = article.published_at.isoformat()
-        if article.author:
-            entry["author"] = {
-                "@type": "Person",
-                "name": article.author.get_full_name() or article.author.username,
-            }
-        graph.append(entry)
     context.update(
         {
             "settings": Setting.objects.first(),
@@ -139,7 +103,7 @@ def render_page(
                 "description": page_description,
                 "canonical": canonical,
                 "image": image_url,
-                "type": "article" if article is not None else "website",
+                "type": "website",
                 "robots": "index, follow" if indexable else "noindex, follow",
                 "structured_data": json_ld(
                     {"@context": "https://schema.org", "@graph": graph}
