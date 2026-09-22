@@ -1,3 +1,5 @@
+import uuid
+import logging
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
@@ -22,6 +24,24 @@ from admin_api.security.login_throttle import (
     get_login_retry_after,
     record_login_failure,
     reset_login_throttle,
+)
+from django.core.exceptions import ValidationError
+
+from admin_api.serializers.auth import (
+    PASSWORD_RESET_ERROR_INVALID_REQUEST,
+    PASSWORD_RESET_ERROR_PASSWORD_MISMATCH,
+    parse_password_reset_confirm_payload,
+    parse_password_reset_request_payload,
+    parse_password_reset_verify_payload,
+)
+from admin_api.services.password_reset import (
+    confirm_admin_password_reset,
+    request_admin_password_reset,
+    verify_admin_password_reset,
+)
+
+logger = logging.getLogger(
+    __name__
 )
 
 def csrf_token_view(request):
@@ -219,6 +239,227 @@ def method_not_allowed(allowed_methods):
 
     response["Allow"] = ", ".join(
         allowed_methods
+    )
+
+    return response
+
+def password_reset_request_view(
+    request,
+):
+    if request.method != "POST":
+        return method_not_allowed(
+            ["POST"]
+        )
+
+    payload, error = (
+        parse_password_reset_request_payload(
+            request.body
+        )
+    )
+
+    if (
+        error
+        == PASSWORD_RESET_ERROR_INVALID_REQUEST
+    ):
+        return JsonResponse(
+            {
+                "status": "error",
+                "message":
+                    "Enter a valid email address.",
+            },
+            status=400,
+        )
+
+    try:
+        challenge_id = (
+            request_admin_password_reset(
+                payload["email"]
+            )
+        )
+    except Exception:
+        logger.exception(
+            "Administrator password reset "
+            "email delivery failed."
+        )
+
+        # Preserve the same outward shape so
+        # account existence is not exposed.
+        challenge_id = str(
+            uuid.uuid4()
+        )
+
+    response = JsonResponse(
+        {
+            "status": "success",
+            "message": (
+                "If an eligible administrator "
+                "account exists, a verification "
+                "code has been sent."
+            ),
+            "data": {
+                "challenge_id":
+                    challenge_id,
+            },
+        }
+    )
+
+    response["Cache-Control"] = (
+        "no-store"
+    )
+
+    return response
+
+
+def password_reset_verify_view(
+    request,
+):
+    if request.method != "POST":
+        return method_not_allowed(
+            ["POST"]
+        )
+
+    payload, error = (
+        parse_password_reset_verify_payload(
+            request.body
+        )
+    )
+
+    if error is not None:
+        return JsonResponse(
+            {
+                "status": "error",
+                "message":
+                    "Invalid verification request.",
+            },
+            status=400,
+        )
+
+    reset_token = (
+        verify_admin_password_reset(
+            payload["challenge_id"],
+            payload["code"],
+        )
+    )
+
+    if reset_token is None:
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": (
+                    "The verification code is "
+                    "invalid or has expired."
+                ),
+            },
+            status=400,
+        )
+
+    response = JsonResponse(
+        {
+            "status": "success",
+            "message":
+                "Verification successful.",
+            "data": {
+                "reset_token":
+                    reset_token,
+            },
+        }
+    )
+
+    response["Cache-Control"] = (
+        "no-store"
+    )
+
+    return response
+
+
+def password_reset_confirm_view(
+    request,
+):
+    if request.method != "POST":
+        return method_not_allowed(
+            ["POST"]
+        )
+
+    payload, error = (
+        parse_password_reset_confirm_payload(
+            request.body
+        )
+    )
+
+    if (
+        error
+        == PASSWORD_RESET_ERROR_PASSWORD_MISMATCH
+    ):
+        return JsonResponse(
+            {
+                "status": "error",
+                "message":
+                    "Passwords do not match.",
+                "errors": {
+                    "confirm_password": [
+                        "Passwords do not match."
+                    ],
+                },
+            },
+            status=400,
+        )
+
+    if error is not None:
+        return JsonResponse(
+            {
+                "status": "error",
+                "message":
+                    "Invalid password reset request.",
+            },
+            status=400,
+        )
+
+    try:
+        success = (
+            confirm_admin_password_reset(
+                payload["reset_token"],
+                payload["password"],
+            )
+        )
+    except ValidationError as error:
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": (
+                    "Password does not meet "
+                    "the security requirements."
+                ),
+                "errors": {
+                    "password":
+                        error.messages,
+                },
+            },
+            status=400,
+        )
+
+    if not success:
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": (
+                    "The password reset session "
+                    "is invalid or has expired."
+                ),
+            },
+            status=400,
+        )
+
+    response = JsonResponse(
+        {
+            "status": "success",
+            "message": (
+                "Password reset successfully."
+            ),
+        }
+    )
+
+    response["Cache-Control"] = (
+        "no-store"
     )
 
     return response
