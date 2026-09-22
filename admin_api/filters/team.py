@@ -13,6 +13,12 @@ ALLOWED_TEAM_ORDERINGS = {
 }
 
 
+class TeamFilterError(
+    ValueError
+):
+    pass
+
+
 def apply_team_filters(
     queryset,
     query_params,
@@ -20,7 +26,7 @@ def apply_team_filters(
     search = (
         query_params.get(
             "search",
-            ""
+            "",
         ).strip()
     )
 
@@ -35,7 +41,7 @@ def apply_team_filters(
         ordering
         not in ALLOWED_TEAM_ORDERINGS
     ):
-        raise ValueError(
+        raise TeamFilterError(
             "Invalid ordering."
         )
 
