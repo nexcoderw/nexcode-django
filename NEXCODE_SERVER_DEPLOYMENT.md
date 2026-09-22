@@ -58,7 +58,9 @@ sudo -u nexcode touch /var/www/nexcode/shared/api/.env.production
 sudo chmod 600 /var/www/nexcode/shared/api/.env.production
 ```
 
-Use this shape:
+Use `.env.example` as the authoritative variable-name template. Every assignment there is intentionally blank: fill required values before startup and leave only unused integration credentials blank. Django now requires a private `SECRET_KEY` in every environment and rejects production debug mode. The server-managed `.env.production` remains supported and is linked to `.env` by the deployment script. Never commit either private file.
+
+Production configuration example (placeholders only):
 
 ```dotenv
 DJANGO_ENV=production
@@ -88,7 +90,7 @@ After deployment, verify `/robots.txt`, `/sitemap.xml`, and the rendered canonic
 
 Install the updated `requirements.txt` before restarting: public rich text now uses the pinned `nh3` sanitizer. Run static collection as usual to publish the restored original animation script. The shared layout loads the original stylesheets and animation libraries; the redesign override stylesheet is no longer used. No database migration is required for this change.
 
-Company copy follows the supplied [NEXCODE LinkedIn profile](https://www.linkedin.com/company/nexcode-africa/about/). Page-specific service copy lives in `home/content.py`; metadata defaults live in `home/seo.py`. Article, project, team and training records remain managed through Django admin. Review existing rich content after deployment: supported formatting is preserved, while executable HTML, embedded frames and arbitrary inline styles are removed.
+Company copy follows the supplied [NEXCODE LinkedIn profile](https://www.linkedin.com/company/nexcode-africa/about/). Service detail pages have been removed. Existing detail URLs permanently redirect to `/services/` and are excluded from the sitemap; service enquiry links open the contact form with the subject prefilled. Service content data lives in `home/content.py`; metadata defaults live in `home/seo.py`. Article, project, team and training records remain managed through Django admin. Review existing rich content after deployment: supported formatting is preserved, while executable HTML, embedded frames and arbitrary inline styles are removed.
 
 ## Copy Repo Deployment Files To The Server
 
