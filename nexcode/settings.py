@@ -42,9 +42,6 @@ for env_file in ENV_FILES:
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# Use Cloudinary for media (user uploads)?
-USE_CLOUDINARY_MEDIA = getenv_bool("USE_CLOUDINARY_MEDIA", False)
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
@@ -128,12 +125,21 @@ INSTALLED_APPS = [
     'admin_api',
 ]
 
-# Media storage (optional)
-if USE_CLOUDINARY_MEDIA:
-    INSTALLED_APPS += [
-        'cloudinary_storage',
-        'cloudinary',
-    ]
+if DJANGO_ENV == "production":
+    staticfiles_index = (
+        INSTALLED_APPS.index(
+            "django.contrib.staticfiles"
+        )
+    )
+
+    INSTALLED_APPS.insert(
+        staticfiles_index,
+        "cloudinary_storage",
+    )
+
+    INSTALLED_APPS.append(
+        "cloudinary"
+    )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -252,36 +258,70 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # used when USE_CLOUDINARY_MEDIA=False
+
+STORAGES = {
+    "default": {
+        "BACKEND": (
+            "django.core.files.storage."
+            "FileSystemStorage"
+        ),
+    },
+    "staticfiles": {
+        "BACKEND": (
+            "whitenoise.storage."
+            "CompressedManifestStaticFilesStorage"
+        ),
+    },
+}
+
+
+if DJANGO_ENV == "production":
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": os.getenv(
+            "CLOUDINARY_CLOUD_NAME"
+        ),
+        "API_KEY": os.getenv(
+            "CLOUDINARY_API_KEY"
+        ),
+        "API_SECRET": os.getenv(
+            "CLOUDINARY_API_SECRET"
+        ),
+        "SECURE": True,
+    }
+
+    if not all(
+        (
+            CLOUDINARY_STORAGE[
+                "CLOUD_NAME"
+            ],
+            CLOUDINARY_STORAGE[
+                "API_KEY"
+            ],
+            CLOUDINARY_STORAGE[
+                "API_SECRET"
+            ],
+        )
+    ):
+        raise ImproperlyConfigured(
+            "Production media storage requires "
+            "CLOUDINARY_CLOUD_NAME, "
+            "CLOUDINARY_API_KEY, and "
+            "CLOUDINARY_API_SECRET."
+        )
+
+    STORAGES["default"] = {
+        "BACKEND": (
+            "cloudinary_storage.storage."
+            "MediaCloudinaryStorage"
+        ),
+    }
 
 # WhiteNoise for static files
 WHITENOISE_AUTOREFRESH = DEBUG
 WHITENOISE_USE_FINDERS = DEBUG
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-# Cloudinary media storage (optional, controlled by USE_CLOUDINARY_MEDIA)
-if USE_CLOUDINARY_MEDIA:
-    CLOUDINARY_STORAGE = {
-        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
-        "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
-        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
-    }
-    if not all(CLOUDINARY_STORAGE.values()):
-        raise ImproperlyConfigured(
-            "Cloudinary media requires CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET."
-        )
-    STORAGES["default"] = {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
