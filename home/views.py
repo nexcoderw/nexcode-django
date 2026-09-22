@@ -1,13 +1,13 @@
+from urllib.parse import quote
+
 from django.conf import settings
-from django.contrib import messages
 from django.core.paginator import InvalidPage, Paginator
 from django.db import connection
 from django.http import Http404, HttpResponse, HttpResponseGone, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_safe
 
 from home.content import SERVICES
-from home.forms import ContactForm
 from home.models import Team
 from home.seo import render_page
 
@@ -64,23 +64,13 @@ def removed_content(request, slug=None):
     return HttpResponseGone("This page is no longer available.")
 
 
+@require_safe
 def contact(request):
-    initial = {"subject": request.GET.get("service", "")[:150]}
-    form = ContactForm(
-        request.POST if request.method == "POST" else None, initial=initial
+    service = request.GET.get("service", "").strip()[:150]
+    subject = f"Enquiry about {service}" if service else "NEXCODE enquiry"
+    return render_page(
+        request, "contact.html", {"email_subject": quote(subject)}
     )
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Your message has been received. Our team will reply using the email address you provided.",
-            )
-            return redirect("base:contact")
-        messages.error(
-            request, "Your message has not been sent. Check the fields marked below."
-        )
-    return render_page(request, "contact.html", {"form": form})
 
 
 @require_safe
