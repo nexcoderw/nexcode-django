@@ -14,3 +14,7 @@ dist/
 .gitignore
 media/
 staticfiles/
+
+# Keep local credentials and environment variants out of source/build contexts.
+.env.*
+!.env.example
