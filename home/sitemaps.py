@@ -10,9 +10,8 @@ from django.http import Http404
 from django.urls import reverse
 from django.views.decorators.http import require_safe
 
-from home.models import Team, Training
+from home.models import Team
 from home.seo import PAGES
-from home.views import public_projects, published_blogs
 
 
 class CanonicalSitemap(Sitemap):
@@ -26,7 +25,7 @@ class CanonicalSitemap(Sitemap):
 
 class StaticSitemap(CanonicalSitemap):
     def items(self):
-        return [name for name in PAGES if name != "addTestimony"]
+        return list(PAGES)
 
     def location(self, item):
         return reverse(f"base:{item}")
@@ -55,11 +54,6 @@ def public_sitemap(request):
         request,
         sitemaps={
             "pages": StaticSitemap(),
-            "projects": DetailSitemap(public_projects, "workDetails"),
-            "articles": DetailSitemap(published_blogs, "getBlogDetails"),
             "team": DetailSitemap(lambda: Team.objects.order_by("pk"), "getTeamMember"),
-            "training": DetailSitemap(
-                lambda: Training.objects.order_by("pk"), "trainingDetail"
-            ),
         },
     )
