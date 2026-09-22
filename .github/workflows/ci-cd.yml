@@ -26,11 +26,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Generate a disposable CI signing key
+        run: |
+          python - <<'PYTHON'
+          import os
+          import secrets
+          from pathlib import Path
+
+          key = secrets.token_urlsafe(64)
+          print(f"::add-mask::{key}")
+          with Path(os.environ["GITHUB_ENV"]).open("a") as environment:
+              environment.write(f"SECRET_KEY={key}\n")
+          PYTHON
+
       - name: Apply migrations in CI sqlite database
         env:
           DJANGO_ENV: development
           DEBUG: "True"
-          SECRET_KEY: ci-secret-key
           DJANGO_DB: sqlite
           USE_CLOUDINARY_MEDIA: "False"
         run: python manage.py migrate --noinput
@@ -39,7 +51,6 @@ jobs:
         env:
           DJANGO_ENV: development
           DEBUG: "True"
-          SECRET_KEY: ci-secret-key
           DJANGO_DB: sqlite
           USE_CLOUDINARY_MEDIA: "False"
         run: python manage.py check
@@ -48,7 +59,6 @@ jobs:
         env:
           DJANGO_ENV: production
           DEBUG: "False"
-          SECRET_KEY: ci-secret-key
           DJANGO_DB: sqlite
           ALLOWED_HOSTS: nexcode.africa,www.nexcode.africa
           CSRF_TRUSTED_ORIGINS: https://nexcode.africa,https://www.nexcode.africa
@@ -59,7 +69,6 @@ jobs:
         env:
           DJANGO_ENV: production
           DEBUG: "False"
-          SECRET_KEY: ci-secret-key
           DJANGO_DB: sqlite
           ALLOWED_HOSTS: nexcode.africa,www.nexcode.africa
           CSRF_TRUSTED_ORIGINS: https://nexcode.africa,https://www.nexcode.africa
