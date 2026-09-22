@@ -11,6 +11,35 @@ from home.upload_paths import (
 )
 
 
+# Historical migrations still import these paths from home.models.
+def _legacy_image_path(folder, label):
+    name = slugify(label or "") or "item"
+    return f"{folder}/{name}/{uuid4().hex}.jpg"
+
+
+def logo_image_path(instance, filename):
+    return f"settings/branding/{uuid4().hex}.png"
+
+
+def client_image_path(instance, filename):
+    return _legacy_image_path("clients/profiles", instance.name)
+
+
+def portfolio_image_path(instance, filename):
+    name = getattr(instance, "name", None)
+    if not name:
+        name = getattr(getattr(instance, "portfolio", None), "name", None)
+    return _legacy_image_path("portfolios/images", name)
+
+
+def blog_image_path(instance, filename):
+    return _legacy_image_path("blogs/featured", instance.title)
+
+
+def training_image_path(instance, filename):
+    return _legacy_image_path("trainings/images", instance.title)
+
+
 class Team(models.Model):
     name = models.CharField(
         max_length=255,
