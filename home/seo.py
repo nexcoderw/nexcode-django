@@ -11,8 +11,6 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 
-from home.models import Setting
-
 PAGES = {
     "home": (
         "Software Development in Kigali, Rwanda",
@@ -32,7 +30,7 @@ PAGES = {
     ),
     "contact": (
         "Contact NEXCODE in Kigali",
-        "Discuss a software project, an existing system or technical support with NEXCODE. Send your requirements to our team at Norrsken House Kigali.",
+        "Discuss a software project, an existing system or technical support with NEXCODE. Find our email and phone contact details in Kigali.",
     ),
 }
 
@@ -97,7 +95,6 @@ def render_page(
     graph = [organization]
     context.update(
         {
-            "settings": Setting.objects.first(),
             "seo": {
                 "title": page_title,
                 "description": page_description,
