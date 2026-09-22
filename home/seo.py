@@ -11,7 +11,6 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 
-from home.content import SERVICES
 from home.models import Setting
 
 PAGES = {
@@ -52,8 +51,6 @@ PAGES = {
         "Worked with NEXCODE? Share feedback about your project and tell us what went well or what we could improve.",
     ),
 }
-for route, service in SERVICES.items():
-    PAGES[route] = (service["meta_title"], service["description"])
 
 
 def plain_text(value, limit=160):
