@@ -23,6 +23,7 @@ Fast responses, lightweight pages, and responsive interactions are acceptance cr
 ## Browser and assets
 
 - Serve appropriately sized, compressed images with responsive variants where useful. Reserve image dimensions to prevent layout shifts.
+- Process every uploaded raster image before storage. Use the shared `home.image_processing` policy to resize oversized uploads, encode them as WebP at quality 82, avoid enlarging smaller sources, and preserve transparency for cutouts. New image fields must use `ProcessedImageField`; any exception requires a documented product or compatibility reason and focused storage tests.
 - Lazy-load below-the-fold images. Keep the main visible image discoverable and do not lazy-load the LCP image.
 - Load only the scripts, styles, plugins, and font weights required by the page. Avoid introducing duplicate libraries.
 - Defer non-critical scripts while preserving dependency order and existing initialization behavior. Verify changes against the project's jQuery and GSAP setup.
