@@ -9,7 +9,6 @@ from django.db.models.signals import (
 from django.dispatch import receiver
 
 from home.models import (
-    PortfolioDocument,
     PortfolioImage,
     Team,
 )
@@ -185,9 +184,6 @@ PORTFOLIO_FILE_FIELDS = {
     PortfolioImage: (
         "image",
     ),
-    PortfolioDocument: (
-        "file",
-    ),
 }
 
 
@@ -321,7 +317,6 @@ def delete_portfolio_files(
 
 for model in (
     PortfolioImage,
-    PortfolioDocument,
 ):
     pre_save.connect(
         capture_replaced_portfolio_files,
