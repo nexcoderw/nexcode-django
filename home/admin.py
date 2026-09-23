@@ -156,8 +156,7 @@ class PortfolioDocumentInline(
 
     fields = (
         "title",
-        "document_type",
-        "file",
+        "url",
     )
 
 
