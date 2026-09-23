@@ -7,10 +7,9 @@ if [ -f /app/.env ]; then
 fi
 
 PORT="${PORT:-8000}"
-export DJANGO_DB="${DJANGO_DB:-postgres}"
 
 echo "===== Starting NexCode Django ====="
-echo "Database mode: $DJANGO_DB"
+echo "Database: PostgreSQL"
 
 echo "Running migrations..."
 python manage.py migrate --noinput
