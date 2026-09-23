@@ -11,7 +11,9 @@ class NexcodeAdminPermissionTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-        self.group = Group.objects.create(
+        # The group is created by a migration, so it already exists in
+        # the test database.
+        self.group, _ = Group.objects.get_or_create(
             name=NEXCODE_ADMIN_GROUP_NAME,
         )
 
