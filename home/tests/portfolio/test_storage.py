@@ -12,7 +12,6 @@ from PIL import Image
 
 from home.models import (
     Portfolio,
-    PortfolioDocument,
     PortfolioImage,
 )
 
@@ -20,6 +19,12 @@ from home.models import (
 class PortfolioStorageTests(
     TestCase
 ):
+    """Storage behaviour for portfolio gallery images.
+
+    Portfolio documents are stored as links rather than uploads, so the
+    only portfolio files on disk are gallery images.
+    """
+
     def setUp(self):
         self.media_directory = (
             tempfile.TemporaryDirectory()
@@ -41,25 +46,11 @@ class PortfolioStorageTests(
             .get_field("image")
         )
 
-        self.document_field = (
-            PortfolioDocument
-            ._meta
-            .get_field("file")
-        )
-
         self.original_image_storage = (
             self.image_field.storage
         )
 
-        self.original_document_storage = (
-            self.document_field.storage
-        )
-
         self.image_field.storage = (
-            self.storage
-        )
-
-        self.document_field.storage = (
             self.storage
         )
 
@@ -80,10 +71,6 @@ class PortfolioStorageTests(
     def tearDown(self):
         self.image_field.storage = (
             self.original_image_storage
-        )
-
-        self.document_field.storage = (
-            self.original_document_storage
         )
 
         self.media_directory.cleanup()
@@ -115,43 +102,6 @@ class PortfolioStorageTests(
         self.assertTrue(
             image.image.name.endswith(
                 ".jpg"
-            )
-        )
-
-    def test_document_uses_structured_directory(
-        self,
-    ):
-        document = (
-            PortfolioDocument.objects.create(
-                portfolio=(
-                    self.portfolio
-                ),
-                title="Contract",
-                document_type=(
-                    PortfolioDocument
-                    .DocumentType
-                    .CONTRACT
-                ),
-                file=(
-                    document_upload(
-                        "contract.pdf"
-                    )
-                ),
-            )
-        )
-
-        self.assertTrue(
-            document.file.name.startswith(
-                "portfolios/"
-                "storage-test/"
-                "documents/"
-                "contract/"
-            )
-        )
-
-        self.assertTrue(
-            document.file.name.endswith(
-                ".pdf"
             )
         )
 
@@ -218,31 +168,8 @@ class PortfolioStorageTests(
             )
         )
 
-        document = (
-            PortfolioDocument.objects.create(
-                portfolio=(
-                    self.portfolio
-                ),
-                title="Analysis",
-                document_type=(
-                    PortfolioDocument
-                    .DocumentType
-                    .SYSTEM_ANALYSIS
-                ),
-                file=(
-                    document_upload(
-                        "analysis.pdf"
-                    )
-                ),
-            )
-        )
-
         image_name = (
             image.image.name
-        )
-
-        document_name = (
-            document.file.name
         )
 
         with self.captureOnCommitCallbacks(
@@ -253,12 +180,6 @@ class PortfolioStorageTests(
         self.assertFalse(
             self.storage.exists(
                 image_name
-            )
-        )
-
-        self.assertFalse(
-            self.storage.exists(
-                document_name
             )
         )
 
@@ -281,14 +202,4 @@ def image_upload(
         filename,
         buffer.getvalue(),
         content_type="image/png",
-    )
-
-
-def document_upload(
-    filename,
-):
-    return SimpleUploadedFile(
-        filename,
-        b"%PDF-1.4 test document",
-        content_type="application/pdf",
     )
