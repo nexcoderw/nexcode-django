@@ -231,6 +231,10 @@ DATABASES = {
     }
 }
 
+# The test database is created and dropped over Neon's direct endpoint,
+# because the transaction pooler holds sessions open and blocks the drop.
+TEST_RUNNER = "nexcode.test_runner.DirectConnectionTestRunner"
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
