@@ -12,6 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: nexcode_ci
+          POSTGRES_USER: nexcode
+          POSTGRES_PASSWORD: nexcode
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nexcode -d nexcode_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://nexcode:nexcode@127.0.0.1:5432/nexcode_ci?sslmode=disable
+      DATABASE_CONN_MAX_AGE: "0"
 
     steps:
       - uses: actions/checkout@v4
@@ -39,11 +56,10 @@ jobs:
               environment.write(f"SECRET_KEY={key}\n")
           PYTHON
 
-      - name: Apply migrations in CI sqlite database
+      - name: Apply migrations in CI PostgreSQL database
         env:
           DJANGO_ENV: development
           DEBUG: "True"
-          DJANGO_DB: sqlite
           USE_CLOUDINARY_MEDIA: "False"
         run: python manage.py migrate --noinput
 
@@ -51,7 +67,6 @@ jobs:
         env:
           DJANGO_ENV: development
           DEBUG: "True"
-          DJANGO_DB: sqlite
           USE_CLOUDINARY_MEDIA: "False"
         run: python manage.py check
 
@@ -59,7 +74,6 @@ jobs:
         env:
           DJANGO_ENV: production
           DEBUG: "False"
-          DJANGO_DB: sqlite
           ALLOWED_HOSTS: nexcode.africa,www.nexcode.africa
           CSRF_TRUSTED_ORIGINS: https://nexcode.africa,https://www.nexcode.africa
           USE_CLOUDINARY_MEDIA: "False"
@@ -69,7 +83,6 @@ jobs:
         env:
           DJANGO_ENV: production
           DEBUG: "False"
-          DJANGO_DB: sqlite
           ALLOWED_HOSTS: nexcode.africa,www.nexcode.africa
           CSRF_TRUSTED_ORIGINS: https://nexcode.africa,https://www.nexcode.africa
           USE_CLOUDINARY_MEDIA: "False"
