@@ -13,7 +13,6 @@ NEXCODE is a Django application with server-rendered templates, plain CSS and Ja
 | `home/views.py` | Request handling, response selection, and view context. |
 | `home/forms.py` | Form definitions and input validation. |
 | `home/urls.py` | Application routes and named URLs. |
-| `home/admin.py` | Admin registration and configuration. |
 | `home/migrations/` | Versioned schema and data migrations. |
 | `home/tests.py` | Current application tests. Split into `home/tests/` only when needed; remove the conflicting module when converting. |
 | `templates/layouts/` | Shared page shells. |
