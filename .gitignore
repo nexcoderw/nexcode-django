@@ -10,3 +10,5 @@ staticfiles/
 .env.*
 !.env.example.local
 !.env.example.production
+
+media/
