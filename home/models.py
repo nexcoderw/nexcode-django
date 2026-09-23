@@ -1,14 +1,26 @@
 from uuid import uuid4
-
+from django.core.exceptions import (
+    ValidationError,
+)
 from django.db import models
+from django.db.models import (
+    F,
+    Q,
+)
+from django.utils import timezone
 from django.utils.text import slugify
-from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFill
-
 from home.upload_paths import (
+    portfolio_document_path,
+    portfolio_gallery_image_path,
     team_image_path,
     team_png_image_path,
 )
+from home.storages import (
+    raw_media_storage,
+)
+
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
 # Historical migrations still import these paths from home.models.
@@ -38,7 +50,6 @@ def blog_image_path(instance, filename):
 
 def training_image_path(instance, filename):
     return _legacy_image_path("trainings/images", instance.title)
-
 
 class Team(models.Model):
     name = models.CharField(
@@ -170,3 +181,470 @@ class Team(models.Model):
         verbose_name_plural = (
             "Team Members"
         )
+
+class Portfolio(models.Model):
+    class Category(
+        models.TextChoices
+    ):
+        WEB_APPLICATION = (
+            "web_application",
+            "Web Application",
+        )
+
+        MOBILE_APPLICATION = (
+            "mobile_application",
+            "Mobile Application",
+        )
+
+        UI_UX = (
+            "ui_ux",
+            "UI/UX",
+        )
+
+        BRANDING = (
+            "branding",
+            "Branding",
+        )
+
+    class ProjectType(
+        models.TextChoices
+    ):
+        CLIENT_PROJECT = (
+            "client_project",
+            "Client Project",
+        )
+
+        STUDENT_PROJECT = (
+            "student_project",
+            "Student Project",
+        )
+
+        LEARNING_PROJECT = (
+            "learning_project",
+            "Learning Project",
+        )
+
+    class Status(
+        models.TextChoices
+    ):
+        DRAFT = (
+            "draft",
+            "Draft",
+        )
+
+        PUBLISHED = (
+            "published",
+            "Published",
+        )
+
+        ARCHIVED = (
+            "archived",
+            "Archived",
+        )
+
+    name = models.CharField(
+        max_length=255,
+    )
+
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        blank=True,
+    )
+
+    summary = models.CharField(
+        max_length=300,
+        blank=True,
+    )
+
+    description = models.TextField(
+        blank=True,
+    )
+
+    category = models.CharField(
+        max_length=50,
+        choices=Category.choices,
+    )
+
+    project_type = models.CharField(
+        max_length=50,
+        choices=ProjectType.choices,
+    )
+
+    live_url = models.URLField(
+        max_length=500,
+        blank=True,
+    )
+
+    figma_url = models.URLField(
+        max_length=500,
+        blank=True,
+    )
+
+    team_members = (
+        models.ManyToManyField(
+            Team,
+            related_name="portfolios",
+            blank=True,
+        )
+    )
+
+    project_initiation_date = (
+        models.DateField(
+            null=True,
+            blank=True,
+        )
+    )
+
+    deadline_date = (
+        models.DateField(
+            null=True,
+            blank=True,
+        )
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.DRAFT,
+        db_index=True,
+    )
+
+    published_at = (
+        models.DateTimeField(
+            null=True,
+            blank=True,
+        )
+    )
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    updated_at = (
+        models.DateTimeField(
+            auto_now=True,
+        )
+    )
+
+    def _generate_unique_slug(
+        self,
+    ):
+        base_slug = (
+            slugify(
+                self.name or ""
+            )
+            or "portfolio"
+        )
+
+        slug = base_slug
+
+        while (
+            Portfolio.objects
+            .filter(
+                slug=slug,
+            )
+            .exclude(
+                pk=self.pk,
+            )
+            .exists()
+        ):
+            slug = (
+                f"{base_slug}-"
+                f"{uuid4().hex[:8]}"
+            )
+
+        return slug
+
+    def clean(self):
+        super().clean()
+
+        if (
+            self.project_initiation_date
+            and self.deadline_date
+            and self.deadline_date
+            < self.project_initiation_date
+        ):
+            raise ValidationError(
+                {
+                    "deadline_date": (
+                        "Deadline cannot be "
+                        "before the project "
+                        "initiation date."
+                    ),
+                }
+            )
+
+    def save(
+        self,
+        *args,
+        **kwargs,
+    ):
+        if not self.slug:
+            self.slug = (
+                self._generate_unique_slug()
+            )
+
+        if (
+            self.status
+            == self.Status.PUBLISHED
+            and self.published_at
+            is None
+        ):
+            self.published_at = (
+                timezone.now()
+            )
+
+        if (
+            self.status
+            == self.Status.DRAFT
+        ):
+            self.published_at = None
+
+        super().save(
+            *args,
+            **kwargs,
+        )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = (
+            "-created_at",
+            "-pk",
+        )
+
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    Q(
+                        project_initiation_date__isnull=True
+                    )
+                    | Q(
+                        deadline_date__isnull=True
+                    )
+                    | Q(
+                        deadline_date__gte=F(
+                            "project_initiation_date"
+                        )
+                    )
+                ),
+                name=(
+                    "portfolio_deadline_"
+                    "on_or_after_start"
+                ),
+            ),
+        ]
+
+
+class PortfolioImage(
+    models.Model
+):
+    portfolio = models.ForeignKey(
+        Portfolio,
+        on_delete=models.CASCADE,
+        related_name="images",
+    )
+
+    image = ProcessedImageField(
+        upload_to=(
+            portfolio_gallery_image_path
+        ),
+        processors=[
+            ResizeToFill(
+                1920,
+                1350,
+            ),
+        ],
+        format="JPEG",
+        options={
+            "quality": 90,
+        },
+    )
+
+    alt_text = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    is_cover = models.BooleanField(
+        default=False,
+    )
+
+    position = (
+        models.PositiveIntegerField(
+            default=0,
+        )
+    )
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    updated_at = (
+        models.DateTimeField(
+            auto_now=True,
+        )
+    )
+
+    def __str__(self):
+        return (
+            f"Image for "
+            f"{self.portfolio.name}"
+        )
+
+    class Meta:
+        ordering = (
+            "position",
+            "pk",
+        )
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=(
+                    "portfolio",
+                ),
+                condition=Q(
+                    is_cover=True,
+                ),
+                name=(
+                    "unique_portfolio_"
+                    "cover_image"
+                ),
+            ),
+        ]
+
+
+class PortfolioDocument(
+    models.Model
+):
+    class DocumentType(
+        models.TextChoices
+    ):
+        CONTRACT = (
+            "contract",
+            "Contract",
+        )
+
+        SYSTEM_ANALYSIS = (
+            "system_analysis",
+            "System Analysis",
+        )
+
+        OTHER = (
+            "other",
+            "Other",
+        )
+
+    portfolio = models.ForeignKey(
+        Portfolio,
+        on_delete=models.CASCADE,
+        related_name="documents",
+    )
+
+    title = models.CharField(
+        max_length=255,
+    )
+
+    document_type = (
+        models.CharField(
+            max_length=50,
+            choices=(
+                DocumentType.choices
+            ),
+            default=(
+                DocumentType.OTHER
+            ),
+        )
+    )
+
+    file = models.FileField(
+        upload_to=(
+            portfolio_document_path
+        ),
+        storage=raw_media_storage,
+    )
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    updated_at = (
+        models.DateTimeField(
+            auto_now=True,
+        )
+    )
+
+    def __str__(self):
+        return (
+            f"{self.title} — "
+            f"{self.portfolio.name}"
+        )
+
+    class Meta:
+        ordering = (
+            "-created_at",
+            "-pk",
+        )
+
+
+class PortfolioRepository(
+    models.Model
+):
+    portfolio = models.ForeignKey(
+        Portfolio,
+        on_delete=models.CASCADE,
+        related_name="repositories",
+    )
+
+    label = models.CharField(
+        max_length=100,
+        default="Repository",
+    )
+
+    url = models.URLField(
+        max_length=500,
+    )
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    updated_at = (
+        models.DateTimeField(
+            auto_now=True,
+        )
+    )
+
+    def __str__(self):
+        return (
+            f"{self.label} — "
+            f"{self.portfolio.name}"
+        )
+
+    class Meta:
+        ordering = (
+            "pk",
+        )
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=(
+                    "portfolio",
+                    "url",
+                ),
+                name=(
+                    "unique_portfolio_"
+                    "repository_url"
+                ),
+            ),
+        ]
