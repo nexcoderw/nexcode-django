@@ -9,6 +9,7 @@ from PIL import Image
 def image_upload(
     filename="member.png",
     image_format="PNG",
+    size=(40, 40),
 ):
     buffer = BytesIO()
 
@@ -20,7 +21,7 @@ def image_upload(
 
     Image.new(
         mode,
-        (40, 40),
+        size,
         (
             (255, 0, 0, 255)
             if mode == "RGBA"
