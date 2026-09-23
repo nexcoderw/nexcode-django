@@ -12,3 +12,9 @@ staticfiles/
 !.env.example.production
 
 media/
+# macOS Finder metadata
+.DS_Store
+
+# SQLite databases
+*.sqlite
+*.sqlite3
