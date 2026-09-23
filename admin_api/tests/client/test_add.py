@@ -19,6 +19,7 @@ class ClientAddTests(
             {
                 "name": "Example Client",
             },
+            **self.csrf_headers(),
         )
 
         self.assertEqual(
