@@ -14,10 +14,18 @@ urlpatterns = [
             "admin_api.urls.auth"
         ),
     ),
+
     path(
         "team/",
         include(
             "admin_api.urls.team"
+        ),
+    ),
+
+    path(
+        "portfolio/",
+        include(
+            "admin_api.urls.portfolio"
         ),
     ),
 ]
