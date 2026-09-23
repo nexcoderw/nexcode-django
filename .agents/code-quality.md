@@ -30,7 +30,7 @@
 ## Verification
 
 - For behavioral changes, add or update focused tests covering the changed contract and meaningful failure cases. Django checks alone are not behavior tests.
-- Use the project's Python environment. In a development environment with `DJANGO_DB=sqlite` and `USE_CLOUDINARY_MEDIA=False`, run `python manage.py check` and the relevant `python manage.py test home` tests. Set `DJANGO_ENV=development` explicitly if the shell otherwise uses production settings.
+- Use the project's Python environment. In development, set `DATABASE_URL` to the dedicated Neon development branch and `USE_CLOUDINARY_MEDIA=False` before running `python manage.py check` and the relevant `python manage.py test home` tests. Set `DJANGO_ENV=development` explicitly if the shell otherwise uses production settings. Never run tests against the production Neon branch.
 - For model changes, run `python manage.py makemigrations --check --dry-run` after generating migrations, and verify migrations against a disposable database. Never migrate a shared or production database as a routine check.
 - For production settings or deployment changes, run `python manage.py check --deploy` under representative production settings with non-secret test values. Validate affected shell scripts or container configuration as appropriate.
 - For template, CSS, or JavaScript changes, inspect the affected pages at desktop and mobile sizes; check interactions, keyboard access, and browser errors.
