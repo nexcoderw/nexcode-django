@@ -23,7 +23,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
-# Using a hosted Postgres (e.g., Neon) via DATABASE_URL from .env
+# Uses the Neon PostgreSQL pooled DATABASE_URL from the private .env file.
 
 volumes:
   static_volume:
