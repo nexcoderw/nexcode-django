@@ -1,49 +1,49 @@
-from django.http import (
-    HttpResponse,
+from django.urls import path
+
+from admin_api.views.client.add import (
+    add_client_view,
+)
+from admin_api.views.client.delete import (
+    delete_client_view,
+)
+from admin_api.views.client.detail import (
+    client_detail_view,
+)
+from admin_api.views.client.list import (
+    list_client_view,
+)
+from admin_api.views.client.update import (
+    update_client_view,
 )
 
-from admin_api.permissions import (
-    nexcode_admin_required,
-)
-from admin_api.services.client import (
-    delete_client,
-)
-from admin_api.views.client.responses import (
-    client_not_found,
-    method_not_allowed,
-)
-from home.models import Client
+
+app_name = "client"
 
 
-@nexcode_admin_required
-def delete_client_view(
-    request,
-    client_id,
-):
-    if request.method != "DELETE":
-        return method_not_allowed(
-            ["DELETE"]
-        )
-
-    client = (
-        Client.objects.filter(
-            pk=client_id
-        ).first()
-    )
-
-    if client is None:
-        return client_not_found()
-
-    delete_client(
-        client
-    )
-
-    response = HttpResponse(
-        status=204
-    )
-
-    response[
-        "Cache-Control"
-    ] = "no-store"
-
-    return response
+urlpatterns = [
+    path(
+        "list/",
+        list_client_view,
+        name="list",
+    ),
+    path(
+        "add/",
+        add_client_view,
+        name="add",
+    ),
+    path(
+        "detail/<int:client_id>/",
+        client_detail_view,
+        name="detail",
+    ),
+    path(
+        "update/<int:client_id>/",
+        update_client_view,
+        name="update",
+    ),
+    path(
+        "delete/<int:client_id>/",
+        delete_client_view,
+        name="delete",
+    ),
+]
