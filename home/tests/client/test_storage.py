@@ -62,7 +62,8 @@ class ClientStorageTests(
                 name="Storage Client",
                 profile_image=(
                     image_upload(
-                        "profile.png"
+                        "profile.png",
+                        size=(1600, 1600),
                     )
                 ),
             )
@@ -79,9 +80,25 @@ class ClientStorageTests(
         self.assertTrue(
             client.profile_image.name
             .endswith(
-                ".jpg"
+                ".webp"
             )
         )
+
+        with self.storage.open(
+            client.profile_image.name,
+            "rb",
+        ) as stored_image:
+            with Image.open(
+                stored_image
+            ) as processed_image:
+                self.assertEqual(
+                    processed_image.format,
+                    "WEBP",
+                )
+                self.assertEqual(
+                    processed_image.size,
+                    (800, 800),
+                )
 
     def test_replacing_profile_image_deletes_old_file_after_commit(
         self,
@@ -162,12 +179,13 @@ class ClientStorageTests(
 
 def image_upload(
     filename,
+    size=(100, 100),
 ):
     buffer = BytesIO()
 
     Image.new(
         "RGB",
-        (100, 100),
+        size,
         (255, 255, 255),
     ).save(
         buffer,
