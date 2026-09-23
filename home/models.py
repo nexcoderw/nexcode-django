@@ -523,24 +523,6 @@ class PortfolioImage(
 class PortfolioDocument(
     models.Model
 ):
-    class DocumentType(
-        models.TextChoices
-    ):
-        CONTRACT = (
-            "contract",
-            "Contract",
-        )
-
-        SYSTEM_ANALYSIS = (
-            "system_analysis",
-            "System Analysis",
-        )
-
-        OTHER = (
-            "other",
-            "Other",
-        )
-
     portfolio = models.ForeignKey(
         Portfolio,
         on_delete=models.CASCADE,
@@ -551,35 +533,16 @@ class PortfolioDocument(
         max_length=255,
     )
 
-    document_type = (
-        models.CharField(
-            max_length=50,
-            choices=(
-                DocumentType.choices
-            ),
-            default=(
-                DocumentType.OTHER
-            ),
-        )
+    url = models.URLField(
+        max_length=1000,
     )
 
-    file = models.FileField(
-        upload_to=(
-            portfolio_document_path
-        ),
-        storage=raw_media_storage,
+    created_at = models.DateTimeField(
+        auto_now_add=True,
     )
 
-    created_at = (
-        models.DateTimeField(
-            auto_now_add=True,
-        )
-    )
-
-    updated_at = (
-        models.DateTimeField(
-            auto_now=True,
-        )
+    updated_at = models.DateTimeField(
+        auto_now=True,
     )
 
     def __str__(self):
@@ -590,9 +553,21 @@ class PortfolioDocument(
 
     class Meta:
         ordering = (
-            "-created_at",
-            "-pk",
+            "pk",
         )
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=(
+                    "portfolio",
+                    "url",
+                ),
+                name=(
+                    "unique_portfolio_"
+                    "document_url"
+                ),
+            ),
+        ]
 
 
 class PortfolioRepository(
