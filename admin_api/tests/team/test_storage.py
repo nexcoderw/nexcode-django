@@ -29,6 +29,7 @@ class TeamStorageTests(
             image_png=image_upload(
                 "cutout.png",
                 size=(1600, 2000),
+                transparent=True,
             ),
         )
 
