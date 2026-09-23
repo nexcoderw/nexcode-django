@@ -1,6 +1,6 @@
 # Project structure
 
-NEXCODE is a Django application with server-rendered templates, plain CSS and JavaScript, PostgreSQL in deployment, and SQLite for local or CI use. Preserve this architecture unless the task calls for a change.
+NEXCODE is a Django application with server-rendered templates, plain CSS and JavaScript, Neon PostgreSQL for development and production, and PostgreSQL for CI. Preserve this architecture unless the task calls for a change.
 
 ## File ownership
 
@@ -37,5 +37,5 @@ NEXCODE is a Django application with server-rendered templates, plain CSS and Ja
 - Use descriptive `snake_case` names for new Python modules and functions, and `PascalCase` for classes. Preserve existing public names unless updating their references is in scope.
 - Add forward migrations for model changes. Never rewrite migrations already applied in shared environments.
 - Edit first-party source assets, not minified vendor libraries or collected copies. Vendor upgrades must be deliberate and versioned.
-- Keep `venv/`, local databases such as `ci.sqlite3`, caches, and secrets out of new commits. Do not reorganize existing tracked artifacts without a task requiring it.
+- Keep `venv/`, local database artifacts, caches, and secrets out of new commits. Do not reorganize existing tracked artifacts without a task requiring it.
 - Update this map when introducing or moving a major directory.
