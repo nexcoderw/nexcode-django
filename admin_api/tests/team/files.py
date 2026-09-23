@@ -10,7 +10,15 @@ def image_upload(
     filename="member.png",
     image_format="PNG",
     size=(40, 40),
+    transparent=False,
 ):
+    """Build an in-memory image upload.
+
+    With ``transparent`` set, the PNG is a cutout: a clear canvas with an
+    opaque subject in the middle. A solid fill is not enough to test
+    transparency, because WebP encoders drop an alpha channel whose
+    pixels are all fully opaque.
+    """
     buffer = BytesIO()
 
     mode = (
@@ -19,15 +27,36 @@ def image_upload(
         else "RGB"
     )
 
-    Image.new(
-        mode,
-        size,
-        (
-            (255, 0, 0, 255)
-            if mode == "RGBA"
-            else (255, 0, 0)
-        ),
-    ).save(
+    if transparent and mode == "RGBA":
+        image = Image.new(
+            mode,
+            size,
+            (0, 0, 0, 0),
+        )
+
+        width, height = size
+
+        image.paste(
+            (255, 0, 0, 255),
+            (
+                width // 4,
+                height // 4,
+                width * 3 // 4,
+                height * 3 // 4,
+            ),
+        )
+    else:
+        image = Image.new(
+            mode,
+            size,
+            (
+                (255, 0, 0, 255)
+                if mode == "RGBA"
+                else (255, 0, 0)
+            ),
+        )
+
+    image.save(
         buffer,
         format=image_format,
     )
