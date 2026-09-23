@@ -85,7 +85,8 @@ class PortfolioStorageTests(
                 ),
                 image=(
                     image_upload(
-                        "profile.png"
+                        "profile.png",
+                        size=(1600, 1200),
                     )
                 ),
             )
@@ -101,9 +102,25 @@ class PortfolioStorageTests(
 
         self.assertTrue(
             image.image.name.endswith(
-                ".jpg"
+                ".webp"
             )
         )
+
+        with self.storage.open(
+            image.image.name,
+            "rb",
+        ) as stored_image:
+            with Image.open(
+                stored_image
+            ) as processed_image:
+                self.assertEqual(
+                    processed_image.format,
+                    "WEBP",
+                )
+                self.assertEqual(
+                    processed_image.size,
+                    (1280, 900),
+                )
 
     def test_replacing_image_deletes_old_file_after_commit(
         self,
@@ -186,12 +203,13 @@ class PortfolioStorageTests(
 
 def image_upload(
     filename,
+    size=(100, 100),
 ):
     buffer = BytesIO()
 
     Image.new(
         "RGB",
-        (100, 100),
+        size,
         (255, 255, 255),
     ).save(
         buffer,
