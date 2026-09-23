@@ -60,6 +60,8 @@ sudo chmod 600 /var/www/nexcode/shared/api/.env.production
 
 Use `.env.example.production` as the production variable-name template and `.env.example.local` for local development. Both contain intentionally blank assignments. Fill the production values in the server-managed `.env.production` before startup. Django requires a private `SECRET_KEY` in every environment and rejects production debug mode. The deployment script links `.env.production` to `.env`; never commit either private file.
 
+Use separate Neon branches for development and production. Copy each branch's pooled connection string from the Neon dashboard into that environment's private `DATABASE_URL`; pooled endpoint hostnames contain `-pooler`. Keep `sslmode=require` and any `channel_binding` option supplied by Neon in the URL.
+
 Production configuration example (placeholders only):
 
 ```dotenv
@@ -68,8 +70,8 @@ DEBUG=False
 SITE_URL=https://nexcode.africa
 SEARCH_ENGINE_INDEXING=True
 SECRET_KEY=replace-with-a-long-random-secret
-DJANGO_DB=postgres
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require
+DATABASE_URL=postgresql://USER:PASSWORD@ENDPOINT-pooler.REGION.aws.neon.tech/DBNAME?sslmode=require
+DATABASE_CONN_MAX_AGE=30
 ALLOWED_HOSTS=nexcode.africa,www.nexcode.africa
 CSRF_TRUSTED_ORIGINS=https://nexcode.africa,https://www.nexcode.africa
 CLOUDINARY_CLOUD_NAME=replace-me
