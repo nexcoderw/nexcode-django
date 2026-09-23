@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl, unquote, urlparse
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import dotenv_values, load_dotenv
@@ -176,47 +176,60 @@ WSGI_APPLICATION = 'nexcode.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# -----------------------------------------------------------------------------
-# Database Configuration (PostgreSQL by default, SQLite in CI)
-# -----------------------------------------------------------------------------
-
-DJANGO_DB = os.getenv("DJANGO_DB", "postgres").lower()
 database_url = os.getenv("DATABASE_URL", "").strip()
 
-if DJANGO_DB == "sqlite" or (not database_url and DEBUG):
-    # Used only for CI smoke tests or emergency fallback
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "ci.sqlite3"),
-        }
+if not database_url:
+    raise ImproperlyConfigured(
+        "DATABASE_URL must be set to a PostgreSQL connection string."
+    )
+
+postgres_url = urlparse(database_url)
+database_name = unquote(postgres_url.path.lstrip("/"))
+
+if (
+    postgres_url.scheme not in {"postgres", "postgresql"}
+    or not postgres_url.hostname
+    or not postgres_url.username
+    or not postgres_url.password
+    or not database_name
+):
+    raise ImproperlyConfigured(
+        "DATABASE_URL must be a valid PostgreSQL connection string."
+    )
+
+try:
+    database_port = postgres_url.port or 5432
+    database_conn_max_age = int(
+        os.getenv("DATABASE_CONN_MAX_AGE") or "30"
+    )
+except ValueError as error:
+    raise ImproperlyConfigured(
+        "DATABASE_URL port and DATABASE_CONN_MAX_AGE must be integers."
+    ) from error
+
+if database_conn_max_age < 0:
+    raise ImproperlyConfigured(
+        "DATABASE_CONN_MAX_AGE must be zero or greater."
+    )
+
+database_options = dict(parse_qsl(postgres_url.query))
+database_options.setdefault("sslmode", "require")
+using_transaction_pooler = "-pooler." in postgres_url.hostname
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": database_name,
+        "USER": unquote(postgres_url.username),
+        "PASSWORD": unquote(postgres_url.password),
+        "HOST": postgres_url.hostname,
+        "PORT": database_port,
+        "OPTIONS": database_options,
+        "CONN_MAX_AGE": database_conn_max_age,
+        "CONN_HEALTH_CHECKS": True,
+        "DISABLE_SERVER_SIDE_CURSORS": using_transaction_pooler,
     }
-else:
-    if not database_url:
-        raise ImproperlyConfigured("DATABASE_URL must be set for PostgreSQL deployments.")
-
-    tmpPostgres = urlparse(database_url)
-    if not all([tmpPostgres.scheme, tmpPostgres.hostname, tmpPostgres.path]):
-        raise ImproperlyConfigured("DATABASE_URL is not a valid PostgreSQL connection string.")
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": tmpPostgres.path.replace("/", ""),
-            "USER": tmpPostgres.username,
-            "PASSWORD": tmpPostgres.password,
-            "HOST": tmpPostgres.hostname,
-            "PORT": tmpPostgres.port or 5432,
-            "OPTIONS": dict(parse_qsl(tmpPostgres.query)),
-        }
-    }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
