@@ -72,8 +72,13 @@ class NexcodeAdminSessionTests(AuthApiTestCase):
             self.admin_user
         )
 
+        # The CSRF token is sent so the request reaches the view and the
+        # method guard is what the assertion actually exercises.
         response = self.client.post(
             self.me_url,
+            HTTP_X_CSRFTOKEN=(
+                self.get_csrf_token()
+            ),
         )
 
         self.assertEqual(
