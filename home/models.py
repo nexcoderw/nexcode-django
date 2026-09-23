@@ -14,6 +14,7 @@ from home.image_processing import (
     portfolio_image_processors,
     portrait_processors,
     square_profile_processors,
+    transparent_cutout_options,
     transparent_cutout_processors,
     web_image_options,
 )
@@ -93,7 +94,7 @@ class Team(models.Model):
             transparent_cutout_processors()
         ),
         format=WEB_IMAGE_FORMAT,
-        options=web_image_options(),
+        options=transparent_cutout_options(),
         null=True,
         blank=True,
     )
