@@ -9,6 +9,17 @@ from django.db.models import (
 )
 from django.utils import timezone
 from django.utils.text import slugify
+from home.image_processing import (
+    WEB_IMAGE_FORMAT,
+    portfolio_image_processors,
+    portrait_processors,
+    square_profile_processors,
+    transparent_cutout_processors,
+    web_image_options,
+)
+from home.storages import (
+    raw_media_storage,
+)
 from home.upload_paths import (
     client_profile_image_path,
     portfolio_document_path,
@@ -16,12 +27,8 @@ from home.upload_paths import (
     team_image_path,
     team_png_image_path,
 )
-from home.storages import (
-    raw_media_storage,
-)
 
 from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFill
 
 
 # Historical migrations still import these paths from home.models.
@@ -73,22 +80,20 @@ class Team(models.Model):
 
     image = ProcessedImageField(
         upload_to=team_image_path,
-        processors=[
-            ResizeToFill(
-                1333,
-                1694,
-            ),
-        ],
-        format="JPEG",
-        options={
-            "quality": 90,
-        },
+        processors=portrait_processors(),
+        format=WEB_IMAGE_FORMAT,
+        options=web_image_options(),
         null=True,
         blank=True,
     )
 
-    image_png = models.ImageField(
+    image_png = ProcessedImageField(
         upload_to=team_png_image_path,
+        processors=(
+            transparent_cutout_processors()
+        ),
+        format=WEB_IMAGE_FORMAT,
+        options=web_image_options(),
         null=True,
         blank=True,
     )
@@ -454,16 +459,11 @@ class PortfolioImage(
         upload_to=(
             portfolio_gallery_image_path
         ),
-        processors=[
-            ResizeToFill(
-                1920,
-                1350,
-            ),
-        ],
-        format="JPEG",
-        options={
-            "quality": 90,
-        },
+        processors=(
+            portfolio_image_processors()
+        ),
+        format=WEB_IMAGE_FORMAT,
+        options=web_image_options(),
     )
 
     alt_text = models.CharField(
@@ -685,16 +685,11 @@ class Client(
             upload_to=(
                 client_profile_image_path
             ),
-            processors=[
-                ResizeToFill(
-                    1000,
-                    1000,
-                ),
-            ],
-            format="JPEG",
-            options={
-                "quality": 90,
-            },
+            processors=(
+                square_profile_processors()
+            ),
+            format=WEB_IMAGE_FORMAT,
+            options=web_image_options(),
             null=True,
             blank=True,
         )
