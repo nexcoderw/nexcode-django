@@ -92,6 +92,32 @@ def _team_slug(instance):
     )
 
 
+def client_profile_image_path(
+    instance,
+    filename,
+):
+    client = _client_slug(
+        instance
+    )
+
+    return (
+        "clients/profiles/"
+        f"{client}/"
+        f"{uuid4().hex}.jpg"
+    )
+
+def _client_slug(
+    instance,
+):
+    return (
+        instance.slug
+        or slugify(
+            instance.name or ""
+        )
+        or "client"
+    )
+
+
 def _portfolio_slug(
     portfolio,
 ):
