@@ -16,7 +16,7 @@ def team_image_path(
     return (
         "team/images/"
         f"{member}/"
-        f"{uuid4().hex}.jpg"
+        f"{uuid4().hex}.webp"
     )
 
 
@@ -31,7 +31,7 @@ def team_png_image_path(
     return (
         "team/cutouts/"
         f"{member}/"
-        f"{uuid4().hex}.png"
+        f"{uuid4().hex}.webp"
     )
 
 
@@ -47,7 +47,7 @@ def portfolio_gallery_image_path(
         "portfolios/"
         f"{portfolio}/"
         "images/"
-        f"{uuid4().hex}.jpg"
+        f"{uuid4().hex}.webp"
     )
 
 
@@ -103,7 +103,7 @@ def client_profile_image_path(
     return (
         "clients/profiles/"
         f"{client}/"
-        f"{uuid4().hex}.jpg"
+        f"{uuid4().hex}.webp"
     )
 
 def _client_slug(
