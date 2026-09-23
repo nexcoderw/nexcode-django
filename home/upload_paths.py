@@ -1,3 +1,5 @@
+import re
+from pathlib import Path
 from uuid import uuid4
 
 from django.utils.text import slugify
@@ -7,7 +9,7 @@ def team_image_path(
     instance,
     filename,
 ):
-    member = _member_slug(
+    member = _team_slug(
         instance
     )
 
@@ -22,7 +24,7 @@ def team_png_image_path(
     instance,
     filename,
 ):
-    member = _member_slug(
+    member = _team_slug(
         instance
     )
 
@@ -33,10 +35,88 @@ def team_png_image_path(
     )
 
 
-def _member_slug(instance):
+def portfolio_gallery_image_path(
+    instance,
+    filename,
+):
+    portfolio = _portfolio_slug(
+        instance.portfolio
+    )
+
+    return (
+        "portfolios/"
+        f"{portfolio}/"
+        "images/"
+        f"{uuid4().hex}.jpg"
+    )
+
+
+def portfolio_document_path(
+    instance,
+    filename,
+):
+    portfolio = _portfolio_slug(
+        instance.portfolio
+    )
+
+    document_type = (
+        slugify(
+            instance.document_type
+            or ""
+        )
+        or "other"
+    )
+
+    extension = (
+        _safe_extension(
+            filename
+        )
+    )
+
+    return (
+        "portfolios/"
+        f"{portfolio}/"
+        "documents/"
+        f"{document_type}/"
+        f"{uuid4().hex}"
+        f"{extension}"
+    )
+
+
+def _team_slug(instance):
     return (
         slugify(
             instance.name or ""
         )
         or "team-member"
     )
+
+
+def _portfolio_slug(
+    portfolio,
+):
+    return (
+        portfolio.slug
+        or slugify(
+            portfolio.name or ""
+        )
+        or "portfolio"
+    )
+
+
+def _safe_extension(
+    filename,
+):
+    extension = (
+        Path(filename)
+        .suffix
+        .lower()
+    )
+
+    if not re.fullmatch(
+        r"\.[a-z0-9]{1,10}",
+        extension,
+    ):
+        return ""
+
+    return extension
