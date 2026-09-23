@@ -28,4 +28,11 @@ urlpatterns = [
             "admin_api.urls.portfolio"
         ),
     ),
+
+    path(
+        "client/",
+        include(
+            "admin_api.urls.client"
+        ),
+    ),
 ]
