@@ -7,6 +7,7 @@ from django.utils.html import (
 from django.db.models import Count
 
 from home.models import (
+    Client,
     Portfolio,
     PortfolioDocument,
     PortfolioImage,
@@ -246,3 +247,43 @@ class PortfolioAdmin(
         return (
             obj._team_member_count
         )
+
+@admin.register(Client)
+class ClientAdmin(
+    admin.ModelAdmin
+):
+    list_display = (
+        "name",
+        "company_name",
+        "email",
+        "phone",
+        "status",
+        "created_at",
+        "updated_at",
+    )
+
+    search_fields = (
+        "name",
+        "company_name",
+        "email",
+        "phone",
+    )
+
+    list_filter = (
+        "status",
+        "created_at",
+        "updated_at",
+    )
+
+    ordering = (
+        "name",
+        "pk",
+    )
+
+    readonly_fields = (
+        "slug",
+        "created_at",
+        "updated_at",
+    )
+
+    list_per_page = 20
