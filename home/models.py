@@ -13,7 +13,6 @@ from home.image_processing import (
     WEB_IMAGE_FORMAT,
     portfolio_image_processors,
     portrait_processors,
-    square_profile_processors,
     transparent_cutout_options,
     transparent_cutout_processors,
     web_image_options,
@@ -22,7 +21,6 @@ from home.storages import (
     raw_media_storage,
 )
 from home.upload_paths import (
-    client_profile_image_path,
     portfolio_document_path,
     portfolio_gallery_image_path,
     team_image_path,
@@ -629,82 +627,23 @@ class PortfolioRepository(
 class Client(
     models.Model
 ):
-    class Status(
-        models.TextChoices
-    ):
-        ACTIVE = (
-            "active",
-            "Active",
-        )
+    """A client the admin keeps contact details for.
 
-        INACTIVE = (
-            "inactive",
-            "Inactive",
-        )
-
-        ARCHIVED = (
-            "archived",
-            "Archived",
-        )
+    Only identity and contact information is stored. The client is
+    managed from the admin portal and never shown on the public site.
+    """
 
     name = models.CharField(
         max_length=255,
-    )
-
-    slug = models.SlugField(
-        max_length=255,
-        unique=True,
-        blank=True,
-    )
-
-    company_name = models.CharField(
-        max_length=255,
-        blank=True,
     )
 
     email = models.EmailField(
         blank=True,
     )
 
-    phone = models.CharField(
+    phone_number = models.CharField(
         max_length=50,
         blank=True,
-    )
-
-    website = models.URLField(
-        max_length=500,
-        blank=True,
-    )
-
-    location = models.CharField(
-        max_length=255,
-        blank=True,
-    )
-
-    profile_image = (
-        ProcessedImageField(
-            upload_to=(
-                client_profile_image_path
-            ),
-            processors=(
-                square_profile_processors()
-            ),
-            format=WEB_IMAGE_FORMAT,
-            options=web_image_options(),
-            null=True,
-            blank=True,
-        )
-    )
-
-    notes = models.TextField(
-        blank=True,
-    )
-
-    status = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.ACTIVE,
-        db_index=True,
     )
 
     created_at = (
@@ -719,50 +658,6 @@ class Client(
         )
     )
 
-    def _generate_unique_slug(
-        self,
-    ):
-        base_slug = (
-            slugify(
-                self.name or ""
-            )
-            or "client"
-        )
-
-        slug = base_slug
-
-        while (
-            Client.objects
-            .filter(
-                slug=slug,
-            )
-            .exclude(
-                pk=self.pk,
-            )
-            .exists()
-        ):
-            slug = (
-                f"{base_slug}-"
-                f"{uuid4().hex[:8]}"
-            )
-
-        return slug
-
-    def save(
-        self,
-        *args,
-        **kwargs,
-    ):
-        if not self.slug:
-            self.slug = (
-                self._generate_unique_slug()
-            )
-
-        super().save(
-            *args,
-            **kwargs,
-        )
-
     def __str__(self):
         return self.name
 
@@ -771,18 +666,3 @@ class Client(
             "-created_at",
             "-pk",
         )
-
-        constraints = [
-            models.CheckConstraint(
-                condition=Q(
-                    status__in=(
-                        "active",
-                        "inactive",
-                        "archived",
-                    )
-                ),
-                name=(
-                    "client_valid_status"
-                ),
-            ),
-        ]
