@@ -37,6 +37,11 @@ def serialize_reminder_rule(
         "days":
             rule.days,
 
+        "remind_on":
+            rule.remind_on.isoformat()
+            if rule.remind_on
+            else None,
+
         "channel":
             rule.channel,
 
