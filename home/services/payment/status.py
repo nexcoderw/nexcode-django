@@ -129,6 +129,8 @@ def get_installment_status(
     *,
     on_date:
         date | None = None,
+    paid_amount:
+        Decimal | None = None,
 ) -> InstallmentFinancialStatus:
     today = (
         on_date
@@ -136,8 +138,12 @@ def get_installment_status(
     )
 
     paid = (
-        get_installment_paid_amount(
-            installment
+        paid_amount
+        if paid_amount is not None
+        else (
+            get_installment_paid_amount(
+                installment
+            )
         )
     )
 
