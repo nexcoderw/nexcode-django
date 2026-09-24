@@ -1,5 +1,17 @@
 """Page-specific service copy shared by service listings and detail pages."""
 
+# How to reach NEXCODE, shown on the contact page and in reply emails.
+CONTACT_DETAILS = {
+    "address": "1 KN 78 St, Kigali · Norrsken House Kigali",
+    "email": "nexcoderwa@gmail.com",
+    "second_email": "",
+    "phone_number": "+250 781 862 349",
+    "phone_href": "tel:+250781862349",
+    "twitter": "https://x.com/nexcodeafrica",
+    "linkedin": "https://www.linkedin.com/company/nexcode-rwanda/",
+    "instagram": "https://www.instagram.com/nexcode.africa/",
+}
+
 SERVICES = {
     "softwareDev": {
         "slug": "software-development",
