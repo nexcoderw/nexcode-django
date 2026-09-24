@@ -95,16 +95,17 @@ class PublicPageTests(TestCase):
             self.assertEqual(response["X-Robots-Tag"], "noindex, follow")
             self.assertEqual(self.client.get("/sitemap.xml").status_code, 404)
 
-    def test_contact_offers_direct_email_and_rejects_posts(self):
+    def test_contact_offers_direct_email_and_a_form(self):
         response = self.client.get("/contact/")
         self.assertContains(response, "mailto:nexcoderwa@gmail.com")
-        self.assertEqual(self.client.post("/contact/").status_code, 405)
+        self.assertContains(response, 'name="message"')
+        self.assertEqual(self.client.put("/contact/").status_code, 405)
 
-    def test_service_enquiry_sets_email_subject(self):
+    def test_service_enquiry_starts_the_subject(self):
         response = self.client.get("/contact/?service=Mobile%20app%20development")
         self.assertContains(
             response,
-            "subject=Enquiry%20about%20Mobile%20app%20development",
+            'value="Enquiry about Mobile app development"',
         )
 
     def test_json_ld_escapes_script_delimiters(self):
