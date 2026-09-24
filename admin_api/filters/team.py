@@ -2,6 +2,8 @@ from django.db.models import Q
 
 
 ALLOWED_TEAM_ORDERINGS = {
+    "display_order",
+    "-display_order",
     "name",
     "-name",
     "position",
@@ -30,10 +32,11 @@ def apply_team_filters(
         ).strip()
     )
 
+    # The admin lists members in the order the public site shows them.
     ordering = (
         query_params.get(
             "ordering",
-            "-created_at",
+            "display_order",
         ).strip()
     )
 
@@ -61,7 +64,9 @@ def apply_team_filters(
             )
         )
 
+    # Members sharing a position fall back to name, as on the public site.
     return queryset.order_by(
         ordering,
+        "name",
         "pk",
     )
