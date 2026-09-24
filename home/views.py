@@ -1,14 +1,16 @@
-from urllib.parse import quote
-
 from django.conf import settings
+from django.contrib import messages
 from django.core.paginator import InvalidPage, Paginator
 from django.db import connection
 from django.http import Http404, HttpResponse, HttpResponseGone, JsonResponse
-from django.shortcuts import get_object_or_404
-from django.views.decorators.http import require_safe
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_http_methods, require_safe
 
-from home.content import SERVICES
-from home.models import Portfolio, Team
+from home.contact_sender import sender_details
+from home.contact_throttle import allow_contact_submission
+from home.content import CONTACT_DETAILS, SERVICES
+from home.forms import ContactForm
+from home.models import Contact, Portfolio, Team
 from home.seo import plain_text, render_page
 
 
@@ -111,13 +113,53 @@ def removed_content(request, slug=None):
     return HttpResponseGone("This page is no longer available.")
 
 
-@require_safe
+@require_http_methods(["GET", "HEAD", "POST"])
 def contact(request):
-    service = request.GET.get("service", "").strip()[:150]
-    subject = f"Enquiry about {service}" if service else "NEXCODE enquiry"
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid() and save_contact(request, form):
+            messages.success(
+                request,
+                "Thank you, your message has been sent. We will reply to "
+                f"{form.cleaned_data['email']} shortly.",
+            )
+            # Redirect after the POST so a refresh cannot send it twice.
+            return redirect("base:contact")
+    else:
+        # Service pages link here with ?service=… to start the subject.
+        service = request.GET.get("service", "").strip()[:150]
+        form = ContactForm(
+            initial={"subject": f"Enquiry about {service}" if service else ""}
+        )
+
     return render_page(
-        request, "contact.html", {"email_subject": quote(subject)}
+        request,
+        "contact.html",
+        {"form": form, "settings": CONTACT_DETAILS},
     )
+
+
+def save_contact(request, form):
+    """Store a valid submission; False when the sender is over the limit."""
+    if form.is_bot():
+        # Look successful to the bot, but keep its message out of the inbox.
+        return True
+
+    sender = sender_details(request)
+    if not allow_contact_submission(sender["ip_address"]):
+        form.add_error(
+            None,
+            "You have sent several messages recently. Please try again "
+            f"later, or email us at {CONTACT_DETAILS['email']}.",
+        )
+        return False
+
+    fields = {
+        name: form.cleaned_data[name]
+        for name in ("name", "email", "subject", "message")
+    }
+    Contact.objects.create(**fields, **sender)
+    return True
 
 
 @require_safe
