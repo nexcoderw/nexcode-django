@@ -33,13 +33,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="morinfo mt-30">
-                                        <h6 class="mb-15">email</h6>
+                                        <h6 class="mb-15">Address</h6>
                                         <p>
-                                            {% if settings.address %}
-                                                {{ settings.address }}
-                                            {% else %}
-                                                1 KN 78 St, Kigali <br> Norrsken House Kigali
-                                            {% endif %}
+                                            {{ settings.address }}
                                         </p>
                                     </div>
                                 </div>
@@ -47,53 +43,29 @@
                                     <div class="morinfo mt-30">
                                         <h6 class="mb-15">Email</h6>
                                         <p>
-                                            {% if settings.email %}
-                                                {{ settings.email }}
-                                            {% else %}
-                                                nexcoderwa@gmail.com
-                                            {% endif %}
+                                            <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>
                                         </p>
-                                        <p>
-                                            {% if settings.second_email %}
-                                                {{ settings.second_email }}
-                                            {% else %}
-                                                
-                                            {% endif %}
-                                        </p>
+                                        {% if settings.second_email %}
+                                            <p>
+                                                <a href="mailto:{{ settings.second_email }}">{{ settings.second_email }}</a>
+                                            </p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                             <div class="phone fz-30 fw-600 mt-30 underline main-color">
-                                <a href="#">
-                                    {% if settings.phone_number %}
-                                        {{ settings.phone_number }}
-                                    {% else %}
-                                        +250 781 862 349
-                                    {% endif %}
-                                </a>
+                                <a href="{{ settings.phone_href }}">{{ settings.phone_number }}</a>
                             </div>
                         </div>
                         <ul class="rest social-text d-flex mt-60 fz-16">
                             <li class="mr-30">
-                                {% if settings.twitter %}
-                                    <a href="{{ settings.twitter }}" target="_blank" class="hover-this"><span class="hover-anim">X</span></a>
-                                {% else %}
-                                    <a href="https://x.com/nexcodeafrica" target="_blank" class="hover-this"><span class="hover-anim">X</span></a>
-                                {% endif %}
+                                <a href="{{ settings.twitter }}" target="_blank" rel="noopener noreferrer" class="hover-this"><span class="hover-anim">Twitter</span></a>
                             </li>
                             <li class="mr-30">
-                                {% if settings.linkedin %}
-                                    <a href="{{ settings.linkedin }}" target="_blank" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
-                                {% else %}
-                                    <a href="https://www.linkedin.com/company/nexcode-rwanda/" target="_blank" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
-                                {% endif %}
+                                <a href="{{ settings.linkedin }}" target="_blank" rel="noopener noreferrer" class="hover-this"><span class="hover-anim">LinkedIn</span></a>
                             </li>
                             <li>
-                                {% if settings.instagram %}
-                                    <a href="{{ settings.instagram }}" target="_blank" class="hover-this"><span class="hover-anim">Instagram</span></a>
-                                {% else %}
-                                    <a href="https://www.instagram.com/nexcode.africa/" target="_blank" class="hover-this"><span class="hover-anim">Instagram</span></a>
-                                {% endif %}
+                                <a href="{{ settings.instagram }}" target="_blank" rel="noopener noreferrer" class="hover-this"><span class="hover-anim">Instagram</span></a>
                             </li>
                         </ul>
                     </div>
@@ -101,14 +73,65 @@
                 <div class="col-lg-6 offset-lg-1 valign">
                     <div class="full-width">
                         <div class="sec-head mb-50">
-                            <h6 class="sub-head">Get in <span class="fw-200">touch</span></h6>
+                            <h6 class="sub-head">Send a <span class="fw-200">message</span></h6>
                         </div>
-                        <p>Tell us about your project or the support you need. Email our team and we will reply directly.</p>
-                        <div class="mt-30">
-                            <a href="mailto:nexcoderwa@gmail.com?subject={{ email_subject }}" class="butn butn-md butn-bord butn-rounded">
-                                <span>Email NEXCODE</span>
-                            </a>
-                        </div>
+                        <form method="POST" action="{% url 'base:contact' %}">
+                            {% csrf_token %}
+                            <div class="messages" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-20">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            {# Honeypot: kept off screen and away from assistive technology. #}
+                            <div aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+                                <label for="{{ form.website.id_for_label }}">Leave this field empty</label>
+                                {{ form.website }}
+                            </div>
+                            <div class="controls row">
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-30">
+                                        {{ form.name }}
+                                        {% for error in form.name.errors %}
+                                            <small class="d-block mt-10" style="color: #ff7373;">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-30">
+                                        {{ form.email }}
+                                        {% for error in form.email.errors %}
+                                            <small class="d-block mt-10" style="color: #ff7373;">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group mb-30">
+                                        {{ form.subject }}
+                                        {% for error in form.subject.errors %}
+                                            <small class="d-block mt-10" style="color: #ff7373;">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        {{ form.message }}
+                                        {% for error in form.message.errors %}
+                                            <small class="d-block mt-10" style="color: #ff7373;">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mt-30">
+                                        <button type="submit" class="butn butn-md butn-bord butn-rounded">
+                                            <div class="d-flex align-items-center">
+                                                <span>Send Message</span>
+                                                <span class="icon ml-10">
+                                                    <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
