@@ -1,25 +1,13 @@
 from django.db.models import Q
 
-from home.models import Client
-
 
 ALLOWED_CLIENT_ORDERINGS = {
     "name",
     "-name",
-    "company_name",
-    "-company_name",
-    "status",
-    "-status",
     "created_at",
     "-created_at",
     "updated_at",
     "-updated_at",
-}
-
-VALID_CLIENT_STATUSES = {
-    value
-    for value, _
-    in Client.Status.choices
 }
 
 
@@ -40,13 +28,6 @@ def apply_client_filters(
         ).strip()
     )
 
-    status = (
-        query_params.get(
-            "status",
-            "",
-        ).strip()
-    )
-
     ordering = (
         query_params.get(
             "ordering",
@@ -63,15 +44,6 @@ def apply_client_filters(
             "Invalid ordering."
         )
 
-    if (
-        status
-        and status
-        not in VALID_CLIENT_STATUSES
-    ):
-        raise ClientFilterError(
-            "Invalid status."
-        )
-
     if search:
         queryset = (
             queryset.filter(
@@ -79,25 +51,14 @@ def apply_client_filters(
                     name__icontains=search
                 )
                 | Q(
-                    company_name__icontains=(
-                        search
-                    )
-                )
-                | Q(
                     email__icontains=search
                 )
                 | Q(
-                    phone__icontains=search
-                )
-                | Q(
-                    location__icontains=search
+                    phone_number__icontains=(
+                        search
+                    )
                 )
             )
-        )
-
-    if status:
-        queryset = queryset.filter(
-            status=status
         )
 
     return queryset.order_by(
