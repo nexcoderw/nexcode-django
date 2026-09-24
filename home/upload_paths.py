@@ -96,27 +96,16 @@ def client_profile_image_path(
     instance,
     filename,
 ):
-    client = _client_slug(
-        instance
-    )
+    """Retired upload path, kept only so migration 0035 still imports.
 
+    Clients no longer store a profile image, so nothing calls this. It
+    must stay defined for as long as that historical migration exists;
+    removing it would break every migrate and test run.
+    """
     return (
         "clients/profiles/"
-        f"{client}/"
         f"{uuid4().hex}.webp"
     )
-
-def _client_slug(
-    instance,
-):
-    return (
-        instance.slug
-        or slugify(
-            instance.name or ""
-        )
-        or "client"
-    )
-
 
 def _portfolio_slug(
     portfolio,
