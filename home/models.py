@@ -2365,8 +2365,7 @@ class PaymentNotification(
                     "read_at",
                 ),
                 name=(
-                    "payment_note_"
-                    "recipient_read_idx"
+                    "pay_note_rec_read_idx"
                 ),
             ),
         ]
