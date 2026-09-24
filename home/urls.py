@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.views.generic import RedirectView
 
 from home import views
@@ -45,7 +45,13 @@ urlpatterns = [
     path("portfolio/", views.removed_content),
     path("work/<slug>", views.removed_content),
     path("team/", views.team, name="team"),
-    path("team/<slug>/", views.getTeamMember, name="getTeamMember"),
+    # Member detail pages are retired; old links land on the team page.
+    # A fixed url, not pattern_name: pattern_name would pass the captured
+    # slug to reverse(), and the team route takes no slug.
+    path(
+        "team/<slug>/",
+        RedirectView.as_view(url=reverse_lazy("base:team"), permanent=True),
+    ),
     path("blogs/", views.removed_content),
     path("blog/<slug>/", views.removed_content),
     path("testimony/", views.removed_content),
