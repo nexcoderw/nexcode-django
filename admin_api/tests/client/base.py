@@ -1,4 +1,4 @@
-import tempfile
+import json
 
 from django.contrib.auth import (
     get_user_model,
@@ -9,18 +9,13 @@ from django.contrib.auth.models import (
 from django.test import (
     Client as DjangoClient,
     TestCase,
-    override_settings,
-)
-from django.test.client import (
-    BOUNDARY,
-    MULTIPART_CONTENT,
-    encode_multipart,
 )
 from django.urls import reverse
 
 from admin_api.constants import (
     NEXCODE_ADMIN_GROUP_NAME,
 )
+from home.models import Client
 
 
 class ClientApiTestCase(
@@ -31,21 +26,6 @@ class ClientApiTestCase(
     )
 
     def setUp(self):
-        self.media_directory = (
-            tempfile.TemporaryDirectory()
-        )
-
-        self.media_override = (
-            override_settings(
-                MEDIA_ROOT=(
-                    self.media_directory
-                    .name
-                )
-            )
-        )
-
-        self.media_override.enable()
-
         User = get_user_model()
 
         group, _ = (
@@ -100,11 +80,6 @@ class ClientApiTestCase(
             "admin_api:client:add"
         )
 
-    def tearDown(self):
-        self.media_override.disable()
-
-        self.media_directory.cleanup()
-
     def login_admin(self):
         self.client.force_login(
             self.admin_user
@@ -134,53 +109,98 @@ class ClientApiTestCase(
         self,
         client,
     ):
-        return reverse(
-            "admin_api:client:detail",
-            kwargs={
-                "client_id":
-                    client.pk,
-            },
+        return self._client_url(
+            "detail",
+            client,
         )
 
     def update_url(
         self,
         client,
     ):
-        return reverse(
-            "admin_api:client:update",
-            kwargs={
-                "client_id":
-                    client.pk,
-            },
+        return self._client_url(
+            "update",
+            client,
         )
 
     def delete_url(
         self,
         client,
     ):
+        return self._client_url(
+            "delete",
+            client,
+        )
+
+    def post_json(
+        self,
+        url,
+        payload,
+    ):
+        return self.client.post(
+            url,
+            data=json.dumps(
+                payload
+            ),
+            content_type=(
+                "application/json"
+            ),
+            **self.csrf_headers(),
+        )
+
+    def patch_json(
+        self,
+        url,
+        payload,
+    ):
+        return self.client.patch(
+            url,
+            data=json.dumps(
+                payload
+            ),
+            content_type=(
+                "application/json"
+            ),
+            **self.csrf_headers(),
+        )
+
+    def delete_request(
+        self,
+        url,
+    ):
+        return self.client.delete(
+            url,
+            **self.csrf_headers(),
+        )
+
+    def create_client(
+        self,
+        name="Acme Rwanda",
+        **overrides,
+    ):
+        fields = {
+            "name": name,
+            "email": "hello@acme.rw",
+            "phone_number": (
+                "+250 788 000 000"
+            ),
+        }
+
+        fields.update(overrides)
+
+        return Client.objects.create(
+            **fields
+        )
+
+    def _client_url(
+        self,
+        name,
+        client,
+    ):
         return reverse(
-            "admin_api:client:delete",
+            f"admin_api:client:{name}",
             kwargs={
                 "client_id":
                     client.pk,
             },
-        )
-
-    def patch_multipart(
-        self,
-        url,
-        data,
-    ):
-        body = encode_multipart(
-            BOUNDARY,
-            data,
-        )
-
-        return self.client.patch(
-            url,
-            data=body,
-            content_type=(
-                MULTIPART_CONTENT
-            ),
-            **self.csrf_headers(),
         )
