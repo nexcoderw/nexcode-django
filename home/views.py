@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.paginator import InvalidPage, Paginator
 from django.db import connection
 from django.http import Http404, HttpResponse, HttpResponseGone, JsonResponse
-from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_safe
 
 from home.content import SERVICES
@@ -66,18 +65,6 @@ def services(request):
 def team(request):
     page = page_for(request, team_in_display_order())
     return render_page(request, "team/index.html", {"team": page, "page_obj": page})
-
-
-def getTeamMember(request, slug):
-    member = get_object_or_404(Team, slug=slug)
-    return render_page(
-        request,
-        "team/show.html",
-        {"member": member},
-        title=f"{member.name} — {member.position or 'Team'}",
-        description=f"Meet {member.name}, {member.position or 'a team member'} at NEXCODE.",
-        image=member.image.url if member.image else None,
-    )
 
 
 @require_safe
