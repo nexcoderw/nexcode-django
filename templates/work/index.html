@@ -1,0 +1,65 @@
+{% extends 'layouts/app.html' %}
+{% load static %}
+{% block content %}
+
+    <header class="header-pg">
+        <div class="container">
+            <div class="text-center">
+                <div class="caption mb-100">
+                    <h1>Portfolio</h1>
+                    <h6>( <a href="{% url 'base:home' %}">Home</a> - <span>Portfolio</span> )</h6>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="work-card section-padding">
+        <div class="container">
+            <div class="cards">
+                {% for work in portfolio %}
+                    <div class="card-item">
+                        <div class="d-lg-flex align-items-end">
+                            <div>
+                                <div class="tags">
+                                    <a href="{% url 'base:workDetails' work.slug %}">
+                                        {{ work.get_category_display }}
+                                    </a>
+                                </div>
+                                <h3 class="title">
+                                    <a href="{% url 'base:workDetails' work.slug %}">
+                                        {{ work.name }}
+                                    </a>
+                                </h3>
+                            </div>
+                            <div class="ml-auto">
+                                <a href="{% url 'base:workDetails' work.slug %}" class="butn butn-md butn-bord butn-rounded">
+                                    <div class="d-flex align-items-center">
+                                        <span>View Project</span>
+                                        <span class="icon invert ml-10">
+                                            <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="img fit-img mt-30">
+                            {% with work.cover_image as cover %}
+                                {% if cover %}
+                                    <img src="{{ cover.image.url }}" alt="{{ cover.alt_text|default:work.name }}" loading="lazy" decoding="async">
+                                {% else %}
+                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}" loading="lazy" decoding="async">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <h5 class="text-center">
+                        Coming Soon
+                    </h5>
+                {% endfor %}
+            </div>
+            {% include 'inc/pagination.html' %}
+        </div>
+    </section>
+
+{% endblock %}
