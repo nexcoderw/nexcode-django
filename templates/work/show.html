@@ -1,0 +1,151 @@
+{% extends 'layouts/app.html' %}
+{% load static content_tags %}
+{% block content %}
+
+    <header class="serv-hed2 section-padding pb-0">
+        <div class="container">
+            <div class="caption mb-80">
+                <h1 class="fz-80 fw-600">
+                    {{ work.name }}
+                </h1>
+                <div class="row justify-content-end">
+                    <div class="col-lg-5">
+                        <div class="text mt-30">
+                            {% if work.summary %}
+                                <p>{{ work.summary }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="list mt-30">
+                            {% with live=work.live_url|public_url repository=work.repositories.all.0 figma=work.figma_url|public_url %}
+                                {% if live %}
+                                    <a href="{{ live }}" target="_blank" rel="noopener noreferrer" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">Visit {{ work.name }}</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% elif repository and repository.url|public_url %}
+                                    <a href="{{ repository.url|public_url }}" target="_blank" rel="noopener noreferrer" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">Repository</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% elif figma %}
+                                    <a href="{{ figma }}" target="_blank" rel="noopener noreferrer" class="crv-butn mt-80">
+                                        <div class="d-flex">
+                                            <span class="text">View Design</span>
+                                            <span class="icon">
+                                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                                            </span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="fit-img radius-15">
+                {% if cover %}
+                    <img src="{{ cover.image.url }}" alt="{{ cover.alt_text|default:work.name }}">
+                {% else %}
+                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}">
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <section class="serv-details section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="content">
+                        <h3>
+                            About the project
+                        </h3>
+                        <div class="text mt-30 mb-30">
+                            {{ work.description|rich_text }}
+                        </div>
+                        {% for image in work.images.all %}
+                            {% if image != cover %}
+                                <div class="fit-img radius-15 mb-30">
+                                    <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:work.name }}" loading="lazy" decoding="async">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if work.repositories.all or work.documents.all %}
+                            <div class="text mb-30">
+                                <h6 class="mb-15">Project Resources</h6>
+                                <ul>
+                                    {% for repository in work.repositories.all %}
+                                        {% if repository.url|public_url %}
+                                            <li><a href="{{ repository.url|public_url }}" target="_blank" rel="noopener noreferrer" class="underline">{{ repository.label }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for document in work.documents.all %}
+                                        {% if document.url|public_url %}
+                                            <li><a href="{{ document.url|public_url }}" target="_blank" rel="noopener noreferrer" class="underline">{{ document.title }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        {% if work.team_members.all %}
+                            <div class="text mb-30">
+                                <h6 class="mb-15">Built By</h6>
+                                <p>
+                                    {% for member in work.team_members.all %}
+                                        {{ member.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        {% endif %}
+                        <div class="main-post">
+                            <div class="info-area flex pt-50 bord-thin-top">
+                                <div>
+                                    <div class="tags flex">
+                                        <div class="valign">
+                                            <span>Tags :</span>
+                                        </div>
+                                        <div>
+                                            <a href="{% url 'base:portfolio' %}">{{ work.get_category_display }}</a>,
+                                            <a href="{% url 'base:portfolio' %}">{{ work.get_project_type_display }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-auto">
+                                    <div class="share-icon flex">
+                                        <div class="valign">
+                                            <span>Share :</span>
+                                        </div>
+                                        <div>
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ seo.canonical|urlencode:'' }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            <a href="https://twitter.com/intent/tweet?url={{ seo.canonical|urlencode:'' }}&amp;text={{ work.name|urlencode:'' }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ seo.canonical|urlencode:'' }}" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
+                                                <i class="fab fa-linkedin-in"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
