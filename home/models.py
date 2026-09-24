@@ -689,3 +689,43 @@ class Client(
             "-created_at",
             "-pk",
         )
+
+class Contact(
+    models.Model
+):
+    """A message submitted through the public contact form."""
+
+    name = models.CharField(
+        max_length=255,
+    )
+
+    email = models.EmailField()
+
+    subject = models.CharField(
+        max_length=255,
+    )
+
+    message = models.TextField()
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    def __str__(self):
+        return (
+            f"{self.subject} — "
+            f"{self.name}"
+        )
+
+    class Meta:
+        ordering = (
+            "-created_at",
+            "-pk",
+        )
+
+        verbose_name = "Contact"
+        verbose_name_plural = (
+            "Contacts"
+        )
