@@ -41,6 +41,12 @@ class TeamCreateForm(forms.Form):
         required=False,
     )
 
+    # Optional: a new member without one is placed after everyone else.
+    display_order = forms.IntegerField(
+        required=False,
+        min_value=0,
+    )
+
     def clean_image(self):
         return _validate_image(
             self.cleaned_data.get(
@@ -187,6 +193,7 @@ class TeamUpdateForm(
             "image_png",
             "linkedin",
             "github",
+            "display_order",
             "remove_image",
             "remove_image_png",
         }
