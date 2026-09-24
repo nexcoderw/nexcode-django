@@ -3,28 +3,42 @@ from home.models import Client
 from admin_api.tests.client.base import (
     ClientApiTestCase,
 )
-from admin_api.tests.client.files import (
-    image_upload,
-)
 
 
 class ClientAddTests(
     ClientApiTestCase
 ):
+    def payload(
+        self,
+        **overrides,
+    ):
+        data = {
+            "name": "Acme Rwanda",
+            "email": "hello@acme.rw",
+            "phone_number": (
+                "+250 788 000 000"
+            ),
+        }
+
+        data.update(overrides)
+
+        return data
+
     def test_add_requires_authentication(
         self,
     ):
-        response = self.client.post(
+        response = self.post_json(
             self.add_url,
-            {
-                "name": "Example Client",
-            },
-            **self.csrf_headers(),
+            self.payload(),
         )
 
         self.assertEqual(
             response.status_code,
             401,
+        )
+
+        self.assertFalse(
+            Client.objects.exists()
         )
 
     def test_add_rejects_non_admin(
@@ -34,12 +48,9 @@ class ClientAddTests(
             self.regular_user
         )
 
-        response = self.client.post(
+        response = self.post_json(
             self.add_url,
-            {
-                "name": "Example Client",
-            },
-            **self.csrf_headers(),
+            self.payload(),
         )
 
         self.assertEqual(
@@ -54,9 +65,10 @@ class ClientAddTests(
 
         response = self.client.post(
             self.add_url,
-            {
-                "name": "Example Client",
-            },
+            data="{}",
+            content_type=(
+                "application/json"
+            ),
         )
 
         self.assertEqual(
@@ -69,27 +81,9 @@ class ClientAddTests(
     ):
         self.login_admin()
 
-        response = self.client.post(
+        response = self.post_json(
             self.add_url,
-            {
-                "name":
-                    "GRACON Tech Holdings",
-                "company_name":
-                    "GRACON Tech Holdings Ltd",
-                "email":
-                    "info@example.com",
-                "phone":
-                    "+250788000000",
-                "website":
-                    "https://example.com",
-                "location":
-                    "Kigali, Rwanda",
-                "notes":
-                    "Important client.",
-                "status":
-                    Client.Status.ACTIVE,
-            },
-            **self.csrf_headers(),
+            self.payload(),
         )
 
         self.assertEqual(
@@ -97,37 +91,48 @@ class ClientAddTests(
             201,
         )
 
-        client = (
-            Client.objects.get(
-                name=(
-                    "GRACON Tech Holdings"
-                )
-            )
+        client = response.json()[
+            "data"
+        ]["client"]
+
+        # The contract is exactly these fields and no others.
+        self.assertEqual(
+            set(client),
+            {
+                "id",
+                "name",
+                "email",
+                "phone_number",
+                "created_at",
+                "updated_at",
+            },
         )
 
         self.assertEqual(
-            client.slug,
-            "gracon-tech-holdings",
+            client["name"],
+            "Acme Rwanda",
         )
 
         self.assertEqual(
-            client.status,
-            Client.Status.ACTIVE,
+            client["email"],
+            "hello@acme.rw",
         )
 
-    def test_client_can_be_created_with_image(
+        self.assertEqual(
+            client["phone_number"],
+            "+250 788 000 000",
+        )
+
+    def test_contact_details_are_optional(
         self,
     ):
         self.login_admin()
 
-        response = self.client.post(
+        response = self.post_json(
             self.add_url,
             {
-                "name": "Image Client",
-                "profile_image":
-                    image_upload(),
+                "name": "Walk-in client",
             },
-            **self.csrf_headers(),
         )
 
         self.assertEqual(
@@ -135,14 +140,16 @@ class ClientAddTests(
             201,
         )
 
-        client = (
-            Client.objects.get(
-                name="Image Client"
-            )
+        client = response.json()[
+            "data"
+        ]["client"]
+
+        self.assertIsNone(
+            client["email"]
         )
 
-        self.assertTrue(
-            client.profile_image
+        self.assertIsNone(
+            client["phone_number"]
         )
 
     def test_name_is_required(
@@ -150,13 +157,11 @@ class ClientAddTests(
     ):
         self.login_admin()
 
-        response = self.client.post(
+        response = self.post_json(
             self.add_url,
-            {
-                "company_name":
-                    "Example Company",
-            },
-            **self.csrf_headers(),
+            self.payload(
+                name="",
+            ),
         )
 
         self.assertEqual(
@@ -164,21 +169,65 @@ class ClientAddTests(
             400,
         )
 
-    def test_invalid_status_is_rejected(
+        self.assertIn(
+            "name",
+            response.json()["errors"],
+        )
+
+        self.assertFalse(
+            Client.objects.exists()
+        )
+
+    def test_invalid_email_is_rejected(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.post_json(
+            self.add_url,
+            self.payload(
+                email="not-an-email",
+            ),
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400,
+        )
+
+        self.assertIn(
+            "email",
+            response.json()["errors"],
+        )
+
+    def test_non_json_request_is_rejected(
         self,
     ):
         self.login_admin()
 
         response = self.client.post(
             self.add_url,
-            {
-                "name": "Client",
-                "status": "unknown",
+            data={
+                "name": "Form post",
             },
             **self.csrf_headers(),
         )
 
         self.assertEqual(
             response.status_code,
-            400,
+            415,
+        )
+
+    def test_add_rejects_get(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.client.get(
+            self.add_url
+        )
+
+        self.assertEqual(
+            response.status_code,
+            405,
         )
