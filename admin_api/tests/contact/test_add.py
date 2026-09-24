@@ -1,5 +1,6 @@
 import json
 
+from django.core.cache import cache
 from django.test import (
     Client as DjangoClient,
     TestCase,
@@ -13,6 +14,9 @@ class ContactAddTests(
     TestCase
 ):
     def setUp(self):
+        # Submissions are throttled per address; start each test afresh.
+        cache.clear()
+
         self.client = (
             DjangoClient(
                 enforce_csrf_checks=True,
@@ -439,4 +443,87 @@ class ContactAddTests(
                 "Allow"
             ],
             "POST",
+        )
+
+    def test_sender_address_and_device_are_recorded(
+        self,
+    ):
+        token = (
+            self.csrf_token()
+        )
+
+        response = self.client.post(
+            self.add_url,
+            data=json.dumps(
+                self.payload()
+            ),
+            content_type=(
+                "application/json"
+            ),
+            HTTP_X_CSRFTOKEN=token,
+            HTTP_X_REAL_IP=(
+                "203.0.113.9"
+            ),
+            HTTP_USER_AGENT=(
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) "
+                "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                "Version/17.0 Mobile/15E148 Safari/604.1"
+            ),
+        )
+
+        self.assertEqual(
+            response.status_code,
+            201,
+        )
+
+        contact = (
+            Contact.objects.get()
+        )
+
+        self.assertEqual(
+            contact.ip_address,
+            "203.0.113.9",
+        )
+
+        self.assertEqual(
+            contact.device_type,
+            Contact.DeviceType.MOBILE,
+        )
+
+        self.assertEqual(
+            contact.browser,
+            "Safari",
+        )
+
+        self.assertEqual(
+            contact.operating_system,
+            "iOS",
+        )
+
+        # The public response never echoes sender details back.
+        self.assertNotIn(
+            "ip_address",
+            response.json()[
+                "data"
+            ]["contact"],
+        )
+
+    def test_repeated_submissions_are_throttled(
+        self,
+    ):
+        statuses = [
+            self.post_json(
+                self.payload()
+            ).status_code
+            for _ in range(6)
+        ]
+
+        self.assertEqual(
+            statuses,
+            [201] * 5 + [429],
+        )
+
+        self.assertEqual(
+            Contact.objects.count(),
+            5,
         )
