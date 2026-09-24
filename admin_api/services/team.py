@@ -1,6 +1,7 @@
 import logging
 
 from django.db import transaction
+from django.db.models import Max
 
 from home.models import Team
 
@@ -50,8 +51,19 @@ def create_team_member(
         ),
     )
 
+    display_order = cleaned_data.get(
+        "display_order"
+    )
+
     try:
         with transaction.atomic():
+            # Without an explicit position, a new member joins the end.
+            team_member.display_order = (
+                display_order
+                if display_order is not None
+                else _next_display_order()
+            )
+
             team_member.save()
     except Exception:
         _delete_failed_uploads(
@@ -115,6 +127,14 @@ def update_team_member(
     ):
         team_member.image_png = None
 
+    # An empty value leaves the position unchanged rather than resetting it.
+    if data.get(
+        "display_order"
+    ) is not None:
+        team_member.display_order = (
+            data["display_order"]
+        )
+
     try:
         with transaction.atomic():
             team_member.save()
@@ -177,6 +197,15 @@ def _delete_failed_uploads(
                         current_name,
                 },
             )
+
+
+def _next_display_order():
+    """The position just after the current last member."""
+    last = Team.objects.aggregate(
+        value=Max("display_order"),
+    )["value"]
+
+    return (last or 0) + 1
 
 
 def _file_name(file_value):
