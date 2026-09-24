@@ -2010,6 +2010,13 @@ class PaymentReminderRule(
             "After",
         )
 
+        # A fixed calendar date, set by the admin, instead of an
+        # offset from the event's date.
+        DATE = (
+            "date",
+            "On a set date",
+        )
+
     class Channel(
         models.TextChoices
     ):
@@ -2045,6 +2052,14 @@ class PaymentReminderRule(
     days = (
         models.PositiveSmallIntegerField(
             default=0,
+        )
+    )
+
+    # The day a DATE-timed rule fires; empty for every other timing.
+    remind_on = (
+        models.DateField(
+            null=True,
+            blank=True,
         )
     )
 
@@ -2094,12 +2109,35 @@ class PaymentReminderRule(
 
         if (
             self.timing
-            == self.Timing.ON
+            in (
+                self.Timing.ON,
+                self.Timing.DATE,
+            )
             and self.days != 0
         ):
             errors["days"] = (
                 "On-date reminders "
                 "must use zero days."
+            )
+
+        if (
+            self.timing
+            == self.Timing.DATE
+            and not self.remind_on
+        ):
+            errors["remind_on"] = (
+                "Choose the date to "
+                "send this reminder."
+            )
+
+        if (
+            self.timing
+            != self.Timing.DATE
+            and self.remind_on
+        ):
+            errors["remind_on"] = (
+                "Only reminders on a "
+                "set date take a date."
             )
 
         if (
@@ -2153,6 +2191,7 @@ class PaymentReminderRule(
         )
 
         constraints = [
+            # Relative rules: one per event, offset and channel.
             models.UniqueConstraint(
                 fields=(
                     "agreement",
@@ -2161,28 +2200,50 @@ class PaymentReminderRule(
                     "days",
                     "channel",
                 ),
+                condition=Q(
+                    remind_on__isnull=True,
+                ),
                 name=(
                     "unique_payment_"
                     "reminder_rule"
                 ),
             ),
-
+            # Dated rules: one per event, date and channel. Kept apart
+            # because NULL dates never collide in a unique constraint.
+            models.UniqueConstraint(
+                fields=(
+                    "agreement",
+                    "event",
+                    "remind_on",
+                    "channel",
+                ),
+                condition=Q(
+                    timing="date",
+                ),
+                name=(
+                    "unique_payment_"
+                    "reminder_date_rule"
+                ),
+            ),
             models.CheckConstraint(
                 condition=(
                     Q(
                         timing="on",
                         days=0,
+                        remind_on__isnull=True,
                     )
-                    | (
-                        Q(
-                            timing__in=(
-                                "before",
-                                "after",
-                            ),
-                        )
-                        & Q(
-                            days__gt=0,
-                        )
+                    | Q(
+                        timing__in=(
+                            "before",
+                            "after",
+                        ),
+                        days__gt=0,
+                        remind_on__isnull=True,
+                    )
+                    | Q(
+                        timing="date",
+                        days=0,
+                        remind_on__isnull=False,
                     )
                 ),
                 name=(
