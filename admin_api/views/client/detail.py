@@ -2,7 +2,7 @@ from admin_api.permissions import (
     nexcode_admin_required,
 )
 from admin_api.serializers.client import (
-    serialize_client_detail,
+    serialize_client,
 )
 from admin_api.views.client.responses import (
     client_not_found,
@@ -36,7 +36,7 @@ def client_detail_view(
             "status": "success",
             "data": {
                 "client":
-                    serialize_client_detail(
+                    serialize_client(
                         client
                     ),
             },
