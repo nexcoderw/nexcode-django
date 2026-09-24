@@ -24,6 +24,10 @@ PAGES = {
         "Software, Design and Technology Services",
         "Explore NEXCODE services: custom software, mobile apps, UI/UX design, networking, digital marketing and maintenance. Find the right support for your business.",
     ),
+    "portfolio": (
+        "Our Work and Recent Projects",
+        "Explore NEXCODE projects: web applications, mobile apps, UI/UX design and branding built for businesses from our studio in Kigali.",
+    ),
     "team": (
         "Meet the NEXCODE Team",
         "Meet the people behind NEXCODE. Explore team roles and professional profiles from our technology studio in Kigali.",
