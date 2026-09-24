@@ -44,9 +44,7 @@ class PublicPageTests(TestCase):
         )
 
     def page_routes(self):
-        return [reverse(f"base:{name}") for name in PAGES] + [
-            reverse("base:getTeamMember", args=[self.member.slug])
-        ]
+        return [reverse(f"base:{name}") for name in PAGES]
 
     def test_public_pages_render_with_canonical_metadata(self):
         for url in self.page_routes():
@@ -80,9 +78,9 @@ class PublicPageTests(TestCase):
         root = ElementTree.fromstring(response.content)
         urls = [element.text for element in root.findall("{*}url/{*}loc")]
         self.assertEqual(len(urls), len(set(urls)))
-        self.assertIn(
-            "https://nexcode.africa"
-            + reverse("base:getTeamMember", args=[self.member.slug]),
+        # Member detail pages are retired, so the sitemap must not list them.
+        self.assertNotIn(
+            f"https://nexcode.africa/team/{self.member.slug}/",
             urls,
         )
         for url in urls:
