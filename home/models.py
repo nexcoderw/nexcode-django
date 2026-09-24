@@ -1969,3 +1969,404 @@ class PaymentAllocation(
                 ),
             ),
         ]
+
+
+class PaymentReminderRule(
+    models.Model
+):
+    class Event(
+        models.TextChoices
+    ):
+        INSTALLMENT_DUE = (
+            "installment_due",
+            "Installment Due",
+        )
+
+        MILESTONE_EXPECTED = (
+            "milestone_expected",
+            "Milestone Expected",
+        )
+
+        AGREEMENT_EXPIRY = (
+            "agreement_expiry",
+            "Agreement Expiry",
+        )
+
+    class Timing(
+        models.TextChoices
+    ):
+        BEFORE = (
+            "before",
+            "Before",
+        )
+
+        ON = (
+            "on",
+            "On",
+        )
+
+        AFTER = (
+            "after",
+            "After",
+        )
+
+    class Channel(
+        models.TextChoices
+    ):
+        IN_APP = (
+            "in_app",
+            "In-app",
+        )
+
+        EMAIL = (
+            "email",
+            "Email",
+        )
+
+    agreement = models.ForeignKey(
+        PaymentAgreement,
+        on_delete=models.CASCADE,
+        related_name=(
+            "reminder_rules"
+        ),
+    )
+
+    event = models.CharField(
+        max_length=30,
+        choices=Event.choices,
+        db_index=True,
+    )
+
+    timing = models.CharField(
+        max_length=10,
+        choices=Timing.choices,
+    )
+
+    days = (
+        models.PositiveSmallIntegerField(
+            default=0,
+        )
+    )
+
+    channel = models.CharField(
+        max_length=20,
+        choices=Channel.choices,
+        default=Channel.IN_APP,
+        db_index=True,
+    )
+
+    is_enabled = (
+        models.BooleanField(
+            default=True,
+            db_index=True,
+        )
+    )
+
+    created_by = (
+        models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.SET_NULL,
+            related_name=(
+                "created_payment_"
+                "reminder_rules"
+            ),
+            null=True,
+            blank=True,
+        )
+    )
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    updated_at = (
+        models.DateTimeField(
+            auto_now=True,
+        )
+    )
+
+    def clean(self):
+        super().clean()
+
+        errors = {}
+
+        if (
+            self.timing
+            == self.Timing.ON
+            and self.days != 0
+        ):
+            errors["days"] = (
+                "On-date reminders "
+                "must use zero days."
+            )
+
+        if (
+            self.timing
+            in (
+                self.Timing.BEFORE,
+                self.Timing.AFTER,
+            )
+            and self.days == 0
+        ):
+            errors["days"] = (
+                "Before and after "
+                "reminders require at "
+                "least one day."
+            )
+
+        if (
+            self.event
+            == (
+                self.Event
+                .AGREEMENT_EXPIRY
+            )
+            and self.agreement_id
+            and not self.agreement
+            .end_date
+        ):
+            errors["event"] = (
+                "Agreement expiry "
+                "reminders require an "
+                "agreement end date."
+            )
+
+        if errors:
+            raise ValidationError(
+                errors
+            )
+
+    def __str__(self):
+        return (
+            f"{self.get_event_display()} "
+            f"— {self.agreement.title}"
+        )
+
+    class Meta:
+        ordering = (
+            "agreement_id",
+            "event",
+            "timing",
+            "days",
+            "pk",
+        )
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=(
+                    "agreement",
+                    "event",
+                    "timing",
+                    "days",
+                    "channel",
+                ),
+                name=(
+                    "unique_payment_"
+                    "reminder_rule"
+                ),
+            ),
+
+            models.CheckConstraint(
+                condition=(
+                    Q(
+                        timing="on",
+                        days=0,
+                    )
+                    | (
+                        Q(
+                            timing__in=(
+                                "before",
+                                "after",
+                            ),
+                        )
+                        & Q(
+                            days__gt=0,
+                        )
+                    )
+                ),
+                name=(
+                    "payment_reminder_"
+                    "valid_timing"
+                ),
+            ),
+        ]
+
+
+class PaymentNotification(
+    models.Model
+):
+    class Status(
+        models.TextChoices
+    ):
+        PENDING = (
+            "pending",
+            "Pending",
+        )
+
+        SENT = (
+            "sent",
+            "Sent",
+        )
+
+        FAILED = (
+            "failed",
+            "Failed",
+        )
+
+    rule = models.ForeignKey(
+        PaymentReminderRule,
+        on_delete=models.SET_NULL,
+        related_name=(
+            "notifications"
+        ),
+        null=True,
+        blank=True,
+    )
+
+    agreement = (
+        models.ForeignKey(
+            PaymentAgreement,
+            on_delete=models.CASCADE,
+            related_name=(
+                "payment_notifications"
+            ),
+        )
+    )
+
+    installment = (
+        models.ForeignKey(
+            PaymentInstallment,
+            on_delete=models.SET_NULL,
+            related_name=(
+                "payment_notifications"
+            ),
+            null=True,
+            blank=True,
+        )
+    )
+
+    recipient_user = (
+        models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.SET_NULL,
+            related_name=(
+                "payment_notifications"
+            ),
+            null=True,
+            blank=True,
+        )
+    )
+
+    event = models.CharField(
+        max_length=30,
+        choices=(
+            PaymentReminderRule
+            .Event
+            .choices
+        ),
+        db_index=True,
+    )
+
+    channel = models.CharField(
+        max_length=20,
+        choices=(
+            PaymentReminderRule
+            .Channel
+            .choices
+        ),
+        db_index=True,
+    )
+
+    title = models.CharField(
+        max_length=255,
+    )
+
+    message = models.TextField()
+
+    target_date = (
+        models.DateField()
+    )
+
+    trigger_date = (
+        models.DateField(
+            db_index=True,
+        )
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+        db_index=True,
+    )
+
+    attempt_count = (
+        models.PositiveIntegerField(
+            default=0,
+        )
+    )
+
+    last_attempt_at = (
+        models.DateTimeField(
+            null=True,
+            blank=True,
+        )
+    )
+
+    sent_at = (
+        models.DateTimeField(
+            null=True,
+            blank=True,
+        )
+    )
+
+    read_at = (
+        models.DateTimeField(
+            null=True,
+            blank=True,
+            db_index=True,
+        )
+    )
+
+    failure_reason = (
+        models.CharField(
+            max_length=255,
+            blank=True,
+        )
+    )
+
+    dedupe_key = (
+        models.CharField(
+            max_length=64,
+            unique=True,
+        )
+    )
+
+    created_at = (
+        models.DateTimeField(
+            auto_now_add=True,
+        )
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = (
+            "-created_at",
+            "-pk",
+        )
+
+        indexes = [
+            models.Index(
+                fields=(
+                    "recipient_user",
+                    "read_at",
+                ),
+                name=(
+                    "payment_note_"
+                    "recipient_read_idx"
+                ),
+            ),
+        ]
