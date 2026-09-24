@@ -10,6 +10,7 @@ from django.http import Http404
 from django.urls import reverse
 from django.views.decorators.http import require_safe
 
+from home.models import Portfolio
 from home.seo import PAGES
 
 
@@ -30,6 +31,18 @@ class StaticSitemap(CanonicalSitemap):
         return reverse(f"base:{item}")
 
 
+class WorkSitemap(CanonicalSitemap):
+    def items(self):
+        return Portfolio.objects.filter(
+            status=Portfolio.Status.PUBLISHED
+        ).only("slug", "updated_at")
+
+    def location(self, work):
+        return reverse("base:workDetails", args=[work.slug])
+
+    def lastmod(self, work):
+        return work.updated_at
+
 
 @require_safe
 def public_sitemap(request):
@@ -39,5 +52,6 @@ def public_sitemap(request):
         request,
         sitemaps={
             "pages": StaticSitemap(),
+            "work": WorkSitemap(),
         },
     )
