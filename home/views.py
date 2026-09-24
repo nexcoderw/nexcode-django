@@ -12,6 +12,19 @@ from home.models import Team
 from home.seo import render_page
 
 
+# The order set in the admin: lowest display_order first, and members
+# sharing a position alphabetically, so the order never shifts between
+# page loads.
+TEAM_DISPLAY_ORDER = ("display_order", "name", "pk")
+
+# The home page shows one row of the team and links to the full page.
+HOME_TEAM_PREVIEW_SIZE = 4
+
+
+def team_in_display_order():
+    return Team.objects.order_by(*TEAM_DISPLAY_ORDER)
+
+
 def page_for(request, queryset, per_page=12):
     try:
         return Paginator(queryset, per_page).page(request.GET.get("page", 1))
@@ -31,11 +44,19 @@ def healthcheck(request):
 
 
 def home(request):
-    return render_page(request, "index.html", {"services": SERVICES})
+    return render_page(
+        request,
+        "index.html",
+        {
+            "services": SERVICES,
+            # The first members in display order, fetched with a LIMIT.
+            "team": team_in_display_order()[:HOME_TEAM_PREVIEW_SIZE],
+        },
+    )
 
 
 def about(request):
-    return render_page(request, "about.html", {"team": Team.objects.all()})
+    return render_page(request, "about.html", {"team": team_in_display_order()})
 
 
 def services(request):
@@ -43,8 +64,7 @@ def services(request):
 
 
 def team(request):
-    # Team's default ordering is the display order chosen in the admin.
-    page = page_for(request, Team.objects.all())
+    page = page_for(request, team_in_display_order())
     return render_page(request, "team/index.html", {"team": page, "page_obj": page})
 
 
