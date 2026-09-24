@@ -1,4 +1,4 @@
-"""Sitemaps share the publication rules used by public detail views."""
+"""The public sitemap: the site's canonical pages, on the canonical host."""
 
 from types import SimpleNamespace
 from urllib.parse import urlsplit
@@ -10,7 +10,6 @@ from django.http import Http404
 from django.urls import reverse
 from django.views.decorators.http import require_safe
 
-from home.models import Team
 from home.seo import PAGES
 
 
@@ -31,20 +30,6 @@ class StaticSitemap(CanonicalSitemap):
         return reverse(f"base:{item}")
 
 
-class DetailSitemap(CanonicalSitemap):
-    def __init__(self, queryset_factory, route):
-        self.queryset_factory = queryset_factory
-        self.route = route
-
-    def items(self):
-        return self.queryset_factory()
-
-    def location(self, item):
-        return reverse(f"base:{self.route}", kwargs={"slug": item.slug})
-
-    def lastmod(self, item):
-        return item.updated_at
-
 
 @require_safe
 def public_sitemap(request):
@@ -54,6 +39,5 @@ def public_sitemap(request):
         request,
         sitemaps={
             "pages": StaticSitemap(),
-            "team": DetailSitemap(lambda: Team.objects.order_by("pk"), "getTeamMember"),
         },
     )
