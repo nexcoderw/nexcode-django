@@ -42,8 +42,8 @@ urlpatterns = [
         RedirectView.as_view(pattern_name="base:services", permanent=True),
         name="maintenance",
     ),
-    path("portfolio/", views.removed_content),
-    path("work/<slug>", views.removed_content),
+    path("portfolio/", views.portfolio, name="portfolio"),
+    path("work/<slug>", views.workDetails, name="workDetails"),
     path("team/", views.team, name="team"),
     # Member detail pages are retired; old links land on the team page.
     # A fixed url, not pattern_name: pattern_name would pass the captured
