@@ -1,0 +1,186 @@
+from django.urls import path
+
+from admin_api.views.payment.agreements import (
+    add_agreement_view,
+    agreement_detail_view,
+    delete_agreement_view,
+    list_agreements_view,
+    update_agreement_view,
+)
+from admin_api.views.payment.installments import (
+    add_installment_view,
+    confirm_milestone_view,
+    delete_installment_view,
+    list_installments_view,
+    update_installment_view,
+    waive_installment_view,
+)
+from admin_api.views.payment.records import (
+    allocate_payment_view,
+    list_payments_view,
+    record_payment_view,
+    void_payment_view,
+)
+from admin_api.views.payment.schedules import (
+    generate_contract_schedule_view,
+    generate_maintenance_schedule_view,
+)
+from admin_api.views.payment.summary import (
+    agreement_summary_view,
+    portfolio_summary_view,
+)
+
+
+app_name = "payment"
+
+
+urlpatterns = [
+    path(
+        "agreement/list/",
+        list_agreements_view,
+        name="agreement_list",
+    ),
+    path(
+        "agreement/add/",
+        add_agreement_view,
+        name="agreement_add",
+    ),
+    path(
+        (
+            "agreement/detail/"
+            "<int:agreement_id>/"
+        ),
+        agreement_detail_view,
+        name="agreement_detail",
+    ),
+    path(
+        (
+            "agreement/update/"
+            "<int:agreement_id>/"
+        ),
+        update_agreement_view,
+        name="agreement_update",
+    ),
+    path(
+        (
+            "agreement/delete/"
+            "<int:agreement_id>/"
+        ),
+        delete_agreement_view,
+        name="agreement_delete",
+    ),
+
+    path(
+        (
+            "installment/list/"
+            "<int:agreement_id>/"
+        ),
+        list_installments_view,
+        name="installment_list",
+    ),
+    path(
+        (
+            "installment/add/"
+            "<int:agreement_id>/"
+        ),
+        add_installment_view,
+        name="installment_add",
+    ),
+    path(
+        (
+            "installment/update/"
+            "<int:installment_id>/"
+        ),
+        update_installment_view,
+        name="installment_update",
+    ),
+    path(
+        (
+            "installment/delete/"
+            "<int:installment_id>/"
+        ),
+        delete_installment_view,
+        name="installment_delete",
+    ),
+    path(
+        (
+            "installment/"
+            "confirm-milestone/"
+            "<int:installment_id>/"
+        ),
+        confirm_milestone_view,
+        name="installment_confirm_milestone",
+    ),
+    path(
+        (
+            "installment/waive/"
+            "<int:installment_id>/"
+        ),
+        waive_installment_view,
+        name="installment_waive",
+    ),
+
+    path(
+        "record/list/",
+        list_payments_view,
+        name="record_list",
+    ),
+    path(
+        (
+            "record/add/"
+            "<int:agreement_id>/"
+        ),
+        record_payment_view,
+        name="record_add",
+    ),
+    path(
+        (
+            "record/allocate/"
+            "<int:payment_id>/"
+        ),
+        allocate_payment_view,
+        name="record_allocate",
+    ),
+    path(
+        (
+            "record/void/"
+            "<int:payment_id>/"
+        ),
+        void_payment_view,
+        name="record_void",
+    ),
+
+    path(
+        (
+            "schedule/contract/"
+            "<int:agreement_id>/"
+        ),
+        generate_contract_schedule_view,
+        name="schedule_contract",
+    ),
+    path(
+        (
+            "schedule/maintenance/"
+            "<int:agreement_id>/"
+        ),
+        generate_maintenance_schedule_view,
+        name="schedule_maintenance",
+    ),
+
+    path(
+        (
+            "summary/agreement/"
+            "<int:agreement_id>/"
+        ),
+        agreement_summary_view,
+        name="summary_agreement",
+    ),
+    path(
+        (
+            "summary/portfolio/"
+            "<int:portfolio_id>/"
+        ),
+        portfolio_summary_view,
+        name="summary_portfolio",
+    ),
+]
