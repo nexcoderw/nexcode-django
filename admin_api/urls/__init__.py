@@ -42,4 +42,11 @@ urlpatterns = [
             "admin_api.urls.contact"
         ),
     ),
+
+    path(
+        "payment/",
+        include(
+            "admin_api.urls.payment"
+        ),
+    ),
 ]
