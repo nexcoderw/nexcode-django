@@ -47,17 +47,6 @@ def portrait_processors():
     ]
 
 
-def square_profile_processors():
-    """Crop a profile image to a compact square."""
-    return [
-        ResizeToFill(
-            800,
-            800,
-            upscale=False,
-        ),
-    ]
-
-
 def transparent_cutout_processors():
     """Fit a transparent cutout without cropping or enlarging it."""
     return [
