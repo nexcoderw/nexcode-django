@@ -35,4 +35,11 @@ urlpatterns = [
             "admin_api.urls.client"
         ),
     ),
+
+    path(
+        "contact/",
+        include(
+            "admin_api.urls.contact"
+        ),
+    ),
 ]
