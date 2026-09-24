@@ -1,0 +1,22 @@
+{% autoescape off %}Hi {{ contact.name }},
+
+{{ message }}
+
+Warm regards,
+The NEXCODE Team
+{{ site_url }}
+
+----------------------------------------
+Your message ({{ contact.created_at|date:"j F Y" }})
+{{ contact.subject }}
+
+{{ contact.message|truncatechars:1200 }}
+----------------------------------------
+
+NEXCODE Africa
+{{ details.address }}
+{{ details.email }} · {{ details.phone_number }}
+
+You are receiving this email because you contacted us through nexcode.africa.
+Reply to this email to continue the conversation.
+{% endautoescape %}
