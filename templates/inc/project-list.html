@@ -1,0 +1,70 @@
+<div class="works-mp section-padding pt-0">
+    <div class="container-xxl">
+        <div class="sec-head mb-80">
+            <div class="d-flex">
+                <div>
+                    <span class="sub-head">Selected Work</span>
+                </div>
+                <div class="ml-auto">
+                    <div class="bract">{ <span>2020 - {% now "Y" %}</span> }</div>
+                </div>
+            </div>
+            <div class="row mt-30">
+                <div class="col-lg-5 offset-lg-3 col-md-7">
+                    <div class="sm-mb30">
+                        <h2>Our Recent <br> Work</h2>
+                        <a href="{% url 'base:portfolio' %}" class="butn-under mt-15">
+                            View All Works
+                            <span class="icon invert">
+                                <img src="https://uithemez.com/i/kyan/common/imgs/icons/arrow-top-right.svg" alt="">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-5">
+                    <div class="text">
+                        <span>Creating forms that last. <br>
+                            <span class="opacity-5 mt-10">
+                                Discover our latest projects, showcasing NEXCODE's commitment to building enduring and impactful digital solutions.
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row gallery">
+            {% for work in portfolio %}
+                <div class="col-lg-3 items">
+                    <div class="item">
+                        <div class="cont d-flex align-items-center">
+                            <div>
+                                <h5 style="font-size: 24px;">
+                                    {{ work.name|truncatechars:27 }}.
+                                </h5>
+                                <span>{{ work.get_category_display }}</span>
+                            </div>
+                            <div class="ml-auto">
+                                <a href="{% url 'base:workDetails' work.slug %}" aria-label="View {{ work.name }}">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="img">
+                            {% with work.cover_image as cover %}
+                                {% if cover %}
+                                    <img src="{{ cover.image.url }}" alt="{{ cover.alt_text|default:work.name }}" loading="lazy" decoding="async">
+                                {% else %}
+                                    <img src="https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png" alt="{{ work.name }}" loading="lazy" decoding="async">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <h5 class="text-center">
+                    Coming Soon
+                </h5>
+            {% endfor %}
+        </div>
+    </div>
+</div>
