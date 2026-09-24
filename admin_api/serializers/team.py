@@ -17,6 +17,8 @@ def serialize_team_member(
             team_member.linkedin,
         "github":
             team_member.github,
+        "display_order":
+            team_member.display_order,
         "created_at": (
             team_member
             .created_at
