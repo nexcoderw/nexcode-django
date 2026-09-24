@@ -10,7 +10,7 @@ from admin_api.permissions import (
     nexcode_admin_required,
 )
 from admin_api.serializers.client import (
-    serialize_client_summary,
+    serialize_client,
 )
 from admin_api.views.client.responses import (
     json_response,
@@ -62,7 +62,7 @@ def list_client_view(
             "status": "success",
             "data": {
                 "items": [
-                    serialize_client_summary(
+                    serialize_client(
                         client
                     )
                     for client
