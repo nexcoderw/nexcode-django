@@ -16,6 +16,13 @@ from admin_api.views.contact.responses import (
     json_response,
     method_not_allowed,
     payload_error,
+    too_many_requests,
+)
+from home.contact_sender import (
+    sender_details,
+)
+from home.contact_throttle import (
+    allow_contact_submission,
 )
 
 
@@ -47,8 +54,18 @@ def add_contact_view(
             form
         )
 
+    sender = sender_details(
+        request
+    )
+
+    if not allow_contact_submission(
+        sender["ip_address"]
+    ):
+        return too_many_requests()
+
     contact = create_contact(
-        form.cleaned_data
+        form.cleaned_data,
+        sender,
     )
 
     return json_response(
