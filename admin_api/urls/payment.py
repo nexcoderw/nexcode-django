@@ -30,6 +30,17 @@ from admin_api.views.payment.summary import (
     portfolio_summary_view,
 )
 
+from admin_api.views.payment.reminders import (
+    add_reminder_rule_view,
+    delete_reminder_rule_view,
+    list_payment_notifications_view,
+    list_reminder_rules_view,
+    mark_all_notifications_read_view,
+    mark_notification_read_view,
+    reminder_rule_detail_view,
+    retry_notification_view,
+    update_reminder_rule_view,
+)
 
 app_name = "payment"
 
@@ -182,5 +193,80 @@ urlpatterns = [
         ),
         portfolio_summary_view,
         name="summary_portfolio",
+    ),
+    path(
+        "reminder/rule/list/",
+        list_reminder_rules_view,
+        name="reminder_rule_list",
+    ),
+    path(
+        (
+            "reminder/rule/add/"
+            "<int:agreement_id>/"
+        ),
+        add_reminder_rule_view,
+        name="reminder_rule_add",
+    ),
+    path(
+        (
+            "reminder/rule/detail/"
+            "<int:rule_id>/"
+        ),
+        reminder_rule_detail_view,
+        name="reminder_rule_detail",
+    ),
+    path(
+        (
+            "reminder/rule/update/"
+            "<int:rule_id>/"
+        ),
+        update_reminder_rule_view,
+        name="reminder_rule_update",
+    ),
+    path(
+        (
+            "reminder/rule/delete/"
+            "<int:rule_id>/"
+        ),
+        delete_reminder_rule_view,
+        name="reminder_rule_delete",
+    ),
+
+    path(
+        "reminder/notification/list/",
+        list_payment_notifications_view,
+        name=(
+            "reminder_notification_list"
+        ),
+    ),
+    path(
+        (
+            "reminder/notification/read/"
+            "<int:notification_id>/"
+        ),
+        mark_notification_read_view,
+        name=(
+            "reminder_notification_read"
+        ),
+    ),
+    path(
+        (
+            "reminder/notification/"
+            "read-all/"
+        ),
+        mark_all_notifications_read_view,
+        name=(
+            "reminder_notification_read_all"
+        ),
+    ),
+    path(
+        (
+            "reminder/notification/retry/"
+            "<int:notification_id>/"
+        ),
+        retry_notification_view,
+        name=(
+            "reminder_notification_retry"
+        ),
     ),
 ]
