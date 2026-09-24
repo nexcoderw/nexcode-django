@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <title>{{ subject }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; width: 100% !important; }
+        a { text-decoration: none; }
+        @media only screen and (max-width: 620px) {
+            .container { width: 100% !important; }
+            .gutter { padding-left: 24px !important; padding-right: 24px !important; }
+            .headline { font-size: 26px !important; line-height: 32px !important; }
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background-color:#eceee6;">
+    {# Inbox preview text; hidden in the message itself. #}
+    <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#eceee6;">
+        {{ message|truncatechars:110 }}
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eceee6;">
+        <tr>
+            <td align="center" style="padding:32px 12px;">
+                <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; border-radius:18px; overflow:hidden; background-color:#ffffff;">
+
+                    {# Header: the white logo needs the dark brand background. #}
+                    <tr>
+                        <td class="gutter" style="background-color:#0d0d0d; padding:32px 40px 28px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="left" valign="middle">
+                                        <a href="{{ site_url }}" target="_blank">
+                                            <img src="{{ logo_url }}" alt="NEXCODE" height="36" style="display:block; height:36px; width:auto; border:0; outline:none;">
+                                        </a>
+                                    </td>
+                                    <td align="right" valign="middle">
+                                        <span style="display:inline-block; padding:6px 14px; border-radius:999px; background-color:#d0ff71; color:#0d0d0d; font-family:'Outfit', Helvetica, Arial, sans-serif; font-size:11px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase;">
+                                            Reply
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <h1 class="headline" style="margin:36px 0 0; color:#ffffff; font-family:'Outfit', Helvetica, Arial, sans-serif; font-size:30px; line-height:36px; font-weight:600; letter-spacing:-0.4px;">
+                                {{ subject }}
+                            </h1>
+                        </td>
+                    </tr>
+
+                    {# Brand accent. #}
+                    <tr>
+                        <td style="background-color:#d0ff71; height:4px; line-height:4px; font-size:4px;">&nbsp;</td>
+                    </tr>
+
+                    {# The reply. linebreaks escapes the text before adding paragraphs. #}
+                    <tr>
+                        <td class="gutter" style="padding:40px 40px 8px; font-family:'Outfit', Helvetica, Arial, sans-serif; color:#1d1d1d; font-size:16px; line-height:26px;">
+                            <p style="margin:0 0 20px; font-size:17px; font-weight:600; color:#0d0d0d;">Hi {{ contact.name }},</p>
+                            <div style="color:#393939;">
+                                {{ message|linebreaks }}
+                            </div>
+                            <p style="margin:28px 0 0; color:#393939;">
+                                Warm regards,<br>
+                                <strong style="color:#0d0d0d;">The NEXCODE Team</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    {# Call to action. #}
+                    <tr>
+                        <td class="gutter" style="padding:32px 40px 8px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="border-radius:999px; background-color:#0d0d0d;">
+                                        <a href="{{ site_url }}" target="_blank" style="display:inline-block; padding:14px 28px; font-family:'Outfit', Helvetica, Arial, sans-serif; font-size:14px; font-weight:600; color:#d0ff71; letter-spacing:0.3px;">
+                                            Visit nexcode.africa &rarr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {# The sender's original message, for context. #}
+                    <tr>
+                        <td class="gutter" style="padding:36px 40px 40px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f5f6f1; border-radius:12px; border-left:4px solid #d0ff71;">
+                                <tr>
+                                    <td style="padding:20px 24px; font-family:'Outfit', Helvetica, Arial, sans-serif;">
+                                        <p style="margin:0 0 6px; font-size:11px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:#7a7d72;">
+                                            Your message &middot; {{ contact.created_at|date:"j F Y" }}
+                                        </p>
+                                        <p style="margin:0 0 10px; font-size:15px; font-weight:600; color:#0d0d0d;">
+                                            {{ contact.subject }}
+                                        </p>
+                                        <p style="margin:0; font-size:14px; line-height:22px; color:#4d4949;">
+                                            {{ contact.message|truncatechars:1200|linebreaksbr }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {# Footer. #}
+                    <tr>
+                        <td class="gutter" style="background-color:#0d0d0d; padding:32px 40px; font-family:'Outfit', Helvetica, Arial, sans-serif;">
+                            <p style="margin:0 0 4px; font-size:15px; font-weight:600; color:#ffffff;">
+                                NEXCODE Africa
+                            </p>
+                            <p style="margin:0 0 18px; font-size:13px; line-height:20px; color:#a4a4a4;">
+                                {{ details.address }}
+                            </p>
+                            <p style="margin:0 0 20px; font-size:13px; line-height:22px;">
+                                <a href="mailto:{{ details.email }}" style="color:#d0ff71;">{{ details.email }}</a>
+                                <span style="color:#4d4949;">&nbsp;&middot;&nbsp;</span>
+                                <a href="{{ details.phone_href }}" style="color:#d0ff71;">{{ details.phone_number }}</a>
+                            </p>
+                            <p style="margin:0 0 22px; font-size:13px;">
+                                <a href="{{ details.linkedin }}" target="_blank" style="color:#ffffff; font-weight:500;">LinkedIn</a>
+                                <span style="color:#4d4949;">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+                                <a href="{{ details.twitter }}" target="_blank" style="color:#ffffff; font-weight:500;">X</a>
+                                <span style="color:#4d4949;">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+                                <a href="{{ details.instagram }}" target="_blank" style="color:#ffffff; font-weight:500;">Instagram</a>
+                            </p>
+                            <p style="margin:0; padding-top:18px; border-top:1px solid #212121; font-size:11px; line-height:18px; color:#7a7a7a;">
+                                &copy; {{ year }} NEXCODE Africa. You are receiving this email because you contacted us through nexcode.africa. Reply to this email to continue the conversation.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
