@@ -44,6 +44,13 @@ urlpatterns = [
     ),
 
     path(
+        "dashboard/",
+        include(
+            "admin_api.urls.dashboard"
+        ),
+    ),
+
+    path(
         "payment/",
         include(
             "admin_api.urls.payment"
