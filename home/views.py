@@ -43,7 +43,8 @@ def services(request):
 
 
 def team(request):
-    page = page_for(request, Team.objects.order_by("name", "pk"))
+    # Team's default ordering is the display order chosen in the admin.
+    page = page_for(request, Team.objects.all())
     return render_page(request, "team/index.html", {"team": page, "page_obj": page})
 
 
