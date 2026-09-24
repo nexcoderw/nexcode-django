@@ -1,5 +1,3 @@
-from home.models import Client
-
 from admin_api.tests.client.base import (
     ClientApiTestCase,
 )
@@ -11,21 +9,32 @@ class ClientListTests(
     def setUp(self):
         super().setUp()
 
-        Client.objects.create(
-            name="Alpha Client",
-            company_name="Alpha Ltd",
-            email="alpha@example.com",
-            status=Client.Status.ACTIVE,
-        )
-
-        Client.objects.create(
-            name="Beta Client",
-            company_name="Beta Ltd",
-            email="beta@example.com",
-            status=(
-                Client.Status.INACTIVE
+        self.create_client(
+            name="Acme Rwanda",
+            email="hello@acme.rw",
+            phone_number=(
+                "+250 788 000 000"
             ),
         )
+
+        self.create_client(
+            name="Bright Ventures",
+            email="team@bright.co",
+            phone_number=(
+                "+254 700 111 222"
+            ),
+        )
+
+    def names(
+        self,
+        response,
+    ):
+        return [
+            item["name"]
+            for item in response.json()[
+                "data"
+            ]["items"]
+        ]
 
     def test_list_requires_authentication(
         self,
@@ -69,18 +78,14 @@ class ClientListTests(
             200,
         )
 
-        data = response.json()[
-            "data"
-        ]
-
         self.assertEqual(
-            data["pagination"][
-                "total_items"
-            ],
+            response.json()["data"][
+                "pagination"
+            ]["total_items"],
             2,
         )
 
-    def test_search_filters_clients(
+    def test_search_matches_name(
         self,
     ):
         self.login_admin()
@@ -88,25 +93,16 @@ class ClientListTests(
         response = self.client.get(
             self.list_url,
             {
-                "search": "Beta",
+                "search": "bright",
             },
         )
 
-        items = response.json()[
-            "data"
-        ]["items"]
-
         self.assertEqual(
-            len(items),
-            1,
+            self.names(response),
+            ["Bright Ventures"],
         )
 
-        self.assertEqual(
-            items[0]["name"],
-            "Beta Client",
-        )
-
-    def test_status_filters_clients(
+    def test_search_matches_email(
         self,
     ):
         self.login_admin()
@@ -114,22 +110,30 @@ class ClientListTests(
         response = self.client.get(
             self.list_url,
             {
-                "status": "inactive",
+                "search": "acme.rw",
             },
         )
 
-        items = response.json()[
-            "data"
-        ]["items"]
-
         self.assertEqual(
-            len(items),
-            1,
+            self.names(response),
+            ["Acme Rwanda"],
+        )
+
+    def test_search_matches_phone_number(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.client.get(
+            self.list_url,
+            {
+                "search": "+254",
+            },
         )
 
         self.assertEqual(
-            items[0]["status"],
-            "inactive",
+            self.names(response),
+            ["Bright Ventures"],
         )
 
     def test_ordering_is_supported(
@@ -140,40 +144,16 @@ class ClientListTests(
         response = self.client.get(
             self.list_url,
             {
-                "ordering": "name",
-            },
-        )
-
-        items = response.json()[
-            "data"
-        ]["items"]
-
-        self.assertEqual(
-            [
-                item["name"]
-                for item in items
-            ],
-            [
-                "Alpha Client",
-                "Beta Client",
-            ],
-        )
-
-    def test_invalid_status_is_rejected(
-        self,
-    ):
-        self.login_admin()
-
-        response = self.client.get(
-            self.list_url,
-            {
-                "status": "unknown",
+                "ordering": "-name",
             },
         )
 
         self.assertEqual(
-            response.status_code,
-            400,
+            self.names(response),
+            [
+                "Bright Ventures",
+                "Acme Rwanda",
+            ],
         )
 
     def test_invalid_ordering_is_rejected(
@@ -184,8 +164,7 @@ class ClientListTests(
         response = self.client.get(
             self.list_url,
             {
-                "ordering":
-                    "secret_field",
+                "ordering": "status",
             },
         )
 
@@ -202,7 +181,7 @@ class ClientListTests(
         response = self.client.get(
             self.list_url,
             {
-                "page_size": 101,
+                "page_size": "500",
             },
         )
 
