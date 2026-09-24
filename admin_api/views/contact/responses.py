@@ -74,3 +74,41 @@ def form_error(
         },
         status=400,
     )
+
+
+def too_many_requests():
+    return json_response(
+        {
+            "status": "error",
+            "message": (
+                "Too many messages "
+                "sent. Please try "
+                "again later."
+            ),
+        },
+        status=429,
+    )
+
+
+def contact_not_found():
+    return json_response(
+        {
+            "status": "error",
+            "message":
+                "Contact not found.",
+        },
+        status=404,
+    )
+
+
+def email_not_sent():
+    return json_response(
+        {
+            "status": "error",
+            "message": (
+                "The email could "
+                "not be sent."
+            ),
+        },
+        status=502,
+    )
