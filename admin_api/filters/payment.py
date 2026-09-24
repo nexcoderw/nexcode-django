@@ -4,7 +4,9 @@ from django.db.models import Q
 
 from home.models import (
     PaymentAgreement,
+    PaymentNotification,
     PaymentRecord,
+    PaymentReminderRule,
 )
 
 
@@ -236,6 +238,173 @@ def apply_record_filters(
     return queryset.order_by(
         ordering,
         "pk",
+    )
+
+def apply_reminder_rule_filters(
+    queryset,
+    query_params,
+):
+    agreement_id = (
+        _positive_integer(
+            query_params.get(
+                "agreement_id"
+            ),
+            "agreement_id",
+        )
+    )
+
+    if agreement_id:
+        queryset = queryset.filter(
+            agreement_id=(
+                agreement_id
+            )
+        )
+
+    queryset = _choice_filter(
+        queryset,
+        query_params,
+        "event",
+        (
+            PaymentReminderRule
+            .Event.values
+        ),
+    )
+
+    queryset = _choice_filter(
+        queryset,
+        query_params,
+        "channel",
+        (
+            PaymentReminderRule
+            .Channel.values
+        ),
+    )
+
+    enabled = _boolean_value(
+        query_params.get(
+            "is_enabled"
+        ),
+        "is_enabled",
+    )
+
+    if enabled is not None:
+        queryset = queryset.filter(
+            is_enabled=enabled
+        )
+
+    return queryset.order_by(
+        "agreement_id",
+        "event",
+        "timing",
+        "days",
+        "pk",
+    )
+
+
+def apply_notification_filters(
+    queryset,
+    query_params,
+):
+    agreement_id = (
+        _positive_integer(
+            query_params.get(
+                "agreement_id"
+            ),
+            "agreement_id",
+        )
+    )
+
+    if agreement_id:
+        queryset = queryset.filter(
+            agreement_id=(
+                agreement_id
+            )
+        )
+
+    queryset = _choice_filter(
+        queryset,
+        query_params,
+        "event",
+        (
+            PaymentReminderRule
+            .Event.values
+        ),
+    )
+
+    queryset = _choice_filter(
+        queryset,
+        query_params,
+        "channel",
+        (
+            PaymentReminderRule
+            .Channel.values
+        ),
+    )
+
+    queryset = _choice_filter(
+        queryset,
+        query_params,
+        "status",
+        (
+            PaymentNotification
+            .Status.values
+        ),
+    )
+
+    unread = _boolean_value(
+        query_params.get(
+            "unread"
+        ),
+        "unread",
+    )
+
+    if unread is True:
+        queryset = queryset.filter(
+            read_at__isnull=True
+        )
+
+    elif unread is False:
+        queryset = queryset.filter(
+            read_at__isnull=False
+        )
+
+    return queryset.order_by(
+        "-created_at",
+        "-pk",
+    )
+
+
+def _boolean_value(
+    value,
+    field,
+):
+    if value in (
+        None,
+        "",
+    ):
+        return None
+
+    normalized = (
+        str(value)
+        .strip()
+        .lower()
+    )
+
+    if normalized in (
+        "true",
+        "1",
+    ):
+        return True
+
+    if normalized in (
+        "false",
+        "0",
+    ):
+        return False
+
+    raise PaymentFilterError(
+        f"{field} must be true "
+        "or false."
     )
 
 
