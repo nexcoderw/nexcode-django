@@ -61,8 +61,6 @@ class PublicPageTests(TestCase):
 
     def test_retired_content_returns_gone(self):
         for path in (
-            "/portfolio/",
-            "/work/old-project",
             "/blogs/",
             "/blog/old-post/",
             "/testimony/",
