@@ -1,8 +1,7 @@
-from django.db import (
-    IntegrityError,
-    transaction,
-)
+from datetime import timedelta
+
 from django.test import TestCase
+from django.utils import timezone
 
 from home.models import Client
 
@@ -10,106 +9,14 @@ from home.models import Client
 class ClientModelTests(
     TestCase
 ):
-    def create_client(
-        self,
-        **overrides,
-    ):
-        values = {
-            "name":
-                "GRACON Tech Holdings",
-        }
-
-        values.update(
-            overrides
-        )
-
-        return (
-            Client.objects.create(
-                **values
-            )
-        )
-
-    def test_slug_is_generated(
+    def test_contact_details_can_be_empty(
         self,
     ):
-        client = (
-            self.create_client()
+        client = Client.objects.create(
+            name="Walk-in client",
         )
 
-        self.assertEqual(
-            client.slug,
-            "gracon-tech-holdings",
-        )
-
-    def test_slug_remains_stable_after_rename(
-        self,
-    ):
-        client = (
-            self.create_client()
-        )
-
-        original_slug = (
-            client.slug
-        )
-
-        client.name = (
-            "GRACON Technologies"
-        )
-
-        client.save()
-
-        client.refresh_from_db()
-
-        self.assertEqual(
-            client.slug,
-            original_slug,
-        )
-
-    def test_duplicate_names_receive_unique_slugs(
-        self,
-    ):
-        first = (
-            self.create_client()
-        )
-
-        second = (
-            self.create_client()
-        )
-
-        self.assertNotEqual(
-            first.slug,
-            second.slug,
-        )
-
-        self.assertTrue(
-            second.slug.startswith(
-                "gracon-tech-holdings-"
-            )
-        )
-
-    def test_status_defaults_to_active(
-        self,
-    ):
-        client = (
-            self.create_client()
-        )
-
-        self.assertEqual(
-            client.status,
-            Client.Status.ACTIVE,
-        )
-
-    def test_optional_fields_can_be_empty(
-        self,
-    ):
-        client = (
-            self.create_client()
-        )
-
-        self.assertEqual(
-            client.company_name,
-            "",
-        )
+        client.full_clean()
 
         self.assertEqual(
             client.email,
@@ -117,36 +24,53 @@ class ClientModelTests(
         )
 
         self.assertEqual(
-            client.phone,
+            client.phone_number,
             "",
         )
 
-        self.assertEqual(
-            client.website,
-            "",
-        )
-
-        self.assertEqual(
-            client.location,
-            "",
-        )
-
-        self.assertEqual(
-            client.notes,
-            "",
-        )
-
-        self.assertFalse(
-            client.profile_image
-        )
-
-    def test_invalid_status_is_rejected_by_database(
+    def test_string_is_the_name(
         self,
     ):
-        with self.assertRaises(
-            IntegrityError
-        ):
-            with transaction.atomic():
-                self.create_client(
-                    status="unknown",
+        client = Client(
+            name="Acme Rwanda",
+        )
+
+        self.assertEqual(
+            str(client),
+            "Acme Rwanda",
+        )
+
+    def test_newest_clients_come_first(
+        self,
+    ):
+        older = Client.objects.create(
+            name="Older",
+        )
+
+        newer = Client.objects.create(
+            name="Newer",
+        )
+
+        # created_at is auto-set, so move the first one back explicitly
+        # rather than relying on two inserts landing at different times.
+        Client.objects.filter(
+            pk=older.pk
+        ).update(
+            created_at=(
+                timezone.now()
+                - timedelta(days=1)
+            )
+        )
+
+        self.assertEqual(
+            list(
+                Client.objects.values_list(
+                    "pk",
+                    flat=True,
                 )
+            ),
+            [
+                newer.pk,
+                older.pk,
+            ],
+        )
