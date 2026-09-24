@@ -428,6 +428,17 @@ class Portfolio(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def cover_image(self):
+        # Reads images.all() so a prefetch_related("images") is reused
+        # instead of querying once per portfolio in a list.
+        images = list(self.images.all())
+
+        return next(
+            (image for image in images if image.is_cover),
+            images[0] if images else None,
+        )
+
     class Meta:
         ordering = (
             "-created_at",
