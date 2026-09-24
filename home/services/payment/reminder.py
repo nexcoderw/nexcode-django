@@ -108,18 +108,44 @@ def process_payment_reminders(
     skipped = 0
 
     for rule in rules:
+        dated = (
+            rule.timing
+            == (
+                PaymentReminderRule
+                .Timing.DATE
+            )
+        )
+
+        # A set-date rule has nothing to do on any other day, so its
+        # targets are not even loaded.
+        if (
+            dated
+            and rule.remind_on
+            != process_date
+        ):
+            continue
+
         targets = (
             _targets_for_rule(
                 rule
             )
         )
 
+        if dated:
+            # One reminder on the chosen day, about the earliest item
+            # still open, rather than one per outstanding installment.
+            targets = sorted(
+                targets,
+                key=lambda target: (
+                    target.target_date
+                ),
+            )[:1]
+
         for target in targets:
             trigger_date = (
                 _get_trigger_date(
                     target.target_date,
-                    rule.timing,
-                    rule.days,
+                    rule,
                 )
             )
 
@@ -514,15 +540,23 @@ def _installment_queryset(
 
 def _get_trigger_date(
     target_date,
-    timing,
-    days,
+    rule,
 ):
+    if (
+        rule.timing
+        == (
+            PaymentReminderRule
+            .Timing.DATE
+        )
+    ):
+        return rule.remind_on
+
     offset = timedelta(
-        days=days
+        days=rule.days
     )
 
     if (
-        timing
+        rule.timing
         == (
             PaymentReminderRule
             .Timing.BEFORE
@@ -534,7 +568,7 @@ def _get_trigger_date(
         )
 
     if (
-        timing
+        rule.timing
         == (
             PaymentReminderRule
             .Timing.AFTER
@@ -646,6 +680,10 @@ def _notification_content(
                     "Agreement expiry "
                     "passed"
                 ),
+                dated=(
+                    "Agreement expiry "
+                    "reminder"
+                ),
                 rule=rule,
             )
         )
@@ -690,6 +728,10 @@ def _notification_content(
                     "Milestone expected "
                     "date passed"
                 ),
+                dated=(
+                    "Milestone payment "
+                    "reminder"
+                ),
                 rule=rule,
             )
         )
@@ -712,6 +754,7 @@ def _notification_content(
         before="Payment due",
         on="Payment due today",
         after="Payment overdue",
+        dated="Payment reminder",
         rule=rule,
     )
 
@@ -731,8 +774,20 @@ def _timed_title(
     before,
     on,
     after,
+    dated,
     rule,
 ):
+    # A set-date reminder has no offset to describe; its message
+    # carries the date that matters.
+    if (
+        rule.timing
+        == (
+            PaymentReminderRule
+            .Timing.DATE
+        )
+    ):
+        return dated
+
     if (
         rule.timing
         == (
