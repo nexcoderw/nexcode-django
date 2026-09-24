@@ -245,20 +245,24 @@
                                 {% else %}
                                     <img src="{% static 'img/image404.jpg' %}" alt="Dummy Image">
                                 {% endif %}
-                                <div class="social-icon">
-                                    <a href="{{ member.linkedin }}" target="_blank">
-                                        <i class="fa-brands fa-linkedin"></i>
-                                    </a>
-                                    <a href="{{ member.github }}" target="_blank">
-                                        <i class="fa-brands fa-github"></i>
-                                    </a>
-                                </div>
+                                {% if member.linkedin or member.github %}
+                                    <div class="social-icon">
+                                        {% if member.linkedin %}
+                                            <a href="{{ member.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="{{ member.name }} on LinkedIn">
+                                                <i class="fa-brands fa-linkedin"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if member.github %}
+                                            <a href="{{ member.github }}" target="_blank" rel="noopener noreferrer" aria-label="{{ member.name }} on GitHub">
+                                                <i class="fa-brands fa-github"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="cont text-center">
                                 <h6>
-                                    <a href="{% url 'base:getTeamMember' member.slug %}">
-                                        {{ member.name }}
-                                    </a>
+                                    {{ member.name }}
                                 </h6>
                                 <p>{{ member.position }}</p>
                             </div>
