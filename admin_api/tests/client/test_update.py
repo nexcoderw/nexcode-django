@@ -1,10 +1,7 @@
-from home.models import Client
+from django.urls import reverse
 
 from admin_api.tests.client.base import (
     ClientApiTestCase,
-)
-from admin_api.tests.client.files import (
-    image_upload,
 )
 
 
@@ -14,21 +11,25 @@ class ClientUpdateTests(
     def setUp(self):
         super().setUp()
 
-        self.domain_client = (
-            Client.objects.create(
-                name="Example Client",
-                company_name=(
-                    "Example Company"
-                ),
-                email=(
-                    "client@example.com"
-                ),
-                profile_image=(
-                    image_upload(
-                        "old.png"
-                    )
-                ),
-            )
+        self.record = (
+            self.create_client()
+        )
+
+    def test_update_requires_authentication(
+        self,
+    ):
+        response = self.patch_json(
+            self.update_url(
+                self.record
+            ),
+            {
+                "name": "Renamed",
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            401,
         )
 
     def test_update_requires_csrf(
@@ -38,11 +39,11 @@ class ClientUpdateTests(
 
         response = self.client.patch(
             self.update_url(
-                self.domain_client
+                self.record
             ),
-            data=b"",
+            data='{"name": "Renamed"}',
             content_type=(
-                "multipart/form-data"
+                "application/json"
             ),
         )
 
@@ -56,16 +57,15 @@ class ClientUpdateTests(
     ):
         self.login_admin()
 
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
+        response = self.patch_json(
+            self.update_url(
+                self.record
+            ),
+            {
+                "phone_number": (
+                    "+250 722 111 222"
                 ),
-                {
-                    "company_name":
-                        "Updated Company",
-                },
-            )
+            },
         )
 
         self.assertEqual(
@@ -73,202 +73,22 @@ class ClientUpdateTests(
             200,
         )
 
-        self.domain_client.refresh_from_db()
+        self.record.refresh_from_db()
 
         self.assertEqual(
-            self.domain_client
-            .company_name,
-            "Updated Company",
+            self.record.phone_number,
+            "+250 722 111 222",
         )
 
+        # Fields left out of the request keep their stored values.
         self.assertEqual(
-            self.domain_client.name,
-            "Example Client",
-        )
-
-    def test_slug_remains_stable_when_name_changes(
-        self,
-    ):
-        self.login_admin()
-
-        original_slug = (
-            self.domain_client.slug
-        )
-
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "name":
-                        "Renamed Client",
-                },
-            )
+            self.record.name,
+            "Acme Rwanda",
         )
 
         self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertEqual(
-            self.domain_client.slug,
-            original_slug,
-        )
-
-    def test_empty_name_is_rejected(
-        self,
-    ):
-        self.login_admin()
-
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "name": "",
-                },
-            )
-        )
-
-        self.assertEqual(
-            response.status_code,
-            400,
-        )
-
-    def test_status_can_be_changed(
-        self,
-    ):
-        self.login_admin()
-
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "status":
-                        Client.Status
-                        .INACTIVE,
-                },
-            )
-        )
-
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertEqual(
-            self.domain_client.status,
-            Client.Status.INACTIVE,
-        )
-
-    def test_replacing_profile_image_deletes_old_file(
-        self,
-    ):
-        self.login_admin()
-
-        old_name = (
-            self.domain_client
-            .profile_image
-            .name
-        )
-
-        storage = (
-            self.domain_client
-            .profile_image
-            .storage
-        )
-
-        self.assertTrue(
-            storage.exists(
-                old_name
-            )
-        )
-
-        with self.captureOnCommitCallbacks(
-            execute=True
-        ):
-            response = (
-                self.patch_multipart(
-                    self.update_url(
-                        self.domain_client
-                    ),
-                    {
-                        "profile_image":
-                            image_upload(
-                                "new.png"
-                            ),
-                    },
-                )
-            )
-
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.assertFalse(
-            storage.exists(
-                old_name
-            )
-        )
-
-    def test_remove_profile_image(
-        self,
-    ):
-        self.login_admin()
-
-        old_name = (
-            self.domain_client
-            .profile_image
-            .name
-        )
-
-        storage = (
-            self.domain_client
-            .profile_image
-            .storage
-        )
-
-        with self.captureOnCommitCallbacks(
-            execute=True
-        ):
-            response = (
-                self.patch_multipart(
-                    self.update_url(
-                        self.domain_client
-                    ),
-                    {
-                        "remove_profile_image":
-                            "true",
-                    },
-                )
-            )
-
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertFalse(
-            self.domain_client
-            .profile_image
-        )
-
-        self.assertFalse(
-            storage.exists(
-                old_name
-            )
+            self.record.email,
+            "hello@acme.rw",
         )
 
     def test_empty_optional_field_clears_value(
@@ -276,15 +96,13 @@ class ClientUpdateTests(
     ):
         self.login_admin()
 
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "email": "",
-                },
-            )
+        response = self.patch_json(
+            self.update_url(
+                self.record
+            ),
+            {
+                "email": "",
+            },
         )
 
         self.assertEqual(
@@ -292,9 +110,119 @@ class ClientUpdateTests(
             200,
         )
 
-        self.domain_client.refresh_from_db()
+        self.assertIsNone(
+            response.json()["data"][
+                "client"
+            ]["email"]
+        )
+
+        self.record.refresh_from_db()
 
         self.assertEqual(
-            self.domain_client.email,
+            self.record.email,
             "",
+        )
+
+    def test_empty_name_is_rejected(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.patch_json(
+            self.update_url(
+                self.record
+            ),
+            {
+                "name": "",
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400,
+        )
+
+        self.assertIn(
+            "name",
+            response.json()["errors"],
+        )
+
+    def test_empty_payload_is_rejected(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.patch_json(
+            self.update_url(
+                self.record
+            ),
+            {},
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400,
+        )
+
+    def test_invalid_email_is_rejected(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.patch_json(
+            self.update_url(
+                self.record
+            ),
+            {
+                "email": "not-an-email",
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400,
+        )
+
+        self.assertIn(
+            "email",
+            response.json()["errors"],
+        )
+
+    def test_unknown_client_returns_404(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.patch_json(
+            reverse(
+                "admin_api:client:update",
+                kwargs={
+                    "client_id": 999999,
+                },
+            ),
+            {
+                "name": "Renamed",
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            404,
+        )
+
+    def test_update_rejects_post(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.client.post(
+            self.update_url(
+                self.record
+            ),
+            **self.csrf_headers(),
+        )
+
+        self.assertEqual(
+            response.status_code,
+            405,
         )
