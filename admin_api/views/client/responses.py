@@ -49,6 +49,18 @@ def client_not_found():
     )
 
 
+def payload_error(
+    error,
+):
+    return json_response(
+        {
+            "status": "error",
+            "message": str(error),
+        },
+        status=error.status,
+    )
+
+
 def form_error(
     form,
 ):
