@@ -107,6 +107,13 @@ class Team(models.Model):
         blank=True,
     )
 
+    # Where the member appears on the public site and in the admin:
+    # lower numbers first, ties broken by name.
+    display_order = models.PositiveIntegerField(
+        default=0,
+        db_index=True,
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
@@ -182,6 +189,11 @@ class Team(models.Model):
         )
 
     class Meta:
+        ordering = (
+            "display_order",
+            "name",
+            "pk",
+        )
         verbose_name = "Team Member"
         verbose_name_plural = (
             "Team Members"
