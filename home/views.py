@@ -4,11 +4,12 @@ from django.conf import settings
 from django.core.paginator import InvalidPage, Paginator
 from django.db import connection
 from django.http import Http404, HttpResponse, HttpResponseGone, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_safe
 
 from home.content import SERVICES
-from home.models import Team
-from home.seo import render_page
+from home.models import Portfolio, Team
+from home.seo import plain_text, render_page
 
 
 # The order set in the admin: lowest display_order first, and members
@@ -22,6 +23,18 @@ HOME_TEAM_PREVIEW_SIZE = 4
 
 def team_in_display_order():
     return Team.objects.order_by(*TEAM_DISPLAY_ORDER)
+
+
+# The home page shows two rows of recent work and links to the portfolio.
+HOME_WORK_PREVIEW_SIZE = 8
+
+
+def published_work():
+    # Drafts and archived projects never reach the public site. Images are
+    # prefetched so each card's cover_image costs no extra query.
+    return Portfolio.objects.filter(
+        status=Portfolio.Status.PUBLISHED
+    ).prefetch_related("images")
 
 
 def page_for(request, queryset, per_page=12):
@@ -48,6 +61,7 @@ def home(request):
         "index.html",
         {
             "services": SERVICES,
+            "portfolio": published_work()[:HOME_WORK_PREVIEW_SIZE],
             # The first members in display order, fetched with a LIMIT.
             "team": team_in_display_order()[:HOME_TEAM_PREVIEW_SIZE],
         },
@@ -65,6 +79,31 @@ def services(request):
 def team(request):
     page = page_for(request, team_in_display_order())
     return render_page(request, "team/index.html", {"team": page, "page_obj": page})
+
+
+def portfolio(request):
+    page = page_for(request, published_work())
+    return render_page(
+        request, "work/index.html", {"portfolio": page, "page_obj": page}
+    )
+
+
+def workDetails(request, slug):
+    work = get_object_or_404(
+        published_work().prefetch_related(
+            "repositories", "documents", "team_members"
+        ),
+        slug=slug,
+    )
+    cover = work.cover_image
+    return render_page(
+        request,
+        "work/show.html",
+        {"work": work, "cover": cover},
+        title=f"{work.name} — Project",
+        description=work.summary or plain_text(work.description),
+        image=cover.image.url if cover else None,
+    )
 
 
 @require_safe
