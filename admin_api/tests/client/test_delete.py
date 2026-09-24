@@ -1,49 +1,53 @@
+from django.urls import reverse
+
 from home.models import Client
 
 from admin_api.tests.client.base import (
     ClientApiTestCase,
 )
-from admin_api.tests.client.files import (
-    image_upload,
-)
 
 
-class ClientUpdateTests(
+class ClientDeleteTests(
     ClientApiTestCase
 ):
     def setUp(self):
         super().setUp()
 
-        self.domain_client = (
-            Client.objects.create(
-                name="Example Client",
-                company_name=(
-                    "Example Company"
-                ),
-                email=(
-                    "client@example.com"
-                ),
-                profile_image=(
-                    image_upload(
-                        "old.png"
-                    )
-                ),
+        self.record = (
+            self.create_client()
+        )
+
+    def test_delete_requires_authentication(
+        self,
+    ):
+        response = self.delete_request(
+            self.delete_url(
+                self.record
             )
         )
 
-    def test_update_requires_csrf(
+        self.assertEqual(
+            response.status_code,
+            401,
+        )
+
+        self.assertTrue(
+            Client.objects.filter(
+                pk=self.record.pk
+            ).exists()
+        )
+
+    def test_delete_rejects_non_admin(
         self,
     ):
-        self.login_admin()
+        self.client.force_login(
+            self.regular_user
+        )
 
-        response = self.client.patch(
-            self.update_url(
-                self.domain_client
-            ),
-            data=b"",
-            content_type=(
-                "multipart/form-data"
-            ),
+        response = self.delete_request(
+            self.delete_url(
+                self.record
+            )
         )
 
         self.assertEqual(
@@ -51,250 +55,81 @@ class ClientUpdateTests(
             403,
         )
 
-    def test_partial_update(
+    def test_delete_requires_csrf(
         self,
     ):
         self.login_admin()
 
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "company_name":
-                        "Updated Company",
-                },
+        response = self.client.delete(
+            self.delete_url(
+                self.record
             )
         )
 
         self.assertEqual(
             response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertEqual(
-            self.domain_client
-            .company_name,
-            "Updated Company",
-        )
-
-        self.assertEqual(
-            self.domain_client.name,
-            "Example Client",
-        )
-
-    def test_slug_remains_stable_when_name_changes(
-        self,
-    ):
-        self.login_admin()
-
-        original_slug = (
-            self.domain_client.slug
-        )
-
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "name":
-                        "Renamed Client",
-                },
-            )
-        )
-
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertEqual(
-            self.domain_client.slug,
-            original_slug,
-        )
-
-    def test_empty_name_is_rejected(
-        self,
-    ):
-        self.login_admin()
-
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "name": "",
-                },
-            )
-        )
-
-        self.assertEqual(
-            response.status_code,
-            400,
-        )
-
-    def test_status_can_be_changed(
-        self,
-    ):
-        self.login_admin()
-
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "status":
-                        Client.Status
-                        .INACTIVE,
-                },
-            )
-        )
-
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertEqual(
-            self.domain_client.status,
-            Client.Status.INACTIVE,
-        )
-
-    def test_replacing_profile_image_deletes_old_file(
-        self,
-    ):
-        self.login_admin()
-
-        old_name = (
-            self.domain_client
-            .profile_image
-            .name
-        )
-
-        storage = (
-            self.domain_client
-            .profile_image
-            .storage
+            403,
         )
 
         self.assertTrue(
-            storage.exists(
-                old_name
-            )
+            Client.objects.filter(
+                pk=self.record.pk
+            ).exists()
         )
 
-        with self.captureOnCommitCallbacks(
-            execute=True
-        ):
-            response = (
-                self.patch_multipart(
-                    self.update_url(
-                        self.domain_client
-                    ),
-                    {
-                        "profile_image":
-                            image_upload(
-                                "new.png"
-                            ),
-                    },
-                )
-            )
-
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
-
-        self.assertFalse(
-            storage.exists(
-                old_name
-            )
-        )
-
-    def test_remove_profile_image(
+    def test_admin_can_delete_client(
         self,
     ):
         self.login_admin()
 
-        old_name = (
-            self.domain_client
-            .profile_image
-            .name
-        )
-
-        storage = (
-            self.domain_client
-            .profile_image
-            .storage
-        )
-
-        with self.captureOnCommitCallbacks(
-            execute=True
-        ):
-            response = (
-                self.patch_multipart(
-                    self.update_url(
-                        self.domain_client
-                    ),
-                    {
-                        "remove_profile_image":
-                            "true",
-                    },
-                )
+        response = self.delete_request(
+            self.delete_url(
+                self.record
             )
+        )
 
         self.assertEqual(
             response.status_code,
-            200,
-        )
-
-        self.domain_client.refresh_from_db()
-
-        self.assertFalse(
-            self.domain_client
-            .profile_image
+            204,
         )
 
         self.assertFalse(
-            storage.exists(
-                old_name
-            )
+            Client.objects.filter(
+                pk=self.record.pk
+            ).exists()
         )
 
-    def test_empty_optional_field_clears_value(
+    def test_unknown_client_returns_404(
         self,
     ):
         self.login_admin()
 
-        response = (
-            self.patch_multipart(
-                self.update_url(
-                    self.domain_client
-                ),
-                {
-                    "email": "",
+        response = self.delete_request(
+            reverse(
+                "admin_api:client:delete",
+                kwargs={
+                    "client_id": 999999,
                 },
             )
         )
 
         self.assertEqual(
             response.status_code,
-            200,
+            404,
         )
 
-        self.domain_client.refresh_from_db()
+    def test_delete_rejects_get(
+        self,
+    ):
+        self.login_admin()
+
+        response = self.client.get(
+            self.delete_url(
+                self.record
+            )
+        )
 
         self.assertEqual(
-            self.domain_client.email,
-            "",
+            response.status_code,
+            405,
         )
