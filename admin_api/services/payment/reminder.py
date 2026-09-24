@@ -85,6 +85,9 @@ def create_reminder_rule(
             )
             or 0
         ),
+        remind_on=cleaned_data.get(
+            "remind_on"
+        ),
         channel=(
             cleaned_data.get(
                 "channel"
@@ -101,6 +104,10 @@ def create_reminder_rule(
             )
         ),
         created_by=created_by,
+    )
+
+    _normalize_timing(
+        rule
     )
 
     rule.full_clean()
@@ -143,6 +150,10 @@ def update_reminder_rule(
             field,
             data.get(field),
         )
+
+    _normalize_timing(
+        rule
+    )
 
     rule.full_clean()
     rule.save()
@@ -243,3 +254,24 @@ def _assert_rule_allowed(
                 "cancelled agreement."
             )
         )
+
+
+def _normalize_timing(
+    rule,
+):
+    """
+    Keep only what the rule's timing uses: a set date needs no offset,
+    and an offset needs no date. Switching a rule's timing therefore
+    never leaves a stale value behind.
+    """
+
+    if (
+        rule.timing
+        == (
+            PaymentReminderRule
+            .Timing.DATE
+        )
+    ):
+        rule.days = 0
+    else:
+        rule.remind_on = None
