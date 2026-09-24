@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from home.models import (
     PaymentReminderRule,
@@ -9,6 +10,7 @@ REMINDER_RULE_FIELDS = (
     "event",
     "timing",
     "days",
+    "remind_on",
     "channel",
     "is_enabled",
 )
@@ -34,6 +36,10 @@ class PaymentReminderRuleCreateForm(
     days = forms.IntegerField(
         min_value=0,
         max_value=3650,
+        required=False,
+    )
+
+    remind_on = forms.DateField(
         required=False,
     )
 
@@ -105,6 +111,10 @@ class PaymentReminderRuleUpdateForm(
     days = forms.IntegerField(
         min_value=0,
         max_value=3650,
+        required=False,
+    )
+
+    remind_on = forms.DateField(
         required=False,
     )
 
@@ -198,6 +208,23 @@ def _validate_timing(
         timing
         == (
             PaymentReminderRule
+            .Timing.DATE
+        )
+    ):
+        _validate_remind_on(
+            form,
+            data.get(
+                "remind_on"
+            ),
+        )
+
+        # A set date replaces the offset.
+        return
+
+    if (
+        timing
+        == (
+            PaymentReminderRule
             .Timing.ON
         )
         and days != 0
@@ -226,5 +253,35 @@ def _validate_timing(
                 "Before and after "
                 "reminders require "
                 "at least one day."
+            ),
+        )
+
+
+def _validate_remind_on(
+    form,
+    remind_on,
+):
+    if not remind_on:
+        form.add_error(
+            "remind_on",
+            (
+                "Choose the date to "
+                "send this reminder."
+            ),
+        )
+        return
+
+    # Only a newly chosen date must lie ahead; an unchanged date on
+    # an existing rule may already have passed.
+    if (
+        "remind_on" in form.data
+        and remind_on
+        < timezone.localdate()
+    ):
+        form.add_error(
+            "remind_on",
+            (
+                "Choose today or a "
+                "later date."
             ),
         )
