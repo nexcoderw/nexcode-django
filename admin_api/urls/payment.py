@@ -42,6 +42,14 @@ from admin_api.views.payment.reminders import (
     update_reminder_rule_view,
 )
 
+from admin_api.views.payment.reports import (
+    collections_report_view,
+    outstanding_report_view,
+    payment_receipt_view,
+    portfolio_statement_view,
+    report_overview_view,
+)
+
 app_name = "payment"
 
 
@@ -268,5 +276,36 @@ urlpatterns = [
         name=(
             "reminder_notification_retry"
         ),
+    ),
+    path(
+        "report/overview/",
+        report_overview_view,
+        name="report_overview",
+    ),
+    path(
+        "report/collections/",
+        collections_report_view,
+        name="report_collections",
+    ),
+    path(
+        "report/outstanding/",
+        outstanding_report_view,
+        name="report_outstanding",
+    ),
+    path(
+        (
+            "report/statement/"
+            "<int:portfolio_id>/"
+        ),
+        portfolio_statement_view,
+        name="report_statement",
+    ),
+    path(
+        (
+            "report/receipt/"
+            "<int:payment_id>/"
+        ),
+        payment_receipt_view,
+        name="report_receipt",
     ),
 ]
